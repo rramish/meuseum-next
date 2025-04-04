@@ -1,4 +1,6 @@
+"use client"
 import { ICONS } from "@/assets";
+import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 import Image from "next/image";
 import React from "react";
 
@@ -8,7 +10,7 @@ export const CustomButton = ({
   fontsize = "text-base",
   bg,
   textcolor,
-  onClick = () =>{},
+  onClick = () => {},
   width = 20,
   height = 20,
 }: {
@@ -18,12 +20,12 @@ export const CustomButton = ({
   fontsize?: string;
   title?: string;
   bg?: string;
-  onClick?: () =>void;
+  onClick?: () => void;
   textcolor?: string;
 }) => {
   return (
     <div
-    onClick={onClick}
+      onClick={onClick}
       className={`flex items-center cursor-pointer hover:scale-105 duration-300 border gap-2 border-[#DADCE0] ${textcolor} ${bg} rounded-lg px-4 py-2`}
     >
       <div>
@@ -42,22 +44,27 @@ export const CustomButton = ({
 };
 
 const Header = () => {
+  const {selectedImages} = useSelectedImagesStore();
   return (
     <div className="px-10 py-6">
-      <div className="justify-between flex">
-        <CustomButton
-          title={`Available Canvas ${20}/${20}`}
-          icon={ICONS.image_icon}
-          bg={"bg-transparent"}
-          textcolor={"text-[#1A73E8]"}
-        />
-        <Image src={ICONS.logo_icon} alt="" width={100} height={100} />
-        <CustomButton
+      <div className="flex">
+        <div className="flex-1 flex">
+          <CustomButton
+            title={`Available Canvas ${20-selectedImages.length}/${20}`}
+            icon={ICONS.image_icon}
+            bg={"bg-transparent"}
+            textcolor={"text-[#1A73E8]"}
+          />
+        </div>
+        <div className="flex-1">
+          <Image src={ICONS.logo_icon} alt="" width={100} height={100} />
+        </div>
+        {/* <CustomButton
           title="Submit Work"
           icon={ICONS.check_icon}
           bg={"bg-[#1A73E8]"}
           textcolor={"text-white"}
-        />
+        /> */}
       </div>
     </div>
   );

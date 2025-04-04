@@ -57,7 +57,7 @@ function App() {
     };
 
     canvasRef.current.addEventListener("contextmenu", handleRightClick);
-    canvasRef.current.addEventListener("mouse:dblclick", toggleZoom);
+    canvas.on("mouse:dblclick", toggleZoom);
 
     return () => {
       canvas.dispose();

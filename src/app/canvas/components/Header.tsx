@@ -10,20 +10,20 @@ const Header = () => {
       <div className="flex gap-4">
         <CustomButton
           title="Back"
-          icon={ICONS.check_icon}
+          icon={ICONS.back_icon}
           onClick={() =>{router.push("/main")}}
-          bg={"bg-[#1A73E8]"}
-          textcolor={"text-[#fff]"}
+          bg={"bg-[#fff]"}
+          textcolor={"text-[#1A73E8]"}
         />
         <CustomButton
           title="New Drawing"
-          icon={ICONS.image_icon}
+          icon={ICONS.plus_icon}
           bg={"bg-[#fff]"}
           textcolor={"text-[#1A73E8]"}
         />
         <CustomButton
           title={`Canvas 4`}
-          icon={ICONS.plus_icon}
+          icon={ICONS.image_icon}
           bg={"bg-[#fff]"}
           textcolor={"text-[#1A73E8]"}
         />

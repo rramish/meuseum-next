@@ -1,5 +1,6 @@
 "use client";
 import { ICONS } from "@/assets";
+import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 import { useImageStorage } from "@/store/imageStore";
 import * as Img from "next/image";
 import React, { useEffect, useState } from "react";
@@ -19,11 +20,12 @@ const DropZone = ({
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [, setIsLoading] = useState<boolean>(false);
   const {setImage} = useImageStorage();
+  const {clearSelectedImages} = useSelectedImagesStore();
 
   const defaultImageUrl =
     "https://images.unsplash.com/photo-1740421198589-f98aa30526ac?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
-  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+  // const MAX_FILE_SIZE = 5 * 1024 * 1024;
   const ACCEPTED_TYPES = {
     "image/jpeg": [".jpg", ".jpeg"],
     "image/png": [".png"],
@@ -47,12 +49,12 @@ const DropZone = ({
       return;
     }
 
-    if (file.size > MAX_FILE_SIZE) {
-      setErrorMessage("File size must be less than 5 MB.");
-      setIsDragging(false);
-      setIsLoading(false);
-      return;
-    }
+    // if (file.size > MAX_FILE_SIZE) {
+    //   setErrorMessage("File size must be less than 5 MB.");
+    //   setIsDragging(false);
+    //   setIsLoading(false);
+    //   return;
+    // }
 
     const imageUrl = URL.createObjectURL(file);
     setSelectedImageUrl(imageUrl);
@@ -60,6 +62,7 @@ const DropZone = ({
     setSelectedImage(file);
     console.log("Selected file:", file);
     setIsDragging(false);
+    clearSelectedImages();
     setImage(file);
 
     const img = new Image();
@@ -102,7 +105,7 @@ const DropZone = ({
           onDragEnter={onDragEnter}
           onDragLeave={onDragLeave}
           accept={ACCEPTED_TYPES}
-          maxSize={MAX_FILE_SIZE}
+          // maxSize={MAX_FILE_SIZE}
         >
           {({ getRootProps, getInputProps }) => (
             <section>

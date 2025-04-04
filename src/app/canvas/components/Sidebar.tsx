@@ -1,135 +1,210 @@
 "use client";
 import Image from "next/image";
 import * as fabric from "fabric";
-
 import { useState } from "react";
 import { ICONS } from "@/assets";
 import { useToolsStore } from "@/store/toolsStore";
 import { useCanvasStore } from "@/store/canvasStore";
 
+// Utility to convert hex to rgba string
+const hexToRgba = (hex: string, opacity: number) => {
+  const bigint = parseInt(hex.slice(1), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+
+type FolderModalProps = {
+  brushSize: number;
+  setBrushSize: (val: number) => void;
+  updateBrushSize: (val: number) => void;
+  brushOpacity: number;
+  setBrushOpacity: (val: number) => void;
+  updateBrushOpacity: (val: number) => void;
+};
+
+const FolderModal = ({
+  brushSize,
+  setBrushSize,
+  updateBrushSize,
+  brushOpacity,
+  setBrushOpacity,
+  updateBrushOpacity,
+}: FolderModalProps) => {
+
+  return (
+    <div className="absolute w-60 left-16 p-4 rounded-lg text-black border border-[#E6E7EA] bg-white z-50">
+      <div className="flex gap-2 mb-3">
+        <p className="w-14">Size</p>
+        <input
+          type="range"
+          className="w-44"
+          min={1}
+          max={100}
+          value={brushSize}
+          onChange={(e) => {
+            const newSize = parseInt(e.target.value);
+            setBrushSize(newSize);
+            updateBrushSize(newSize);
+          }}
+        />
+      </div>
+      <div className="flex gap-2">
+        <p className="w-14">Opacity</p>
+        <input
+          type="range"
+          className="w-44"
+          min={0}
+          max={1}
+          step={0.01}
+          value={brushOpacity}
+          onChange={(e) => {
+            const newOpacity = parseFloat(e.target.value);
+            setBrushOpacity(newOpacity);
+            updateBrushOpacity(newOpacity);
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
 const Sidebar = () => {
   const [showFolder, setShowFolder] = useState(false);
   const [active, setActive] = useState("pencil");
   const { canvasRef } = useCanvasStore();
-  const {setEraser:erase} = useToolsStore();
-  const [zoomlevel,setZoomlevel] = useState(1);
+  const { setEraser: erase } = useToolsStore();
+  const [zoomlevel, setZoomlevel] = useState(1);
+  const [brushSize, setBrushSize] = useState<number>(10);
+  const [brushOpacity, setBrushOpacity] = useState<number>(1);
+  const [brushColor, setBrushColor] = useState<string>("#0052cc");
 
-  const setPencil = () => {
-    if (canvasRef) {
-      if (canvasRef.current) {
-        canvasRef.current.isDrawingMode = true;
-        const instance = canvasRef.current as unknown as fabric.Canvas;
-        let remp = canvasRef.current.freeDrawingBrush as unknown as fabric.PencilBrush;
-        remp = new fabric.PencilBrush(
-          instance
-        )
-        console.log(remp);
-      }
+  const getBrushColorWithOpacity = () =>
+    hexToRgba(brushColor, brushOpacity);
+
+  const updateBrushSize = (size: number) => {
+    const canvas = canvasRef?.current as unknown as fabric.Canvas;
+    if (canvas?.freeDrawingBrush) {
+      canvas.freeDrawingBrush.width = size;
     }
   };
 
-  const toggleZoom = () =>{
-    if(canvasRef){
-      if(canvasRef.current){
-        const instance = canvasRef.current as unknown as fabric.Canvas;
-        if(zoomlevel == 1){
-          instance.setZoom(zoomlevel);
-          setZoomlevel(2);
-        }else{
-          instance.setZoom(zoomlevel);
-          setZoomlevel(1);
-        }
-      }
+  const updateBrushOpacity = (opacity: number) => {
+    const canvas = canvasRef?.current as unknown as fabric.Canvas;
+    if (canvas?.freeDrawingBrush) {
+      canvas.freeDrawingBrush.color = hexToRgba(brushColor, opacity);
     }
-  }
+  };
 
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (canvasRef.current?.freeDrawingBrush) {
-      canvasRef.current.freeDrawingBrush.color = e.target.value;
+  const setPencil = () => {
+    if (canvasRef?.current) {
+      const canvas = canvasRef.current as unknown as fabric.Canvas;
+      canvas.isDrawingMode = true;
+      const pencilBrush = new fabric.PencilBrush(canvas);
+      pencilBrush.width = brushSize;
+      pencilBrush.color = getBrushColorWithOpacity();
+      canvas.freeDrawingBrush = pencilBrush;
     }
   };
 
   const setBrush = () => {
-    if (canvasRef.current) {
+    if (canvasRef?.current) {
       const canvas = canvasRef.current as unknown as fabric.Canvas;
       canvas.isDrawingMode = true;
-
-      const brush = new fabric.CircleBrush(canvas);
-      brush.width = 10;
-      brush.color = canvas.freeDrawingBrush?.color || "#0052cc";
-
-      canvas.freeDrawingBrush = brush;
+      const circleBrush = new fabric.CircleBrush(canvas);
+      circleBrush.width = brushSize;
+      circleBrush.color = getBrushColorWithOpacity();
+      canvas.freeDrawingBrush = circleBrush;
     }
   };
 
   const setEraser = () => {
-    if (canvasRef.current) {
-      console.log("eraser funcitio")
+    if (canvasRef?.current) {
       canvasRef.current.isDrawingMode = false;
       erase(true);
     }
   };
 
+  const toggleZoom = () => {
+    if (canvasRef?.current) {
+      const canvas = canvasRef.current as unknown as fabric.Canvas;
+      if (zoomlevel === 1) {
+        canvas.setZoom(2);
+        setZoomlevel(2);
+      } else {
+        canvas.setZoom(1);
+        setZoomlevel(1);
+        canvas.absolutePan(new fabric.Point(0, 0));
+      }
+    }
+  };
+
+  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newColor = e.target.value;
+    setBrushColor(newColor);
+    const canvas = canvasRef?.current as unknown as fabric.Canvas;
+    if (canvas?.freeDrawingBrush) {
+      canvas.freeDrawingBrush.color = hexToRgba(newColor, brushOpacity);
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-8 bg-white pr-2 rounded-r-xl py-10 -mr-6 z-10 shadow">
+    <div className="flex flex-col gap-4 bg-white pr-2 rounded-r-xl py-14 -mr-6 z-10 shadow">
       <Image
         src={ICONS.pencil_icon}
-        alt=""
-        width={70}
-        height={70}
+        alt="Pencil Tool"
+        width={50}
+        height={50}
         onClick={() => {
           setActive("pencil");
           setPencil();
         }}
-        className={`py-1 cursor-pointer hover:scale-150 hover:scale-x-200 duration-300 ${
-          active == "pencil" && "scale-150 scale-x-200"
+        className={`py-1 cursor-pointer hover:scale-150 duration-300 ${
+          active === "pencil" && "scale-150 scale-x-150"
         }`}
       />
       <Image
         src={ICONS.marker_icon}
-        alt=""
-        width={70}
-        height={70}
-        onClick={() => {
-          setActive("marker");
-        }}
-        className={`py-1 cursor-pointer hover:scale-150 hover:scale-x-200 duration-300 ${
-          active == "marker" && "scale-150 scale-x-200"
+        alt="Marker Tool"
+        width={50}
+        height={50}
+        onClick={() => setActive("marker")}
+        className={`py-1 cursor-pointer hover:scale-150 duration-300 ${
+          active === "marker" && "scale-150 scale-x-150"
         }`}
       />
       <Image
         src={ICONS.brush_icon}
-        alt=""
-        width={70}
-        height={70}
+        alt="Brush Tool"
+        width={50}
+        height={50}
         onClick={() => {
           setActive("brush");
           setBrush();
         }}
-        className={`py-1 cursor-pointer hover:scale-150 hover:scale-x-200 duration-300 ${
-          active == "brush" && "scale-150 scale-x-200"
+        className={`py-1 cursor-pointer hover:scale-150 duration-300 ${
+          active === "brush" && "scale-150 scale-x-150"
         }`}
       />
       <Image
         src={ICONS.eraser_icon}
-        alt=""
-        width={70}
-        height={70}
+        alt="Eraser Tool"
+        width={50}
+        height={50}
         onClick={() => {
           setActive("eraser");
           setEraser();
         }}
         className={`py-1 cursor-pointer hover:scale-150 hover:scale-x-200 duration-300 ${
-          active == "eraser" && "scale-150 scale-x-200"
+          active === "eraser" && "scale-150 scale-x-200"
         }`}
       />
       <div className="justify-center flex">
         <label
           htmlFor="color"
-          className="h-12 w-12 rounded-full bg-[#2622A5] hover:scale-110 duration-300 cursor-pointer"
-          onClick={() => {
-            setActive("null");
-          }}
+          className="h-8 w-8 rounded-full bg-[#2622A5] hover:scale-110 duration-300 cursor-pointer"
+          onClick={() => setActive("null")}
         />
         <div className="absolute">
           <input
@@ -137,29 +212,39 @@ const Sidebar = () => {
             id="color"
             defaultValue="#0052cc"
             onChange={handleColorChange}
-            className="w-10 h-10 hidden"
+            className="w-4 h-4 hidden"
           />
         </div>
       </div>
       <div className="flex justify-center">
         <Image
           src={ICONS.folder_icon}
-          alt=""
-          width={50}
-          height={50}
+          alt="Brush Settings"
+          width={30}
+          height={30}
           onClick={() => {
             setActive("null");
             setShowFolder(!showFolder);
           }}
           className={`py-1 hover:scale-110 cursor-pointer duration-300`}
         />
+        {showFolder && (
+          <FolderModal
+            brushSize={brushSize}
+            setBrushSize={setBrushSize}
+            updateBrushSize={updateBrushSize}
+            brushOpacity={brushOpacity}
+            setBrushOpacity={setBrushOpacity}
+            updateBrushOpacity={updateBrushOpacity}
+          />
+        )}
       </div>
       <div className="flex justify-center">
         <Image
           src={ICONS.zoom_2x_icon}
-          alt=""
-          width={50}
-          height={50}
+          alt="Zoom Tool"
+          width={30}
+          height={30}
           onClick={() => {
             setActive("null");
             toggleZoom();
