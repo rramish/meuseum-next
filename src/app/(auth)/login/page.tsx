@@ -21,6 +21,9 @@ export default function Login() {
       console.log("data is : ", resp.data);
 
       if (resp?.data?.token) {
+        if(typeof window !== "undefined"){
+          localStorage.setItem("token", resp.data.token);
+        }
         setToken(resp.data.token);
         router.push("/main");
       }

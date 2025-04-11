@@ -88,10 +88,14 @@ const Main = () => {
     return dataUrl;
   }
   const router = useRouter();
-  
-  if(!token){
-    return router.push("/login");
+
+  if(typeof window !== "undefined"){
+    const token = localStorage.getItem("token");
+    if(!token){
+      return router.push("/login");
+    }
   }
+  
 
   return (
     <div className="flex-1">
