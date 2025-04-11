@@ -10,7 +10,7 @@ function App() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasInstance = useRef<fabric.Canvas | null>(null);
   const { setCanvasRef } = useCanvasStore();
-  const { eraser } = useToolsStore();
+  const { eraser, setEraser } = useToolsStore();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const toggleZoom = (event: any) => {
@@ -29,7 +29,7 @@ function App() {
     if (!canvasRef.current) return;
 
     const canvas = new fabric.Canvas(canvasRef.current, {
-      width: 1345,
+      width: 1200,
       height: 700,
     });
 
@@ -57,13 +57,14 @@ function App() {
       }
     };
 
-    console.log("eraser on 1")
+    console.log("eraser on 1");
     if (eraser) {
       console.log("eraser on");
       if (!canvasInstance.current) return;
-      console.log("not return")
+      console.log("not return");
       const canvas = canvasInstance.current;
       const activeObjects = canvas.getActiveObjects();
+      console.log("active objects ",activeObjects);
       if (activeObjects.length > 0) {
         activeObjects.forEach((obj) => canvas.remove(obj));
         canvas.discardActiveObject();
@@ -80,30 +81,81 @@ function App() {
         canvasRef.current.removeEventListener("contextmenu", handleRightClick);
       }
     };
-  }, [eraser, canvasRef]);
+  }, [eraser, canvasRef, setEraser]);
+
+  useEffect(() =>{
+    console.log("eraser on 2");
+    if (eraser) {
+      console.log("eraser on 2");
+      if (!canvasInstance.current) return;
+      console.log("not return 2");
+      const canvas = canvasInstance.current;
+      const activeObjects = canvas.getActiveObjects();
+      console.log("active objects 2",activeObjects);
+      if (activeObjects.length > 0) {
+        activeObjects.forEach((obj) => canvas.remove(obj));
+        canvas.discardActiveObject();
+        canvas.renderAll();
+      }
+    }
+  }, [canvasInstance.current, eraser])
 
   const { imagePiece } = useImageStorage();
 
+  // const handleAddImage = () => {
+  //   if (!canvasInstance.current) return;
+
+  //   const canvas = canvasInstance.current;
+  //   if (!imagePiece) return;
+
+  //   const imageElement = document.createElement("img");
+  //   imageElement.src = imagePiece.dataUrl;
+
+  //   imageElement.onload = () => {
+  //     const image = new fabric.Image(imageElement);
+
+  //     const aspectRatio = imageElement.width / imageElement.height;
+  //     const canvasAspectRatio = canvas.width! / canvas.height!;
+
+  //     let scaleFactor;
+  //     if (aspectRatio > canvasAspectRatio) {
+  //       scaleFactor = canvas.width! / imageElement.width;
+  //     } else {
+  //       scaleFactor = canvas.height! / imageElement.height;
+  //     }
+
+  //     image.set({
+  //       left: 0,
+  //       top: 0,
+  //       selectable: false,
+  //       evented: false,
+  //     });
+
+  //     image.scale(scaleFactor);
+  //     canvas.add(image);
+  //     canvas.renderAll();
+  //   };
+  // };
+
   const handleAddImage = () => {
-    if (!canvasInstance.current) return;
+    if (!canvasInstance.current || !imagePiece || !imagePiece.dataUrl) return;
 
     const canvas = canvasInstance.current;
-    if (!imagePiece) return;
-
     const imageElement = document.createElement("img");
     imageElement.src = imagePiece.dataUrl;
 
     imageElement.onload = () => {
       const image = new fabric.Image(imageElement);
-
       const aspectRatio = imageElement.width / imageElement.height;
-      const canvasAspectRatio = canvas.width! / canvas.height!;
+      const canvasAspectRatio = (canvas.width || 1345) / (canvas.height || 700);
 
       let scaleFactor;
       if (aspectRatio > canvasAspectRatio) {
-        scaleFactor = canvas.width! / imageElement.width;
+        // Image is wider: scale by height, crop width
+        scaleFactor = (canvas.height || 700) / imageElement.height;
       } else {
-        scaleFactor = canvas.height! / imageElement.height;
+        // Image is taller: scale by width, crop height
+        scaleFactor = (canvas.width || 1345) / imageElement.width;
       }
 
       image.set({
@@ -111,9 +163,17 @@ function App() {
         top: 0,
         selectable: false,
         evented: false,
+        scaleX: scaleFactor,
+        scaleY: scaleFactor,
+        originX: "center", // Center the image
+        originY: "center",
       });
 
-      image.scale(scaleFactor);
+      // Position image at canvas center
+      image.setCoords();
+      image.left = (canvas.width || 1345) / 2;
+      image.top = (canvas.height || 700) / 2;
+
       canvas.add(image);
       canvas.renderAll();
     };

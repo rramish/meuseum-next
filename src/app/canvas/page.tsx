@@ -20,7 +20,7 @@ const Canvas = () => {
           alt=""
           width={100}
           height={100}
-          className={`absolute -z-10 top-0 left-0 w-full h-screen`}
+          className={`absolute -z-10 top-0 left-0 w-full min-h-screen`}
         />
         <Header
           onFinishDrawing={() => {
@@ -51,7 +51,7 @@ const Canvas = () => {
             </div>
           </>
         )}
-        {!showModal && !showConfirmModal && (
+        {!showModal && (
           <div className="flex flex-1 w-full h-full">
             <div className="flex flex-1 pb-10">
               <div className="flex justify-center items-center">

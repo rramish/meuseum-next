@@ -26,9 +26,10 @@ const Home = () => {
   const [w, setW] = useState("");
   const [h, setH] = useState("");
   const { image, imageBackend, setImagePiece } = useImageStorage();
-  const FIXED_WIDTH = 1000;
+  const [fixedWidth, setFixedWidth] = useState(1200);
+  // const FIXED_WIDTH = 1200;
   // const FIXED_WIDTH = window && window.innerWidth - 100 || 1200;
-  const FIXED_HEIGHT = 900;
+  const FIXED_HEIGHT = 800;
 
   const getDataFromBackend = async () => {
     setLoading(true);
@@ -39,6 +40,9 @@ const Home = () => {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setFixedWidth(window.innerWidth - 100);
+    }
     const sliceImage = async () => {
       const rows = 5;
       const cols = 4;
@@ -52,7 +56,7 @@ const Home = () => {
           img.onload = () => resolve();
         });
 
-        const pieceWidth = FIXED_WIDTH / cols;
+        const pieceWidth = fixedWidth / cols;
         const pieceHeight = FIXED_HEIGHT / rows;
         setW(`${pieceWidth}px`);
         setH(`${pieceHeight}px`);
@@ -96,7 +100,7 @@ const Home = () => {
               style={{
                 display: "grid",
                 gridTemplateRows: `repeat(5, ${FIXED_HEIGHT / 5}px)`,
-                gridTemplateColumns: `repeat(4, ${FIXED_WIDTH / 4}px)`,
+                gridTemplateColumns: `repeat(4, ${fixedWidth / 4}px)`,
                 gap: "1px",
                 height: `${FIXED_HEIGHT + 100}px`,
                 margin: "0 auto",

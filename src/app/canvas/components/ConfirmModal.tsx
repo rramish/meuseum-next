@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useImageStorage } from "@/store/imageStore";
 import { useCanvasStore } from "@/store/canvasStore";
 import { CustomButton } from "@/components/CustomButton";
+// import Image from "next/image";
 
 export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
   const { imagePiece } = useImageStorage();
@@ -14,7 +15,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
   const handleSubmit = async () => {
     setLoading(true);
     const obj = {
-      updatedUrl: canvasRef.current?.toDataURL(),
+      updatedUrl: canvasRef.current!.toDataURL(),
       pieceId: imagePiece?._id,
     };
     const resp = await axios.post("/api/drawing-image/update", obj);
@@ -30,6 +31,9 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
           <div className="text-center">
             <p className="text-lg font-bold py-2 text-black">Do you really want to submit?</p>
           </div>
+          {/* <div>
+            <Image width={100} height={100} alt="jsdkf"  className="" src={canvasRef.current!.toDataURL()}/>
+          </div> */}
           <div className="flex gap-10">
             <CustomButton
               onClick={onclose}

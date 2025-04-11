@@ -6,6 +6,8 @@ import ImageSlicerWithDrawing from "./components/ImageSlicer";
 
 import { ICONS } from "@/assets";
 import { Uploadmodal } from "./components/Uploadmodal";
+import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
 
 interface ImagePiece {
   name: string;
@@ -19,6 +21,7 @@ interface ImagePiece {
 const Main = () => {
   const [showModal, setShowModal] = useState(false);
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
+  const {token} = useAuthStore();
 
   async function reconstructImage(): Promise<string | void> {
     const filename = "reconstructed_image.png";
@@ -84,6 +87,11 @@ const Main = () => {
 
     return dataUrl;
   }
+  const router = useRouter();
+  
+  if(!token){
+    return router.push("/login");
+  }
 
   return (
     <div className="flex-1">
@@ -94,7 +102,7 @@ const Main = () => {
         height={100}
         className={`absolute ${
           showModal && "h-full"
-        } -z-10 top-0 left-0 w-full`}
+        } -z-10 top-0 left-0 w-full min-h-screen`}
       />
       <Header
         onNewDrawing={() => {

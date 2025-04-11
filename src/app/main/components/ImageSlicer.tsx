@@ -25,10 +25,11 @@ const ImageSlicerWithDrawing = ({
   const [w, setW] = useState("");
   const [h, setH] = useState("");
   const [loading, setLoading] = useState(false);
+    const [fixedWidth, setFixedWidth] = useState(1200);
 
-  const FIXED_WIDTH = 1000;
+  // const FIXED_WIDTH = 1000;
   // const FIXED_WIDTH = window && window.innerWidth - 100 || 1200;
-  const FIXED_HEIGHT = 900;
+  const FIXED_HEIGHT = 800;
 
   const getDataFromBackend = async () => {
     setLoading(true);
@@ -48,9 +49,12 @@ const ImageSlicerWithDrawing = ({
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setFixedWidth(window.innerWidth - 100);
+    }
     const rows = 5;
     const cols = 4;
-    const pieceWidth = FIXED_WIDTH / cols;
+    const pieceWidth = fixedWidth / cols;
     const pieceHeight = FIXED_HEIGHT / rows;
     setW(`${pieceWidth}px`);
     setH(`${pieceHeight}px`);
@@ -65,7 +69,7 @@ const ImageSlicerWithDrawing = ({
         style={{
           display: "grid",
           gridTemplateRows: `repeat(5, ${FIXED_HEIGHT / 5}px)`,
-          gridTemplateColumns: `repeat(4, ${FIXED_WIDTH / 4}px)`,
+          gridTemplateColumns: `repeat(4, ${fixedWidth / 4}px)`,
           gap: "1px",
           height: `${FIXED_HEIGHT + 100}px`,
           margin: "0 auto",
@@ -111,7 +115,7 @@ const ImageSlicerWithDrawing = ({
               onClick={() => {}}
               className="rounded-lg bg-black duration-300"
               src={
-                piece && piece.updatedUrl ? piece.updatedUrl : piece!.dataUrl
+                (piece && piece.updatedUrl) ? piece.updatedUrl : piece!.dataUrl
               }
               alt={`Piece ${index + 1}`}
               width={100}

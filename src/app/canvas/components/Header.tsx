@@ -12,12 +12,12 @@ const Header = ({ onFinishDrawing }: { onFinishDrawing: () => void }) => {
           title="Back"
           icon={ICONS.back_icon}
           onClick={() => {
-            router.push("/main");
+            router.push("/home");
           }}
           bg={"bg-[#fff]"}
           textcolor={"text-[#1A73E8]"}
         />
-        <CustomButton
+        {/* <CustomButton
           title="New Drawing"
           icon={ICONS.plus_icon}
           bg={"bg-[#fff]"}
@@ -28,9 +28,9 @@ const Header = ({ onFinishDrawing }: { onFinishDrawing: () => void }) => {
           icon={ICONS.image_icon}
           bg={"bg-[#fff]"}
           textcolor={"text-[#1A73E8]"}
-        />
+        /> */}
       </div>
-      <div className="flex gap-4">
+      {/* <div className="flex gap-4">
         <CustomButton
           title="Undo"
           icon={ICONS.undo_icon}
@@ -43,14 +43,14 @@ const Header = ({ onFinishDrawing }: { onFinishDrawing: () => void }) => {
           bg={"bg-[#fff]"}
           textcolor={"text-[#1A73E8]"}
         />
-      </div>
+      </div> */}
       <div className="flex gap-4">
-        <CustomButton
+        {/* <CustomButton
           title="Preview Drawing"
           icon={ICONS.eye_icon}
           bg={"bg-[#fff]"}
           textcolor={"text-[#1A73E8]"}
-        />
+        /> */}
         <CustomButton
           onClick={onFinishDrawing}
           title="Finish Drawing"
