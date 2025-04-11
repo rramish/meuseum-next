@@ -1,37 +1,105 @@
 "use client";
-import { ICONS } from "@/assets";
-import { useSelectedImagesStore } from "@/store/imagesSessionStore";
-import { useImageStorage } from "@/store/imageStore";
+import React, { useState, useRef } from "react";
+import axios from "axios";
 import * as Img from "next/image";
-import React, { useEffect, useState } from "react";
 import Dropzone from "react-dropzone";
+import { ICONS } from "@/assets";
+import { useImageStorage } from "@/store/imageStore";
+import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
-const DropZone = ({
-  setSelectedImage,
-  onclose,
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setSelectedImage: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onclose: any;
-}) => {
-  const [selectedImageUrl, setSelectedImageUrl] = useState<string>("");
+
+interface ImagePiece {
+  name: string;
+  _id?: string;
+  serial: number;
+  dataUrl: string;
+  username?: string;
+  updatedUrl?: string;
+}
+
+const DropZone = ({ onclose }: { onclose: () => void }) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [, setIsLoading] = useState<boolean>(false);
-  const {setImage} = useImageStorage();
-  const {clearSelectedImages} = useSelectedImagesStore();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setImageBackend, setImageFolderName } = useImageStorage();
+  const { clearSelectedImages } = useSelectedImagesStore();
+  const isUploading = useRef(false); // Prevent duplicate calls
 
-  const defaultImageUrl =
-    "https://images.unsplash.com/photo-1740421198589-f98aa30526ac?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-
-  // const MAX_FILE_SIZE = 5 * 1024 * 1024;
   const ACCEPTED_TYPES = {
     "image/jpeg": [".jpg", ".jpeg"],
     "image/png": [".png"],
   };
 
-  const handleDrop = (acceptedFiles: File[]) => {
+  const FIXED_WIDTH = window.innerWidth - 100;
+  const FIXED_HEIGHT = 800;
+
+
+  const sliceImageAndUpload = async (imgUrl:string, folderName:string) => {
+    const rows = 5;
+    const cols = 4;
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = imgUrl;
+
+    await new Promise<void>((resolve) => {
+      img.onload = () => resolve();
+    });
+
+    const pieceWidth = FIXED_WIDTH / cols;
+    const pieceHeight = FIXED_HEIGHT / rows;
+
+    const pieces: ImagePiece[] = [];
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      console.error("Failed to get 2D context");
+      return;
+    }
+
+    canvas.width = pieceWidth;
+    canvas.height = pieceHeight;
+    let serial = 0;
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(
+          img,
+          col * (img.width / cols),
+          row * (img.height / rows),
+          img.width / cols,
+          img.height / rows,
+          0,
+          0,
+          pieceWidth,
+          pieceHeight
+        );
+        const pieceDataUrl = canvas.toDataURL();
+        pieces.push({
+          dataUrl: pieceDataUrl,
+          name: `piece_${row + 1}_${col + 1}.png`,
+          serial,
+        });
+        serial++;
+      }
+    }
+    console.log("cleared");
+    console.log("pieces are : ", pieces);
+    const resp = await axios.post("/api/drawing-image", {
+      pieces,
+      sessionId: folderName,
+    });
+    console.log("resp is : ", resp.data);
+    // setPieces(resp.data.pieceDocs);
+  };
+
+  const handleDrop = async (acceptedFiles: File[]) => {
+    if (isUploading.current) return;
+    isUploading.current = true;
+
+    console.log("handleDrop called with files:", acceptedFiles);
     const file = acceptedFiles[0];
     setErrorMessage("");
     setIsLoading(true);
@@ -39,6 +107,7 @@ const DropZone = ({
     if (!file) {
       setIsDragging(false);
       setIsLoading(false);
+      isUploading.current = false;
       return;
     }
 
@@ -46,53 +115,36 @@ const DropZone = ({
       setErrorMessage("Only JPG, JPEG, and PNG files are allowed.");
       setIsDragging(false);
       setIsLoading(false);
+      isUploading.current = false;
       return;
     }
 
-    // if (file.size > MAX_FILE_SIZE) {
-    //   setErrorMessage("File size must be less than 5 MB.");
-    //   setIsDragging(false);
-    //   setIsLoading(false);
-    //   return;
-    // }
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("name", "original");
 
-    const imageUrl = URL.createObjectURL(file);
-    setSelectedImageUrl(imageUrl);
-    console.log("image url is : ", imageUrl);
-    setSelectedImage(file);
-    console.log("Selected file:", file);
-    setIsDragging(false);
-    clearSelectedImages();
-    setImage(file);
+    console.log("Making API call to /api/upload-image");
+    const resp = await axios.post("/api/upload-image", formData);
 
-    const img = new Image();
-    img.src = imageUrl;
-    img.onload = () => setIsLoading(false);
-    img.onerror = () => {
-      setErrorMessage("Failed to load image.");
+    console.log("resp is : ", resp.data);
+
+    if (resp?.data?.imageUrl) {
+      console.log("Uploaded image URL:", resp.data.imageUrl);
+      setImageBackend(resp.data.imageUrl);
+      setImageFolderName(resp.data.folderName);
+      await sliceImageAndUpload(resp.data.imageUrl, resp.data.folderName);
+      clearSelectedImages();
+      setIsDragging(false);
       setIsLoading(false);
-    };
-    onclose();
-  };
-
-  useEffect(() => {
-    if (!selectedImageUrl) {
-      setIsLoading(true);
-      const img = new Image();
-      img.src = defaultImageUrl;
-      img.onload = () => setIsLoading(false);
-      img.onerror = () => {
-        setErrorMessage("Failed to load default image.");
-        setIsLoading(false);
-      };
+      onclose();
+    } else {
+      setErrorMessage("Image cannot be uploaded");
+      setIsDragging(false);
+      setIsLoading(false);
     }
 
-    return () => {
-      if (selectedImageUrl) {
-        URL.revokeObjectURL(selectedImageUrl);
-      }
-    };
-  }, [selectedImageUrl]);
+    isUploading.current = false;
+  };
 
   const onDragEnter = () => setIsDragging(true);
   const onDragLeave = () => setIsDragging(false);
@@ -105,7 +157,7 @@ const DropZone = ({
           onDragEnter={onDragEnter}
           onDragLeave={onDragLeave}
           accept={ACCEPTED_TYPES}
-          // maxSize={MAX_FILE_SIZE}
+          disabled={isLoading}
         >
           {({ getRootProps, getInputProps }) => (
             <section>
@@ -115,12 +167,12 @@ const DropZone = ({
                   isDragging
                     ? "border-blue-500 bg-blue-200 bg-opacity-50 shadow-lg"
                     : "border-gray-400 bg-[#0179DC20] hover:bg-gray-100"
-                }`}
+                } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 <input {...getInputProps()} />
                 <Img.default
                   src={ICONS.upload_icon}
-                  alt=""
+                  alt="Upload Icon"
                   width={50}
                   height={50}
                 />
@@ -134,6 +186,9 @@ const DropZone = ({
                 </span>
                 {errorMessage && (
                   <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+                )}
+                {isLoading && (
+                  <p className="text-blue-500 text-sm mt-2">Uploading...</p>
                 )}
               </div>
             </section>

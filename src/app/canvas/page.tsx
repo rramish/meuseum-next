@@ -1,14 +1,17 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import DrawingCanvas from "./components/Sample";
 
 import { ICONS } from "@/assets";
-
+import { NameModal } from "./components/NameModal";
+import { ConfirmModal } from "./components/ConfirmModal";
 
 const Canvas = () => {
+  const [showModal, setShowModal] = useState(true);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -19,17 +22,47 @@ const Canvas = () => {
           height={100}
           className={`absolute -z-10 top-0 left-0 w-full h-screen`}
         />
-        <Header />
-        <div className="flex flex-1 w-full h-full">
-          <div className="flex flex-1 pb-10">
-            <div className="flex justify-center items-center">
-              <Sidebar />
+        <Header
+          onFinishDrawing={() => {
+            setShowConfirmModal(true);
+          }}
+        />
+        {showModal && (
+          <>
+            <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
+            <div className="h-[700px]">
+              <NameModal
+                onclose={() => {
+                  setShowModal(false);
+                }}
+              />
             </div>
-            <div className="flex flex-1 border-[#DADCE0] border mr-10 bg-white rounded-lg">
-              <DrawingCanvas />
+          </>
+        )}
+        {showConfirmModal && (
+          <>
+            <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
+            <div className="h-[700px]">
+              <ConfirmModal
+                onclose={() => {
+                  setShowConfirmModal(false);
+                }}
+              />
+            </div>
+          </>
+        )}
+        {!showModal && !showConfirmModal && (
+          <div className="flex flex-1 w-full h-full">
+            <div className="flex flex-1 pb-10">
+              <div className="flex justify-center items-center">
+                <Sidebar />
+              </div>
+              <div className="flex flex-1 border-[#DADCE0] border mr-10 bg-white rounded-lg">
+                <DrawingCanvas />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

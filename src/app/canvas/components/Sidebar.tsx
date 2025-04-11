@@ -74,7 +74,7 @@ const Sidebar = () => {
   const [showFolder, setShowFolder] = useState(false);
   const [active, setActive] = useState("pencil");
   const { canvasRef } = useCanvasStore();
-  const { setEraser: erase } = useToolsStore();
+  const { setEraser } = useToolsStore();
   const [zoomlevel, setZoomlevel] = useState(1);
   const [brushSize, setBrushSize] = useState<number>(10);
   const [brushOpacity, setBrushOpacity] = useState<number>(1);
@@ -119,11 +119,16 @@ const Sidebar = () => {
     }
   };
 
-  const setEraser = () => {
-    if (canvasRef?.current) {
-      canvasRef.current.isDrawingMode = false;
-      erase(true);
-    }
+  const setEraserTool = () => {
+    setEraser(true);
+    // if (canvasRef?.current) {
+    //   const canvas = canvasRef.current as unknown as fabric.Canvas;
+    //   canvas.isDrawingMode = false;
+    //   canvasRef.current.isDrawingMode = false;
+      // const eraserBrush = new fabric.EraserBrush(canvas);
+      // eraserBrush.width = brushSize;
+      // canvas.freeDrawingBrush = eraserBrush;
+    // }
   };
 
   const toggleZoom = () => {
@@ -194,7 +199,7 @@ const Sidebar = () => {
         height={50}
         onClick={() => {
           setActive("eraser");
-          setEraser();
+          setEraserTool();
         }}
         className={`py-1 cursor-pointer hover:scale-150 hover:scale-x-200 duration-300 ${
           active === "eraser" && "scale-150 scale-x-200"

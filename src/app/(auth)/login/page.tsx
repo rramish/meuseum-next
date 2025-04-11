@@ -1,0 +1,76 @@
+"use client";
+import axios from "axios";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/authStore";
+
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { setToken } = useAuthStore();
+  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true);
+    try {
+      const resp = await axios.post("/api/auth/login", { email, password });
+
+      console.log("data is : ", resp.data);
+
+      if (resp?.data?.token) {
+        setToken(resp.data.token);
+        router.push("/main");
+      }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setErrorMessage(error.response.data.error);
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="w-full max-w-md rounded-lg border-2 border-gray-300 bg-white p-6 shadow-md">
+        <h1 className="mb-6 text-center text-2xl font-semibold text-gray-800">
+          Login
+        </h1>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="mb-4 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className="mb-6 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        {errorMessage && (
+          <p className="mb-4 text-center text-sm text-red-500">
+            {errorMessage}
+          </p>
+        )}
+        <button
+          onClick={handleLogin}
+          disabled={loading}
+          className={`w-full rounded-md py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            loading
+              ? "cursor-not-allowed bg-blue-400"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </div>
+    </div>
+  );
+}

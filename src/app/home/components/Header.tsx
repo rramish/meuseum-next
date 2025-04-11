@@ -3,7 +3,6 @@ import React from "react";
 import Image from "next/image";
 
 import { ICONS } from "@/assets";
-import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 export const CustomButton = ({
   icon,
@@ -44,42 +43,34 @@ export const CustomButton = ({
   );
 };
 
-const Header = ({
-  onNewDrawing,
-  onConstruct,
-}: {
-  onNewDrawing: () => void;
-  onConstruct: () => void;
-}) => {
-  const { selectedImages } = useSelectedImagesStore();
+const Header = () => {
   return (
     <div className="px-10 py-6">
       <div className="flex">
         <div className="flex-1 flex gap-3">
-          <CustomButton
+          {/* <CustomButton
             title={`Available Canvas ${20 - selectedImages.length}/${20}`}
             icon={ICONS.image_icon}
             bg={"bg-transparent"}
             textcolor={"text-[#1A73E8]"}
-          />
-          <CustomButton
+          /> */}
+          {/* <CustomButton
             onClick={onNewDrawing}
             title={`New Session`}
             icon={ICONS.plus_icon}
             bg={"bg-transparent"}
             textcolor={"text-[#1A73E8]"}
-          />
+          /> */}
         </div>
         <div className="flex-1">
           <Image src={ICONS.logo_icon} alt="" width={100} height={100} />
         </div>
-        <CustomButton
-          onClick={onConstruct}
-          title="Reconstruct"
+        {/* <CustomButton
+          title="Submit Work"
           bg={"bg-[#1A73E8]"}
           icon={ICONS.check_icon}
           textcolor={"text-white"}
-        />
+        /> */}
       </div>
     </div>
   );

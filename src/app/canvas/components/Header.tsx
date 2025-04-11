@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import { ICONS } from "@/assets";
 import { CustomButton } from "@/components/CustomButton";
 import { useRouter } from "next/navigation";
 
-const Header = () => {
+const Header = ({ onFinishDrawing }: { onFinishDrawing: () => void }) => {
   const router = useRouter();
   return (
     <div className="flex justify-between px-10 py-6">
@@ -11,7 +11,9 @@ const Header = () => {
         <CustomButton
           title="Back"
           icon={ICONS.back_icon}
-          onClick={() =>{router.push("/main")}}
+          onClick={() => {
+            router.push("/main");
+          }}
           bg={"bg-[#fff]"}
           textcolor={"text-[#1A73E8]"}
         />
@@ -50,6 +52,7 @@ const Header = () => {
           textcolor={"text-[#1A73E8]"}
         />
         <CustomButton
+          onClick={onFinishDrawing}
           title="Finish Drawing"
           icon={ICONS.check_icon}
           bg={"bg-[#1A73E8]"}

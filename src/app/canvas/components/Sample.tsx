@@ -1,5 +1,6 @@
 "use client";
 import * as fabric from "fabric";
+
 import { useRef, useEffect } from "react";
 import { useToolsStore } from "@/store/toolsStore";
 import { useCanvasStore } from "@/store/canvasStore";
@@ -56,6 +57,20 @@ function App() {
       }
     };
 
+    console.log("eraser on 1")
+    if (eraser) {
+      console.log("eraser on");
+      if (!canvasInstance.current) return;
+      console.log("not return")
+      const canvas = canvasInstance.current;
+      const activeObjects = canvas.getActiveObjects();
+      if (activeObjects.length > 0) {
+        activeObjects.forEach((obj) => canvas.remove(obj));
+        canvas.discardActiveObject();
+        canvas.renderAll();
+      }
+    }
+
     canvasRef.current.addEventListener("contextmenu", handleRightClick);
     canvas.on("mouse:dblclick", toggleZoom);
 
@@ -65,7 +80,7 @@ function App() {
         canvasRef.current.removeEventListener("contextmenu", handleRightClick);
       }
     };
-  }, [eraser]);
+  }, [eraser, canvasRef]);
 
   const { imagePiece } = useImageStorage();
 
@@ -76,7 +91,7 @@ function App() {
     if (!imagePiece) return;
 
     const imageElement = document.createElement("img");
-    imageElement.src = imagePiece;
+    imageElement.src = imagePiece.dataUrl;
 
     imageElement.onload = () => {
       const image = new fabric.Image(imageElement);
