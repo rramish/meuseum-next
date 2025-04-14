@@ -6,7 +6,7 @@ import ImageSlicerWithDrawing from "./components/ImageSlicer";
 
 import { ICONS } from "@/assets";
 import { Uploadmodal } from "./components/Uploadmodal";
-import { useAuthStore } from "@/store/authStore";
+// import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 
 interface ImagePiece {
@@ -21,7 +21,7 @@ interface ImagePiece {
 const Main = () => {
   const [showModal, setShowModal] = useState(false);
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
-  const {token} = useAuthStore();
+  // const {token} = useAuthStore();
 
   async function reconstructImage(): Promise<string | void> {
     const filename = "reconstructed_image.png";
