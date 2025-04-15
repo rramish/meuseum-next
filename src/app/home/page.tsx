@@ -19,7 +19,6 @@ interface ImagePiece {
 }
 
 const Home = () => {
-
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
   const [loading, setLoading] = useState(false);
   // const { selectedImages, setSelectedImages } = useSelectedImagesStore();
@@ -31,11 +30,30 @@ const Home = () => {
   // const FIXED_WIDTH = window && window.innerWidth - 100 || 1200;
   const FIXED_HEIGHT = 800;
 
+  const getImageDimensions = (dataUrl: string) => {
+    let width = 0;
+    let height = 0;
+    const img = new window.Image();
+    img.src = dataUrl;
+    img.onload = () => {
+      console.log("image inside ", img.naturalWidth, img.naturalHeight);
+      width = img.naturalWidth;
+      height = img.naturalHeight;
+
+      setW(`${img.naturalWidth-59}px`);
+      setH(`${img.naturalHeight}px`);
+    };
+    img.onerror = () => {
+      new Error('Failed to load image from dataUrl');
+    };
+  };
+
   const getDataFromBackend = async () => {
     setLoading(true);
     const resp = await axios.get("/api/drawing-image");
     console.log("resp is : ", resp.data);
     setPieces(resp.data.pieces);
+    await getImageDimensions(resp.data.pieces[0].dataUrl);
     setLoading(false);
   };
 
@@ -46,6 +64,10 @@ const Home = () => {
     const sliceImage = async () => {
       const rows = 5;
       const cols = 4;
+      const pieceWidth = fixedWidth / cols;
+      const pieceHeight = FIXED_HEIGHT / rows;
+      // setW(`${pieceWidth}px`);
+      // setH(`${pieceHeight}px`);
 
       if (imageBackend) {
         const img = new Image();
@@ -55,11 +77,6 @@ const Home = () => {
         await new Promise<void>((resolve) => {
           img.onload = () => resolve();
         });
-
-        const pieceWidth = fixedWidth / cols;
-        const pieceHeight = FIXED_HEIGHT / rows;
-        setW(`${pieceWidth}px`);
-        setH(`${pieceHeight}px`);
 
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
@@ -79,8 +96,8 @@ const Home = () => {
 
   const router = useRouter();
 
-  if(loading){
-    return <Loader />
+  if (loading) {
+    return <Loader />;
   }
 
   return (
@@ -146,8 +163,8 @@ const Home = () => {
                     className="rounded-lg bg-black duration-300"
                     src={piece!.dataUrl}
                     alt={`Piece ${index + 1}`}
-                    width={100}
-                    height={100}
+                    width={500}
+                    height={500}
                     style={{
                       width: "100%",
                       height: "100%",

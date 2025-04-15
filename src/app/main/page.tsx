@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import axios from "axios";
 import * as Img from "next/image";
 import Header from "./components/Header";
 import ImageSlicerWithDrawing from "./components/ImageSlicer";
@@ -8,7 +9,6 @@ import { ICONS } from "@/assets";
 import { useRouter } from "next/navigation";
 import { Uploadmodal } from "./components/Uploadmodal";
 import { ConfirmModal } from "./components/ConfirmModal";
-import axios from "axios";
 
 interface ImagePiece {
   name: string;
