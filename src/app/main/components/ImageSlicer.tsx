@@ -75,7 +75,7 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setFixedWidth(window.innerWidth - 100);
+      setFixedWidth(Math.min(window.innerWidth - 100, 1200));
     }
     // const rows = 5;
     // const cols = 4;
