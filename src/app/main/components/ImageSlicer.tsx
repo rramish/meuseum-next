@@ -24,15 +24,38 @@ interface ImageSlicerWithDrawingProps {
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
 }
 
-
-const ImageSlicerWithDrawing : React.FC<ImageSlicerWithDrawingProps> = ({ pieces, setPieces, selectedPiece, setSelectedPiece, setShowConfirmModal }) => {
-
-  const [w, setW] = useState("");
-  const [h, setH] = useState("");
+const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
+  pieces,
+  setPieces,
+  selectedPiece,
+  setSelectedPiece,
+  setShowConfirmModal,
+}) => {
+  const [w, setW] = useState(100);
+  const [h, setH] = useState(100);
   const [loading, setLoading] = useState(false);
   const [fixedWidth, setFixedWidth] = useState(1200);
-    const { setSelectedImages } = useSelectedImagesStore();
+  const { setSelectedImages } = useSelectedImagesStore();
 
+  const getImageDimensions = (dataUrl: string) => {
+    let width = 0;
+    let height = 0;
+    const img = new window.Image();
+    img.src = dataUrl;
+    img.onload = () => {
+      console.log("image inside ", img.naturalWidth, img.naturalHeight);
+      width = img.naturalWidth;
+      height = img.naturalHeight;
+
+      setW(img.naturalWidth-60);
+      // setW(`${img.naturalWidth-59}px`);
+      setH(img.naturalHeight);
+    };
+    img.onerror = () => {
+      new Error('Failed to load image from dataUrl');
+    };
+    console.log(width, height);
+  };
 
   // const FIXED_WIDTH = 1000;
   // const FIXED_WIDTH = window && window.innerWidth - 100 || 1200;
@@ -43,9 +66,10 @@ const ImageSlicerWithDrawing : React.FC<ImageSlicerWithDrawingProps> = ({ pieces
     const resp = await axios.get("/api/drawing-image");
     console.log("resp is : ", resp.data);
     setPieces(resp.data.pieces);
-    const current = resp.data.pieces.filter((f:ImagePiece) => f.username) 
+    getImageDimensions(resp.data.pieces[0].dataUrl);
+    const current = resp.data.pieces.filter((f: ImagePiece) => f.username);
     setSelectedImages(current);
-    
+
     setLoading(false);
   };
 
@@ -53,12 +77,12 @@ const ImageSlicerWithDrawing : React.FC<ImageSlicerWithDrawingProps> = ({ pieces
     if (typeof window !== "undefined") {
       setFixedWidth(window.innerWidth - 100);
     }
-    const rows = 5;
-    const cols = 4;
-    const pieceWidth = fixedWidth / cols;
-    const pieceHeight = FIXED_HEIGHT / rows;
-    setW(`${pieceWidth}px`);
-    setH(`${pieceHeight}px`);
+    // const rows = 5;
+    // const cols = 4;
+    // const pieceWidth = fixedWidth / cols;
+    // const pieceHeight = FIXED_HEIGHT / rows;
+    // setW(`${pieceWidth}px`);
+    // setH(`${pieceHeight}px`);
     getDataFromBackend();
   }, [selectedPiece]);
 
@@ -88,7 +112,7 @@ const ImageSlicerWithDrawing : React.FC<ImageSlicerWithDrawingProps> = ({ pieces
                   ? "hover:bg-[#00115A80]"
                   : "hover:bg-[#5F000280] rounded-lg bg-black/50"
               } hover:rounded-lg`}
-              style={{ width: w, height: h }}
+              style={{ width: `${w}px`, height: `${h}px` }}
             >
               {piece?.updatedUrl && (
                 <p
@@ -120,8 +144,8 @@ const ImageSlicerWithDrawing : React.FC<ImageSlicerWithDrawingProps> = ({ pieces
                 piece && piece.updatedUrl ? piece.updatedUrl : piece!.dataUrl
               }
               alt={`Piece ${index + 1}`}
-              width={100}
-              height={100}
+              width={w}
+              height={h}
               style={{
                 width: "100%",
                 height: "100%",
