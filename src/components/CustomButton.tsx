@@ -11,7 +11,7 @@ export const CustomButton = ({
   width = 20,
   height = 20,
 }: {
-  icon: string;
+  icon?: string;
   width?: number;
   height?: number;
   fontsize?: string;

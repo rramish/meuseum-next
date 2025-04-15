@@ -40,7 +40,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
             <CustomButton
               onClick={onclose}
               title={"Cancel"}
-              icon={ICONS.undo_icon}
+              // icon={ICONS.undo_icon}
               bg={"bg-[#fff]"}
               textcolor={"text-[#1A73E8]"}
             />
@@ -52,7 +52,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
                 handleSubmit();
               }}
               title={loading ? "Processing..." : "Continue"}
-              icon={ICONS.plus_icon}
+              // icon={ICONS.plus_icon}
               bg={"bg-[#fff]"}
               textcolor={"text-[#1A73E8]"}
             />
