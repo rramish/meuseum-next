@@ -46,9 +46,11 @@ export const CustomButton = ({
 
 const Header = ({
   onNewDrawing,
+  onPreview,
   onConstruct,
 }: {
   onNewDrawing: () => void;
+  onPreview: () => void;
   onConstruct: () => void;
 }) => {
   const { selectedImages } = useSelectedImagesStore();
@@ -73,13 +75,22 @@ const Header = ({
         <div className="flex-1">
           <Image src={ICONS.logo_icon} alt="" width={100} height={100} />
         </div>
-        <CustomButton
-          onClick={onConstruct}
-          title="Reconstruct"
-          bg={"bg-[#1A73E8]"}
-          icon={ICONS.check_icon}
-          textcolor={"text-white"}
-        />
+        <div className="flex gap-1">
+          <CustomButton
+            onClick={onPreview}
+            title="Preview"
+            bg={"bg-white"}
+            icon={ICONS.eye_icon}
+            textcolor={"text-[#1A73E8]"}
+          />
+          <CustomButton
+            onClick={onConstruct}
+            title="Reconstruct"
+            bg={"bg-[#1A73E8]"}
+            icon={ICONS.check_icon}
+            textcolor={"text-white"}
+          />
+        </div>
       </div>
     </div>
   );

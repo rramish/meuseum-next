@@ -85,6 +85,7 @@ function App() {
 
   useEffect(() =>{
     console.log("eraser on 2");
+
     if (eraser) {
       console.log("eraser on 2");
       if (!canvasInstance.current) return;

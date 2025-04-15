@@ -6,6 +6,9 @@ interface ImageState {
   setImage: (image: File) => void;
   clearImage: () => void;
 
+  finalimage: string | null;
+  setfinalimage: (image: string) => void;
+
   imageBackend: string | null;
   setImageBackend: (imageBackend: string) => void;
   clearImageBackend: () => void;
@@ -35,6 +38,9 @@ export const useImageStorage = create<ImageState>()(
       image: null,
       setImage: (image) => set({ image }),
       clearImage: () => set({ image: null }),
+
+      finalimage: null,
+      setfinalimage: (finalimage) => set({ finalimage }),
 
       imageBackend: null,
       setImageBackend: (imageBackend) => set({ imageBackend }),

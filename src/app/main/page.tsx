@@ -9,6 +9,7 @@ import { ICONS } from "@/assets";
 import { useRouter } from "next/navigation";
 import { Uploadmodal } from "./components/Uploadmodal";
 import { ConfirmModal } from "./components/ConfirmModal";
+import { useImageStorage } from "@/store/imageStore";
 
 interface ImagePiece {
   name: string;
@@ -28,13 +29,14 @@ const Main = () => {
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
   const [selectedPiece, setSelectedPiece] = useState<ImagePiece>();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); 
+  const {setfinalimage} = useImageStorage();
 
   // const slicerRef = useRef<ImageSlicerRef>(null);
 
-  async function reconstructImage(): Promise<string | void> {
+  async function reconstructImage({download}:{download:boolean}): Promise<string | void> {
     const filename = "reconstructed_image.png";
-    const download = true;
+    // const download = true;
     const imagePieces = pieces;
 
     const pieceMap: { [key: string]: ImagePiece } = {};
@@ -52,10 +54,10 @@ const Main = () => {
       }
     });
 
-    const pieceWidth = 500;
-    const pieceHeight = 300;
-    const canvasWidth = (maxCol + 1) * pieceWidth;
-    const canvasHeight = (maxRow + 1) * pieceHeight;
+    const pieceWidth = 200;
+    const pieceHeight = 160;
+    const canvasWidth = (maxCol + 2) * pieceWidth;
+    const canvasHeight = (maxRow + 2) * pieceHeight;
 
     const canvas = document.createElement("canvas");
     canvas.width = canvasWidth;
@@ -93,9 +95,13 @@ const Main = () => {
       link.click();
       document.body.removeChild(link);
     }
-
+    if(!download){
+      setfinalimage(dataUrl);
+      router.push(`/reconstructed`);
+    }
     return dataUrl;
   }
+
   const router = useRouter();
 
   const handleResetProgress = async () => {
@@ -131,10 +137,11 @@ const Main = () => {
         } -z-10 top-0 left-0 w-full min-h-screen`}
       />
       <Header
+      onPreview={() =>{reconstructImage({download: false})}}
         onNewDrawing={() => {
           setShowModal(true);
         }}
-        onConstruct={reconstructImage}
+        onConstruct={() => reconstructImage({download: true})}
       />
       {showModal && (
         <>
@@ -142,7 +149,7 @@ const Main = () => {
           <div className="h-[800px]">
             <Uploadmodal
               onclose={() => {
-                setShowModal(false);
+                setShowModal(false)
               }}
             />
           </div>
