@@ -44,8 +44,8 @@ const Main = () => {
       }
     });
 
-    const pieceWidth = 100;
-    const pieceHeight = 100;
+    const pieceWidth = 500;
+    const pieceHeight = 300;
     const canvasWidth = (maxCol + 1) * pieceWidth;
     const canvasHeight = (maxRow + 1) * pieceHeight;
 
