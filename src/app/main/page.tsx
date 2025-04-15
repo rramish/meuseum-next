@@ -19,6 +19,7 @@ interface ImagePiece {
 }
 
 const Main = () => {
+
   const [showModal, setShowModal] = useState(false);
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
   // const {token} = useAuthStore();
