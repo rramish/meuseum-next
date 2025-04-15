@@ -46,7 +46,7 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
               onChange={(e) => {
                 setName(e.target.value);
               }}
-              placeholder="Enter you name"
+              placeholder="Enter your name"
               className="w-60 border border-gray-500 rounded-lg py-2 px-2 text-black"
             />
           {errormsg && <p className="text-red-400 text-center">{errormsg}</p>}
@@ -55,7 +55,7 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
             <CustomButton
               onClick={handleSubmit}
               title={loading ? "Processing..." : "Continue"}
-              icon={ICONS.plus_icon}
+              // icon={ICONS.plus_icon}
               bg={"bg-[#fff]"}
               textcolor={"text-[#1A73E8]"}
             />

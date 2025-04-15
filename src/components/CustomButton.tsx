@@ -23,15 +23,17 @@ export const CustomButton = ({
   return (
     <div
     onClick={onClick}
-      className={`flex items-center justify-center cursor-pointer hover:scale-105 duration-300 border gap-2 border-[#DADCE0] ${textcolor} ${bg} rounded-lg px-4 py-2`}
+      className={`flex items-center justify-center cursor-pointer hover:scale-105 duration-300 border ${icon && "gap-2"} border-[#DADCE0] ${textcolor} ${bg} rounded-lg px-4 py-2`}
     >
       <div>
+        {icon && 
         <Image
-          src={icon || ICONS.image_icon}
-          alt="image"
-          width={width}
-          height={height}
+        src={icon || ICONS.image_icon}
+        alt="image"
+        width={width}
+        height={height}
         />
+      }
       </div>
       <div className="flex items-center">
         <p className={`${fontsize}`}>{title} </p>
