@@ -1,7 +1,6 @@
 "use client";
 import axios from "axios";
 
-import { ICONS } from "@/assets";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useImageStorage } from "@/store/imageStore";

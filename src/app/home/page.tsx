@@ -61,7 +61,7 @@ const Home = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setFixedWidth(window.innerWidth - 100);
+      setFixedWidth(Math.min( window.innerWidth - 100, 1200));
     }
     const sliceImage = async () => {
       const rows = 5;

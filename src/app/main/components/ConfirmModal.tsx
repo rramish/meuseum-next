@@ -1,6 +1,5 @@
 "use client";
 
-import { ICONS } from "@/assets";
 import { CustomButton } from "@/components/CustomButton";
 
 export const ConfirmModal = ({ onclose, onSubmit, loading }: { onclose: () => void, onSubmit: () => void, loading: boolean }) => {
