@@ -22,8 +22,8 @@ const Home = () => {
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
   const [loading, setLoading] = useState(false);
   // const { selectedImages, setSelectedImages } = useSelectedImagesStore();
-  const [w, setW] = useState("");
-  const [h, setH] = useState("");
+  const [w, setW] = useState(100);
+  const [h, setH] = useState(100);
   const { image, imageBackend, setImagePiece } = useImageStorage();
   const [fixedWidth, setFixedWidth] = useState(1200);
   // const FIXED_WIDTH = 1200;
@@ -40,9 +40,9 @@ const Home = () => {
       width = img.naturalWidth;
       height = img.naturalHeight;
 
-      setW(`${img.naturalWidth}px`);
+      setW(img.naturalWidth);
       // setW(`${img.naturalWidth-59}px`);
-      setH(`${img.naturalHeight}px`);
+      setH(img.naturalHeight);
     };
     img.onerror = () => {
       new Error('Failed to load image from dataUrl');
@@ -137,7 +137,7 @@ const Home = () => {
                         ? "hover:bg-[#00115A80]"
                         : "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
                     } hover:rounded-lg`}
-                    style={{ width: w, height: h }}
+                    style={{ width: `${w}px`, height: `${h}px` }}
                   >
                     <div
                       className={`m-auto justify-center items-center hidden group-hover:flex`}
@@ -165,8 +165,8 @@ const Home = () => {
                     className="rounded-lg bg-black duration-300"
                     src={piece!.dataUrl}
                     alt={`Piece ${index + 1}`}
-                    width={500}
-                    height={500}
+                    width={w}
+                    height={h}
                     style={{
                       width: "100%",
                       height: "100%",
