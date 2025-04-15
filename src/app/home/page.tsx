@@ -40,7 +40,8 @@ const Home = () => {
       width = img.naturalWidth;
       height = img.naturalHeight;
 
-      setW(`${img.naturalWidth-59}px`);
+      setW(`${img.naturalWidth}px`);
+      // setW(`${img.naturalWidth-59}px`);
       setH(`${img.naturalHeight}px`);
     };
     img.onerror = () => {
