@@ -1,6 +1,5 @@
 "use client";
 import axios from "axios";
-import { ICONS } from "@/assets";
 import { useState } from "react";
 import { useUserStore } from "@/store/userStore";
 import { useImageStorage } from "@/store/imageStore";
