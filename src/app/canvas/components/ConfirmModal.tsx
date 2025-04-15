@@ -5,12 +5,14 @@ import { useState } from "react";
 import { useImageStorage } from "@/store/imageStore";
 import { useCanvasStore } from "@/store/canvasStore";
 import { CustomButton } from "@/components/CustomButton";
+import { useRouter } from "next/navigation";
 // import Image from "next/image";
 
 export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
   const { imagePiece } = useImageStorage();
   const [loading, setLoading] = useState(false);
   const { canvasRef } = useCanvasStore();
+  const router = useRouter();
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -22,6 +24,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
     console.log("update image is : ", resp.data);
     setLoading(false);
     onclose();
+    router.replace("/home")
   };
 
   return (

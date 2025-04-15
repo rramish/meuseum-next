@@ -50,7 +50,7 @@ const ImageSlicerWithDrawing = ({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setFixedWidth(window.innerWidth - 50);
+      setFixedWidth(window.innerWidth - 100);
     }
     const rows = 5;
     const cols = 4;

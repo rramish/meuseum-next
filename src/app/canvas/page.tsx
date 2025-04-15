@@ -8,12 +8,10 @@ import DrawingCanvas from "./components/Sample";
 import { ICONS } from "@/assets";
 import { NameModal } from "./components/NameModal";
 import { ConfirmModal } from "./components/ConfirmModal";
-import { useRouter } from "next/navigation";
 
 const Canvas = () => {
   const [showModal, setShowModal] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const router = useRouter();
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -43,12 +41,11 @@ const Canvas = () => {
         )}
         {showConfirmModal && (
           <>
-            <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
-            <div className="h-[700px]">
+            <div className="h-[1000px] bg-black/70 absolute top-0 left-0 w-full z-0" />
+            <div className="h-[750px]">
               <ConfirmModal
                 onclose={() => {
                   setShowConfirmModal(false);
-                  router.replace("/home");
                 }}
               />
             </div>
