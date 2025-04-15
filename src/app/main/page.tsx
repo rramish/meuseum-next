@@ -20,10 +20,6 @@ interface ImagePiece {
   updatedUrl?: string;
 }
 
-// interface ImageSlicerRef {
-//   getDataFromBackend: () => Promise<void>;
-// }
-
 const Main = () => {
   const [showModal, setShowModal] = useState(false);
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
@@ -32,11 +28,8 @@ const Main = () => {
   const [loading, setLoading] = useState(false); 
   const {setfinalimage} = useImageStorage();
 
-  // const slicerRef = useRef<ImageSlicerRef>(null);
-
   async function reconstructImage({download}:{download:boolean}): Promise<string | void> {
     const filename = "reconstructed_image.png";
-    // const download = true;
     const imagePieces = pieces;
 
     const pieceMap: { [key: string]: ImagePiece } = {};
