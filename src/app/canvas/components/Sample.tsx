@@ -29,7 +29,7 @@ function App() {
     if (!canvasRef.current) return;
 
     const canvas = new fabric.Canvas(canvasRef.current, {
-      width: 1300,
+      width: 1350,
       height: 700,
     });
 
