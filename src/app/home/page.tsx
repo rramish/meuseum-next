@@ -46,6 +46,7 @@ const Home = () => {
     img.onerror = () => {
       new Error('Failed to load image from dataUrl');
     };
+    console.log(width, height);
   };
 
   const getDataFromBackend = async () => {
