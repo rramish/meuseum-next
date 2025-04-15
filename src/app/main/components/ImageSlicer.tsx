@@ -56,7 +56,7 @@ const ImageSlicerWithDrawing = ({
     const cols = 4;
     const pieceWidth = fixedWidth / cols;
     const pieceHeight = FIXED_HEIGHT / rows;
-    setW(`${pieceWidth}px`);
+    setW(`${pieceWidth+20}px`);
     setH(`${pieceHeight}px`);
     getDataFromBackend();
   }, []);
