@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, forwardRef, SetStateAction, useEffect, useImperativeHandle, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
 import * as Img from "next/image";
 import Loader from "@/components/Loader";
@@ -24,13 +24,8 @@ interface ImageSlicerWithDrawingProps {
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
 }
 
-interface ImageSlicerRef {
-  getDataFromBackend: () => Promise<void>;
-}
 
-
-const ImageSlicerWithDrawing = forwardRef<ImageSlicerRef, ImageSlicerWithDrawingProps>(
-  ({ pieces, setPieces, selectedPiece, setSelectedPiece, setShowConfirmModal }, ref) => {
+const ImageSlicerWithDrawing : React.FC<ImageSlicerWithDrawingProps> = ({ pieces, setPieces, selectedPiece, setSelectedPiece, setShowConfirmModal }) => {
 
   const [w, setW] = useState("");
   const [h, setH] = useState("");
@@ -38,20 +33,6 @@ const ImageSlicerWithDrawing = forwardRef<ImageSlicerRef, ImageSlicerWithDrawing
   const [fixedWidth, setFixedWidth] = useState(1200);
     const { setSelectedImages } = useSelectedImagesStore();
 
-  useImperativeHandle(ref, () => ({
-    async getDataFromBackend() {
-      setLoading(true);
-      try {
-        const resp = await axios.get('/api/drawing-image');
-        console.log('resp is : ', resp.data);
-        setPieces(resp.data.pieces);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    },
-  }));
 
   // const FIXED_WIDTH = 1000;
   // const FIXED_WIDTH = window && window.innerWidth - 100 || 1200;
@@ -154,7 +135,6 @@ const ImageSlicerWithDrawing = forwardRef<ImageSlicerRef, ImageSlicerWithDrawing
       </div>
     </div>
   );
-}
-)
+};
 
 export default ImageSlicerWithDrawing;

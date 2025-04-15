@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import * as Img from "next/image";
 import Header from "./components/Header";
 import ImageSlicerWithDrawing from "./components/ImageSlicer";
@@ -19,9 +19,9 @@ interface ImagePiece {
   updatedUrl?: string;
 }
 
-interface ImageSlicerRef {
-  getDataFromBackend: () => Promise<void>;
-}
+// interface ImageSlicerRef {
+//   getDataFromBackend: () => Promise<void>;
+// }
 
 const Main = () => {
   const [showModal, setShowModal] = useState(false);
@@ -30,7 +30,7 @@ const Main = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const slicerRef = useRef<ImageSlicerRef>(null);
+  // const slicerRef = useRef<ImageSlicerRef>(null);
 
   async function reconstructImage(): Promise<string | void> {
     const filename = "reconstructed_image.png";
