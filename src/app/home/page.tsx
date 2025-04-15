@@ -130,10 +130,10 @@ const Home = () => {
                         height={50}
                         className=""
                         onClick={() => {
-                          if (!selectedImages.includes(index)) {
-                            const current = selectedImages;
-                            current.push(index);
-                            setSelectedImages(current);
+                          if (!piece?.username) {
+                            // const current = selectedImages;
+                            // current.push(index);
+                            // setSelectedImages(current);
                             setImagePiece(piece!);
                             router.push("/canvas");
                           }

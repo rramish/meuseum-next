@@ -1,13 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import * as Img from "next/image";
 import Header from "./components/Header";
 import ImageSlicerWithDrawing from "./components/ImageSlicer";
 
 import { ICONS } from "@/assets";
-import { Uploadmodal } from "./components/Uploadmodal";
-// import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
+import { Uploadmodal } from "./components/Uploadmodal";
+import { ConfirmModal } from "./components/ConfirmModal";
+import axios from "axios";
 
 interface ImagePiece {
   name: string;
@@ -18,11 +19,18 @@ interface ImagePiece {
   updatedUrl?: string;
 }
 
-const Main = () => {
+interface ImageSlicerRef {
+  getDataFromBackend: () => Promise<void>;
+}
 
+const Main = () => {
   const [showModal, setShowModal] = useState(false);
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
-  // const {token} = useAuthStore();
+  const [selectedPiece, setSelectedPiece] = useState<ImagePiece>();
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const slicerRef = useRef<ImageSlicerRef>(null);
 
   async function reconstructImage(): Promise<string | void> {
     const filename = "reconstructed_image.png";
@@ -90,13 +98,26 @@ const Main = () => {
   }
   const router = useRouter();
 
-  if(typeof window !== "undefined"){
+  const handleResetProgress = async () => {
+    setLoading(true);
+    const item = selectedPiece!;
+    const obj = {
+      pieceId: item._id,
+    };
+    const resp = await axios.post("/api/drawing-image/reset-progress", obj);
+    console.log("response form reset is : ", resp.data);
+    // await slicerRef.current?.getDataFromBackend();
+    setSelectedPiece(undefined);
+    setShowConfirmModal(false);
+    setLoading(false);
+  };
+
+  if (typeof window !== "undefined") {
     const token = localStorage.getItem("token");
-    if(!token){
+    if (!token) {
       return router.push("/login");
     }
   }
-  
 
   return (
     <div className="flex-1">
@@ -127,9 +148,34 @@ const Main = () => {
           </div>
         </>
       )}
+
+      {showConfirmModal && (
+        <>
+          <div className="h-[1000px] bg-black/70 absolute top-0 left-0 w-full z-0" />
+          <div className="h-[750px]">
+            <ConfirmModal
+              loading={loading}
+              onclose={() => {
+                setShowConfirmModal(false);
+              }}
+              onSubmit={() => {
+                if(loading)return;
+                handleResetProgress();
+              }}
+            />
+          </div>
+        </>
+      )}
+
       {!showModal && (
         <div className="w-full mb-8 py-4 relative">
-          <ImageSlicerWithDrawing setPieces={setPieces} pieces={pieces} />
+          <ImageSlicerWithDrawing
+            pieces={pieces}
+            setPieces={setPieces}
+            selectedPiece={selectedPiece}
+            setSelectedPiece={setSelectedPiece}
+            setShowConfirmModal={setShowConfirmModal}
+          />
         </div>
       )}
     </div>

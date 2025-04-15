@@ -10,9 +10,17 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
   const [name, setName] = useState("");
   const { setUserName } = useUserStore();
   const { imagePiece } = useImageStorage();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errormsg, setErrormsg] = useState<string | null>(null);
 
   const handleSubmit = async () => {
+    if (!name) {
+      setErrormsg("Name field cannot be empty!");
+      setTimeout(() => {
+        setErrormsg(null);
+      }, 3000);
+      return;
+    }
     setLoading(true);
     setUserName(name);
     const obj = {
@@ -30,7 +38,7 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
       <div className="p-4 gap-2 rounded-lg w-[500px] h-52 bg-white shadow">
         <div className="flex gap-4 flex-col justify-center items-center">
           <div className="text-center">
-            <p className="text-lg font-bold py-2 text-black">Enter you name</p>
+            <p className="text-lg font-bold py-2 text-black">Enter your name</p>
           </div>
           <div>
             <input
@@ -41,11 +49,12 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
               placeholder="Enter you name"
               className="w-60 border border-gray-500 rounded-lg py-2 px-2 text-black"
             />
+          {errormsg && <p className="text-red-400 text-center">{errormsg}</p>}
           </div>
           <div className="flex gap-10">
             <CustomButton
               onClick={handleSubmit}
-              title={loading ? "Processing...":"Continue"}
+              title={loading ? "Processing..." : "Continue"}
               icon={ICONS.plus_icon}
               bg={"bg-[#fff]"}
               textcolor={"text-[#1A73E8]"}

@@ -1,10 +1,11 @@
 "use client";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, forwardRef, SetStateAction, useEffect, useImperativeHandle, useState } from "react";
 import axios from "axios";
 import * as Img from "next/image";
 import Loader from "@/components/Loader";
 
 import { ICONS } from "@/assets";
+import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 interface ImagePiece {
   name: string;
@@ -15,17 +16,42 @@ interface ImagePiece {
   updatedUrl?: string;
 }
 
-const ImageSlicerWithDrawing = ({
-  pieces,
-  setPieces,
-}: {
+interface ImageSlicerWithDrawingProps {
   pieces: (ImagePiece | undefined)[];
   setPieces: Dispatch<SetStateAction<(ImagePiece | undefined)[]>>;
-}) => {
+  selectedPiece: ImagePiece | undefined;
+  setSelectedPiece: Dispatch<SetStateAction<ImagePiece | undefined>>;
+  setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
+}
+
+interface ImageSlicerRef {
+  getDataFromBackend: () => Promise<void>;
+}
+
+
+const ImageSlicerWithDrawing = forwardRef<ImageSlicerRef, ImageSlicerWithDrawingProps>(
+  ({ pieces, setPieces, selectedPiece, setSelectedPiece, setShowConfirmModal }, ref) => {
+
   const [w, setW] = useState("");
   const [h, setH] = useState("");
   const [loading, setLoading] = useState(false);
-    const [fixedWidth, setFixedWidth] = useState(1200);
+  const [fixedWidth, setFixedWidth] = useState(1200);
+    const { setSelectedImages } = useSelectedImagesStore();
+
+  useImperativeHandle(ref, () => ({
+    async getDataFromBackend() {
+      setLoading(true);
+      try {
+        const resp = await axios.get('/api/drawing-image');
+        console.log('resp is : ', resp.data);
+        setPieces(resp.data.pieces);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    },
+  }));
 
   // const FIXED_WIDTH = 1000;
   // const FIXED_WIDTH = window && window.innerWidth - 100 || 1200;
@@ -36,16 +62,10 @@ const ImageSlicerWithDrawing = ({
     const resp = await axios.get("/api/drawing-image");
     console.log("resp is : ", resp.data);
     setPieces(resp.data.pieces);
+    const current = resp.data.pieces.filter((f:ImagePiece) => f.username) 
+    setSelectedImages(current);
+    
     setLoading(false);
-  };
-
-  const handleResetProgress = async (item: ImagePiece) => {
-    const obj = {
-      pieceId: item._id,
-    };
-    const resp = await axios.post("/api/drawing-image/reset-progress", obj);
-    console.log("response form reset is : ", resp.data);
-    await getDataFromBackend();
   };
 
   useEffect(() => {
@@ -56,10 +76,10 @@ const ImageSlicerWithDrawing = ({
     const cols = 4;
     const pieceWidth = fixedWidth / cols;
     const pieceHeight = FIXED_HEIGHT / rows;
-    setW(`${pieceWidth+40}px`);
+    setW(`${pieceWidth}px`);
     setH(`${pieceHeight}px`);
     getDataFromBackend();
-  }, []);
+  }, [selectedPiece]);
 
   return loading ? (
     <Loader />
@@ -92,7 +112,8 @@ const ImageSlicerWithDrawing = ({
               {piece?.updatedUrl && (
                 <p
                   onClick={() => {
-                    handleResetProgress(piece);
+                    setSelectedPiece(piece);
+                    setShowConfirmModal(true);
                   }}
                   className="cursor-pointer hover:scale-105 duration-300"
                 >
@@ -115,7 +136,7 @@ const ImageSlicerWithDrawing = ({
               onClick={() => {}}
               className="rounded-lg bg-black duration-300"
               src={
-                (piece && piece.updatedUrl) ? piece.updatedUrl : piece!.dataUrl
+                piece && piece.updatedUrl ? piece.updatedUrl : piece!.dataUrl
               }
               alt={`Piece ${index + 1}`}
               width={100}
@@ -133,6 +154,7 @@ const ImageSlicerWithDrawing = ({
       </div>
     </div>
   );
-};
+}
+)
 
 export default ImageSlicerWithDrawing;

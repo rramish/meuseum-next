@@ -1,31 +1,9 @@
 "use client";
-import axios from "axios";
 
 import { ICONS } from "@/assets";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useImageStorage } from "@/store/imageStore";
-import { useCanvasStore } from "@/store/canvasStore";
 import { CustomButton } from "@/components/CustomButton";
 
-export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
-  const { imagePiece } = useImageStorage();
-  const [loading, setLoading] = useState(false);
-  const { canvasRef } = useCanvasStore();
-  const router = useRouter();
-
-  const handleSubmit = async () => {
-    setLoading(true);
-    const obj = {
-      updatedUrl: canvasRef.current!.toDataURL(),
-      pieceId: imagePiece?._id,
-    };
-    const resp = await axios.post("/api/drawing-image/update", obj);
-    console.log("update image is : ", resp.data);
-    setLoading(false);
-    onclose();
-    router.replace("/home");
-  };
+export const ConfirmModal = ({ onclose, onSubmit, loading }: { onclose: () => void, onSubmit: () => void, loading: boolean }) => {
 
   return (
     <div className="flex-1 h-full flex justify-center flex-col relative items-center">
@@ -45,12 +23,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
               textcolor={"text-[#1A73E8]"}
             />
             <CustomButton
-              onClick={() => {
-                if (loading) {
-                  return;
-                }
-                handleSubmit();
-              }}
+              onClick={onSubmit}
               title={loading ? "Processing..." : "Continue"}
               icon={ICONS.plus_icon}
               bg={"bg-[#fff]"}

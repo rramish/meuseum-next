@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
     }
 
     piece.updatedUrl = null;
+    piece.username = null;
     await piece.save();
 
     return NextResponse.json(
