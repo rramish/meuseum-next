@@ -1,17 +1,22 @@
 "use client";
-import React, { useState } from "react";
 import Image from "next/image";
+import React, { useState } from "react";
+
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import DrawingCanvas from "./components/Sample";
 
 import { ICONS } from "@/assets";
 import { NameModal } from "./components/NameModal";
+import { useCanvasStore } from "@/store/canvasStore";
+import { useImageStorage } from "@/store/imageStore";
 import { ConfirmModal } from "./components/ConfirmModal";
 
 const Canvas = () => {
   const [showModal, setShowModal] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const { canvasRef } = useCanvasStore();
+  const {setSubmissionUrl} = useImageStorage();
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -24,6 +29,9 @@ const Canvas = () => {
         />
         <Header
           onFinishDrawing={() => {
+            // canvasRef.current!.toDataURL()
+            const finalImageDataUrl = canvasRef.current!.toDataURL();
+            setSubmissionUrl(finalImageDataUrl);
             setShowConfirmModal(true);
           }}
         />
@@ -51,7 +59,7 @@ const Canvas = () => {
             </div>
           </>
         )}
-        {!showModal && (
+        {!showModal && !showConfirmModal && (
           <div className="flex flex-1 w-full h-full">
             <div className="flex flex-1 pb-10">
               <div className="flex justify-center items-center">

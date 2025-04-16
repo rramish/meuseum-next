@@ -1,6 +1,7 @@
 "use client";
-import ReconstructedImage from "./components/ReconstructedImage";
 import { Suspense } from "react";
+
+import ReconstructedImage from "./components/ReconstructedImage";
 
 const ReconstructedPage: React.FC = () => {
   return (

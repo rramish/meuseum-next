@@ -17,63 +17,52 @@ interface ImagePiece {
 }
 
 interface ImageSlicerWithDrawingProps {
-  pieces: (ImagePiece | undefined)[];
-  setPieces: Dispatch<SetStateAction<(ImagePiece | undefined)[]>>;
-  selectedPiece: ImagePiece | undefined;
-  setSelectedPiece: Dispatch<SetStateAction<ImagePiece | undefined>>;
-  setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
-  setLoading: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
+  pieces: (ImagePiece | undefined)[];
+  selectedPiece: ImagePiece | undefined;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+  setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
+  setPieces: Dispatch<SetStateAction<(ImagePiece | undefined)[]>>;
+  setSelectedPiece: Dispatch<SetStateAction<ImagePiece | undefined>>;
 }
 
 const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
   pieces,
+  loading,
   setPieces,
+  setLoading,
   selectedPiece,
   setSelectedPiece,
   setShowConfirmModal,
-  loading,
-  setLoading,
 }) => {
-  const [w, setW] = useState(100);
-  const [h, setH] = useState(100);
-  // const [loading, setLoading] = useState(false);
-  const [fixedWidth, setFixedWidth] = useState(1200);
+  const [, setW] = useState(100);
+  const [, setH] = useState(100);
+  const [, setFixedWidth] = useState(1200);
   const { setSelectedImages } = useSelectedImagesStore();
 
   const getImageDimensions = (dataUrl: string) => {
-    console.log(setSelectedPiece)
-    console.log(setShowConfirmModal)
-    console.log("w", w);
-    console.log("w", h);
-    console.log("w", fixedWidth);
+    console.log(setSelectedPiece);
+    console.log(setShowConfirmModal);
     let width = 0;
     let height = 0;
     const img = new window.Image();
     img.src = dataUrl;
     img.onload = () => {
-      console.log("image inside ", img.naturalWidth, img.naturalHeight);
       width = img.naturalWidth;
       height = img.naturalHeight;
 
       setW(img.naturalWidth - 27);
-      // setW(`${img.naturalWidth-59}px`);
       setH(img.naturalHeight);
     };
+    console.log(width, height);
     img.onerror = () => {
       new Error("Failed to load image from dataUrl");
     };
-    console.log(width, height);
   };
-
-  // const FIXED_WIDTH = 1000;
-  // const FIXED_WIDTH = window && window.innerWidth - 100 || 1200;
-  // const FIXED_HEIGHT = 800;
 
   const getDataFromBackend = async () => {
     setLoading(true);
     const resp = await axios.get("/api/drawing-image");
-    console.log("resp is : ", resp.data);
     setLoading(false);
     setPieces(resp.data.pieces);
     getImageDimensions(resp.data.pieces[0].dataUrl);
@@ -85,87 +74,13 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
     if (typeof window !== "undefined") {
       setFixedWidth(Math.min(window.innerWidth, 1100));
     }
-    // const rows = 5;
-    // const cols = 4;
-    // const pieceWidth = fixedWidth / cols;
-    // const pieceHeight = FIXED_HEIGHT / rows;
-    // setW(`${pieceWidth}px`);
-    // setH(`${pieceHeight}px`);
+
     getDataFromBackend();
   }, [selectedPiece]);
 
   return loading ? (
     <Loader />
   ) : (
-    // <div className="w-full flex flex-col justify-center items-center">
-    //   <div
-    //     style={{
-    //       display: "grid",
-    //       gridTemplateRows: `repeat(5, ${FIXED_HEIGHT / 5}px)`,
-    //       gridTemplateColumns: `repeat(4, ${fixedWidth / 4}px)`,
-    //       gap: "1px",
-    //       height: `${FIXED_HEIGHT + 100}px`,
-    //       margin: "0 auto",
-    //       overflow: "hidden",
-    //     }}
-    //   >
-    //     {pieces.map((piece, index) => (
-    //       <div
-    //         key={index}
-    //         className={`text-center flex-1 bg-white rounded-lg group`}
-    //       >
-    //         <div
-    //           className={`text-white absolute flex flex-col z-10 flex-1 p-2 ${
-    //             !piece?.username
-    //               ? "hover:bg-[#00115A80]"
-    //               : "hover:bg-[#5F000280] rounded-lg bg-black/50"
-    //           } hover:rounded-lg`}
-    //           style={{ width: `${w}px`, height: `${h}px` }}
-    //         >
-    //           {piece?.updatedUrl && (
-    //             <p
-    //               onClick={() => {
-    //                 setSelectedPiece(piece);
-    //                 setShowConfirmModal(true);
-    //               }}
-    //               className="cursor-pointer hover:scale-105 duration-300"
-    //             >
-    //               Reset progress
-    //             </p>
-    //           )}
-    //           <div
-    //             className={`m-auto justify-center items-center hidden group-hover:flex`}
-    //           >
-    //             <Img.default
-    //               src={!piece?.username ? ICONS.ab_icon : ICONS.na1_icon}
-    //               alt=""
-    //               width={50}
-    //               height={50}
-    //               className=""
-    //             />
-    //           </div>
-    //         </div>
-    //         <Img.default
-    //           onClick={() => {}}
-    //           className="rounded-lg bg-black duration-300"
-    //           src={
-    //             piece && piece.updatedUrl ? piece.updatedUrl : piece!.dataUrl
-    //           }
-    //           alt={`Piece ${index + 1}`}
-    //           width={w}
-    //           height={h}
-    //           style={{
-    //             width: "100%",
-    //             height: "100%",
-    //             display: "block",
-    //             cursor: "pointer",
-    //             objectFit: "cover",
-    //           }}
-    //         />
-    //       </div>
-    //     ))}
-    //   </div>
-    // </div>
     <div className="w-full flex flex-col justify-center items-center max-w-full">
       <div
         style={{
@@ -175,20 +90,14 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
           gap: "1px",
           margin: "0 auto",
           overflow: "hidden",
-          width: "100vw",
-          height: "100vh"
+          width: "100%",
+          height: "80vh",
         }}
       >
         {pieces.map((piece, index) => (
           <div
             key={index}
             className={`text-center flex-1 bg-white rounded-lg group relative`}
-            onClick={() => {
-              // if (!piece?.username) {
-              //   setImagePiece(piece!);
-              //   router.push("/canvas");
-              // }
-            }}
           >
             <div
               className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full ${
@@ -197,35 +106,34 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
                   : "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
               } hover:rounded-lg`}
             >
-              <div
-                className={`m-auto justify-center hidden items-center w-full h-full group-hover:flex relative `}
-              >
-                <div className=" flex justify-center items-center relative w-1/5 h-1/5">
+              {piece?.username && (
+                <div className={`flex relative `}>
                   <Img.default
-                    src={!piece?.username ? ICONS.ab_icon : ICONS.na1_icon}
-                    alt=""
+                    src={ICONS.dell_icon}
+                    alt="undo icon"
+                    width={30}
+                    height={30}
                     style={{ objectFit: "contain" }}
-                    fill
-                    className="max-w-full max-h-full"
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setSelectedPiece(piece);
+                      setShowConfirmModal(true);
+                    }}
                   />
                 </div>
-              </div>
+              )}
             </div>
             <Img.default
               onClick={() => {}}
               className="rounded-lg bg-black duration-300"
-              // src={piece!.dataUrl}
               src={
                 piece && piece.updatedUrl ? piece.updatedUrl : piece!.dataUrl
               }
               alt={`Piece ${index + 1}`}
-             fill
+              fill
               style={{
-                // width: "auto",
-                // height: "auto",
                 display: "block",
                 cursor: "pointer",
-                // objectFit: "cover",
               }}
             />
           </div>

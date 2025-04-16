@@ -21,14 +21,14 @@ export default function Login() {
       console.log("data is : ", resp.data);
 
       if (resp?.data?.token) {
-        if(typeof window !== "undefined"){
+        if (typeof window !== "undefined") {
           localStorage.setItem("token", resp.data.token);
         }
         setToken(resp.data.token);
         setLoading(false);
         router.replace("/admin");
       }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setErrorMessage(error.response.data.error);
       setTimeout(() => {
@@ -40,7 +40,7 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-white">
-      <div className="w-full max-w-md rounded-lg border-2 border-gray-300 bg-white p-6 shadow-md">
+      <div className="rounded-lg border-2 border-gray-300 bg-white p-6 shadow-md w-1/2 md:w/3/5">
         <h1 className="mb-6 text-center text-2xl font-semibold text-gray-800">
           Login
         </h1>

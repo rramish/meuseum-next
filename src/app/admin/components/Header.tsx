@@ -56,8 +56,8 @@ const Header = ({
   const { selectedImages } = useSelectedImagesStore();
   return (
     <div className="px-10 py-6">
-      <div className="flex flex-wrap gap-2  ">
-        <div className="flex-1 flex gap-2 md:gap-3 flex-col md:flex-row">
+      <div className="flex justify-between flex-wrap gap-2  ">
+        <div className="flex gap-2 md:gap-3 flex-col md:flex-row">
           <CustomButton
             title={`Canvas ${20 - selectedImages.length}/${20}`}
             icon={ICONS.image_icon}
@@ -72,7 +72,7 @@ const Header = ({
             textcolor={"text-[#1A73E8]"}
           />
         </div>
-        <div className="flex-1 self-center flex items-center justify-center">
+        <div className="self-center flex items-center justify-center">
           <Image src={ICONS.logo_icon} alt="" width={100} height={100} />
         </div>
         <div className="flex h-10">

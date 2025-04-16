@@ -20,6 +20,7 @@ export const ICONS = {
   na1_icon: new URL("./na1.svg",import.meta.url).href,
   na2_icon: new URL("./na2.svg",import.meta.url).href,
   back_icon: new URL("./back.svg",import.meta.url).href,
+  dell_icon: new URL("./dell_icon.png",import.meta.url).href,
   zoom_2x_icon: new URL("./zoom-2x-icon.svg",import.meta.url).href,
 
 

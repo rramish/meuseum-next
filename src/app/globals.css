@@ -23,8 +23,6 @@
 *,
 *::before,
 *::after {
-  max-width: 100%;
-  max-height: 100%;
   box-sizing: border-box;
 }
 
@@ -42,4 +40,10 @@ body {
 
 shadow{
   box-shadow: 0px 4.08px 6.12px -2.04px #0520510A;
+}
+
+
+.canvas-container {
+  width: 100% !important;
+  height: 100% !important;
 }

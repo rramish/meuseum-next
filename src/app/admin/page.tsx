@@ -1,16 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import * as Img from "next/image";
 import Header from "./components/Header";
 import ImageSlicerWithDrawing from "./components/ImageSlicer";
 
-import { ICONS } from "@/assets";
 import { useRouter } from "next/navigation";
 import { useImageStorage } from "@/store/imageStore";
 import { Uploadmodal } from "./components/Uploadmodal";
 import { ConfirmModal } from "./components/ConfirmModal";
-// import Loader from "@/components/Loader";
 
 interface ImagePiece {
   name: string;
@@ -110,25 +107,24 @@ const Main = () => {
     };
     const resp = await axios.post("/api/drawing-image/reset-progress", obj);
     console.log("response form reset is : ", resp.data);
-    // await slicerRef.current?.getDataFromBackend();
     setSelectedPiece(undefined);
     setShowConfirmModal(false);
+    // window.location.reload();
     setLoading(false);
   };
 
-  useEffect(() =>{
-  if (typeof window !== "undefined") {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      return router.push("/login");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return router.push("/login");
+      }
     }
-  }
   }, []);
 
   return (
-    <div className="mx-4 max-w-full">
-      <>
-        <Img.default
+    <div className="mx-4 max-w-full bg-white">
+        {/* <Img.default
           src={ICONS.bg_image}
           alt=""
           width={100}
@@ -136,7 +132,7 @@ const Main = () => {
           className={`absolute ${
             showModal && "h-full"
           } -z-10 top-0 left-0 w-full h-full`}
-        />
+        /> */}
         <Header
           onPreview={() => {
             reconstructImage({ download: false });
@@ -146,17 +142,17 @@ const Main = () => {
           }}
           onConstruct={() => reconstructImage({ download: true })}
         />
-
+        {!showConfirmModal && !showModal && 
         <ImageSlicerWithDrawing
-          loading={loading}
-          setLoading={setLoading}
-          pieces={pieces}
-          setPieces={setPieces}
-          selectedPiece={selectedPiece}
-          setSelectedPiece={setSelectedPiece}
-          setShowConfirmModal={setShowConfirmModal}
+        loading={loading}
+        setLoading={setLoading}
+        pieces={pieces}
+        setPieces={setPieces}
+        selectedPiece={selectedPiece}
+        setSelectedPiece={setSelectedPiece}
+        setShowConfirmModal={setShowConfirmModal}
         />
-      </>
+      }
       {showModal && (
         <>
           <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />

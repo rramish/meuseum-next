@@ -9,6 +9,9 @@ interface ImageState {
   finalimage: string | null;
   setfinalimage: (image: string) => void;
 
+  submissionUrl: string | null;
+  setSubmissionUrl: (submissionUrl: string) => void;
+
   imageBackend: string | null;
   setImageBackend: (imageBackend: string) => void;
   clearImageBackend: () => void;
@@ -41,6 +44,9 @@ export const useImageStorage = create<ImageState>()(
 
       finalimage: null,
       setfinalimage: (finalimage) => set({ finalimage }),
+
+      submissionUrl: null,
+      setSubmissionUrl: (submissionUrl) => set({ submissionUrl }),
 
       imageBackend: null,
       setImageBackend: (imageBackend) => set({ imageBackend }),
