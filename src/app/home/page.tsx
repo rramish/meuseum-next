@@ -41,7 +41,7 @@ const Home = () => {
       width = img.naturalWidth;
       height = img.naturalHeight;
 
-      setW(img.naturalWidth-60);
+      setW(img.naturalWidth-27);
       // setW(`${img.naturalWidth-59}px`);
       setH(img.naturalHeight);
     };
@@ -129,7 +129,7 @@ const Home = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setFixedWidth(Math.min( 1400, 1100));
+      setFixedWidth(Math.min( window.innerWidth, 1100));
     }
     const sliceImage = async () => {
       const rows = 5;
@@ -236,8 +236,8 @@ const Home = () => {
                     width={w}
                     height={h}
                     style={{
-                      width: "100%",
-                      height: "100%",
+                      width: "auto",
+                      height: "auto",
                       display: "block",
                       cursor: "pointer",
                       objectFit: "cover",

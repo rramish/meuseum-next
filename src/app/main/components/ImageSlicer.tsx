@@ -47,7 +47,7 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
       width = img.naturalWidth;
       height = img.naturalHeight;
 
-      setW(img.naturalWidth-60);
+      setW(img.naturalWidth-27);
       // setW(`${img.naturalWidth-59}px`);
       setH(img.naturalHeight);
     };
