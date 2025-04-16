@@ -7,9 +7,9 @@ import ImageSlicerWithDrawing from "./components/ImageSlicer";
 
 import { ICONS } from "@/assets";
 import { useRouter } from "next/navigation";
+import { useImageStorage } from "@/store/imageStore";
 import { Uploadmodal } from "./components/Uploadmodal";
 import { ConfirmModal } from "./components/ConfirmModal";
-import { useImageStorage } from "@/store/imageStore";
 
 interface ImagePiece {
   name: string;

@@ -24,7 +24,8 @@ const Home = () => {
   // const { selectedImages, setSelectedImages } = useSelectedImagesStore();
   const [w, setW] = useState(100);
   const [h, setH] = useState(100);
-  const { image, imageBackend, setImagePiece } = useImageStorage();
+  const { image, imageBackend, setImagePiece, setfinalimage } =
+    useImageStorage();
   const [fixedWidth, setFixedWidth] = useState(1200);
   // const FIXED_WIDTH = 1200;
   // const FIXED_WIDTH = window && window.innerWidth - 100 || 1200;
@@ -40,12 +41,12 @@ const Home = () => {
       width = img.naturalWidth;
       height = img.naturalHeight;
 
-      setW(img.naturalWidth-60);
+      setW(img.naturalWidth - 60);
       // setW(`${img.naturalWidth-59}px`);
       setH(img.naturalHeight);
     };
     img.onerror = () => {
-      new Error('Failed to load image from dataUrl');
+      new Error("Failed to load image from dataUrl");
     };
     console.log(width, height);
   };
@@ -59,9 +60,80 @@ const Home = () => {
     setLoading(false);
   };
 
+  async function reconstructImage({
+    download,
+  }: {
+    download: boolean;
+  }): Promise<string | void> {
+    const filename = "reconstructed_image.png";
+    const imagePieces = pieces;
+
+    const pieceMap: { [key: string]: ImagePiece } = {};
+    let maxRow = 0;
+    let maxCol = 0;
+
+    imagePieces.forEach((piece) => {
+      const match = piece!.name.match(/piece_(\d+)_(\d+)\.png/);
+      if (match) {
+        const row = parseInt(match[1], 10);
+        const col = parseInt(match[2], 10);
+        pieceMap[`${row}_${col}`] = piece!;
+        maxRow = Math.max(maxRow, row);
+        maxCol = Math.max(maxCol, col);
+      }
+    });
+
+    const pieceWidth = 200;
+    const pieceHeight = 160;
+    const canvasWidth = (maxCol + 2) * pieceWidth;
+    const canvasHeight = (maxRow + 2) * pieceHeight;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas context not available");
+
+    await Promise.all(
+      Object.entries(pieceMap).map(async ([key, piece]) => {
+        const [row, col] = key.split("_").map(Number);
+        const url = piece.updatedUrl || piece.dataUrl;
+
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = url;
+        });
+
+        const x = col * pieceWidth;
+        const y = row * pieceHeight;
+        ctx.drawImage(img, x, y, pieceWidth, pieceHeight);
+      })
+    );
+
+    const dataUrl = canvas.toDataURL("image/png");
+
+    if (download) {
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    if (!download) {
+      setfinalimage(dataUrl);
+      router.push(`/reconstructed`);
+    }
+    return dataUrl;
+  }
+
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setFixedWidth(Math.min( window.innerWidth, 1100));
+      setFixedWidth(Math.min(1400, 1100));
     }
     const sliceImage = async () => {
       const rows = 5;
@@ -112,7 +184,11 @@ const Home = () => {
           height={100}
           className={`absolute -z-10 top-0 left-0 w-full`}
         />
-        <Header />
+        <Header
+          onPreview={() => {
+            reconstructImage({ download: false });
+          }}
+        />
         <div className="w-full mb-8 py-4 relative">
           <div className="w-full flex flex-col justify-center items-center">
             <div
@@ -127,55 +203,139 @@ const Home = () => {
               }}
             >
               {pieces.map((piece, index) => (
-                <div
-                  key={index}
-                  className={`text-center flex-1 bg-white rounded-lg group`}
-                >
+                <>
                   <div
-                    className={`text-white absolute flex flex-col z-10 flex-1 p-2 ${
-                      !piece?.username
-                        ? "hover:bg-[#00115A80]"
-                        : "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
-                    } hover:rounded-lg`}
-                    style={{ width: `${w}px`, height: `${h}px` }}
+                    key={index}
+                    className={`text-center flex-1 bg-white rounded-lg group hidden md:flex`}
                   >
                     <div
-                      className={`m-auto justify-center items-center hidden group-hover:flex`}
+                      className={`text-white absolute hidden md:flex flex-col z-10 flex-1 p-2 ${
+                        !piece?.username
+                          ? "hover:bg-[#00115A80]"
+                          : "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
+                      } hover:rounded-lg`}
+                      style={{ width: `${w}px`, height: `${h}px` }}
                     >
-                      <Img.default
-                        src={!piece?.username ? ICONS.ab_icon : ICONS.na1_icon}
-                        alt=""
-                        width={50}
-                        height={50}
-                        className=""
-                        onClick={() => {
-                          if (!piece?.username) {
-                            // const current = selectedImages;
-                            // current.push(index);
-                            // setSelectedImages(current);
-                            setImagePiece(piece!);
-                            router.push("/canvas");
+                      <div
+                        className={`m-auto justify-center items-center group-hover:flex`}
+                      >
+                        <Img.default
+                          src={
+                            !piece?.username ? ICONS.ab_icon : ICONS.na1_icon
                           }
-                        }}
-                      />
+                          alt=""
+                          width={50}
+                          height={50}
+                          className=""
+                          onClick={() => {
+                            if (!piece?.username) {
+                              // const current = selectedImages;
+                              // current.push(index);
+                              // setSelectedImages(current);
+                              setImagePiece(piece!);
+                              router.push("/canvas");
+                            }
+                          }}
+                        />
+                      </div>
                     </div>
+                    <Img.default
+                      onClick={() => {
+                        console.log("clicked");
+                      }}
+                      className="rounded-lg bg-black duration-300 hidden md:flex"
+                      src={piece!.dataUrl}
+                      alt={`Piece ${index + 1}`}
+                      width={w}
+                      height={h}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        display: "block",
+                        cursor: "pointer",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <Img.default
+                      onClick={() => {
+                        if (!piece?.username) {
+                          console.log("imag clicked");
+                          setImagePiece(piece!);
+                          router.push("/canvas");
+                        }
+                      }}
+                      className="rounded-lg bg-black duration-300 md:hidden z-20"
+                      src={piece!.dataUrl}
+                      alt={`Piece ${index + 1}`}
+                      width={w}
+                      height={h}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        display: "block",
+                        cursor: "pointer",
+                        objectFit: "cover",
+                      }}
+                    />
                   </div>
-                  <Img.default
-                    onClick={() => {}}
-                    className="rounded-lg bg-black duration-300"
-                    src={piece!.dataUrl}
-                    alt={`Piece ${index + 1}`}
-                    width={w}
-                    height={h}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      display: "block",
-                      cursor: "pointer",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
+                  <div
+                    key={index}
+                    className={`text-center flex-1 bg-white rounded-lg group md:hidden`}
+                  >
+                    <div
+                      className={`text-white absolute md:flex flex-col z-10 flex-1 p-2 ${
+                        !piece?.username
+                          ? "hover:bg-[#00115A80]"
+                          : "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
+                      } hover:rounded-lg`}
+                      style={{ width: `${w}px`, height: `${h}px` }}
+                      onClick={() => {
+                        if(!piece?.username){
+                          console.log("imag clicked");
+                          setImagePiece(piece!);
+                          router.push("/canvas");
+                        }
+                      }}
+                    >
+                      {/* <div
+                        className={`m-auto justify-center hidden items-center group-hover:flex`}
+                      >
+                        <Img.default
+                          src={
+                            !piece?.username ? ICONS.ab_icon : ICONS.na1_icon
+                          }
+                          alt=""
+                          width={50}
+                          height={50}
+                          className=""
+                          onClick={() => {
+                            if (!piece?.username) {
+                              // const current = selectedImages;
+                              // current.push(index);
+                              // setSelectedImages(current);
+                              setImagePiece(piece!);
+                              router.push("/canvas");
+                            }
+                          }}
+                        />
+                      </div> */}
+                    </div>
+                    <Img.default
+                      className="rounded-lg bg-black duration-300 md:hidden z-20"
+                      src={piece!.dataUrl}
+                      alt={`Piece ${index + 1}`}
+                      width={w}
+                      height={h}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        display: "block",
+                        cursor: "pointer",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                </>
               ))}
             </div>
           </div>

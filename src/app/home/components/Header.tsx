@@ -43,7 +43,7 @@ export const CustomButton = ({
   );
 };
 
-const Header = () => {
+const Header = ({onPreview}:{onPreview: () =>void}) => {
   return (
     <div className="px-10 py-6">
       <div className="flex">
@@ -65,12 +65,13 @@ const Header = () => {
         <div className="flex-1">
           <Image src={ICONS.logo_icon} alt="" width={100} height={100} />
         </div>
-        {/* <CustomButton
-          title="Submit Work"
-          bg={"bg-[#1A73E8]"}
-          icon={ICONS.check_icon}
-          textcolor={"text-white"}
-        /> */}
+        <CustomButton
+          title="Preview"
+          bg={"bg-white"}
+          icon={ICONS.eye_icon}
+          textcolor={"text-[#1A73E8]"}
+          onClick={onPreview}
+        />
       </div>
     </div>
   );
