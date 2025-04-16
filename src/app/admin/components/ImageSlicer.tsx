@@ -107,7 +107,7 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
               } hover:rounded-lg`}
             >
               {piece?.username && (
-                <div className={`flex relative `}>
+                <div className={`flex relative justify-between`}>
                   <Img.default
                     src={ICONS.dell_icon}
                     alt="undo icon"
@@ -120,6 +120,7 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
                       setShowConfirmModal(true);
                     }}
                   />
+                  <p>{piece.username}</p>
                 </div>
               )}
             </div>
