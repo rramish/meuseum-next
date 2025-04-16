@@ -182,7 +182,72 @@ const Home = () => {
         />
         <Header onPreview={() =>{reconstructImage({download: false})}} />
         <div className="w-full mb-8 py-4 relative">
-          <div className="w-full flex flex-col justify-center items-center">
+          <div className="w-full flex flex-col justify-center items-center md:hidden">
+            <div
+              style={{
+                display: "grid",
+                gridTemplateRows: `repeat(5, ${FIXED_HEIGHT / 5}px)`,
+                gridTemplateColumns: `repeat(4, ${fixedWidth / 4}px)`,
+                gap: "1px",
+                height: `${FIXED_HEIGHT + 100}px`,
+                margin: "0 auto",
+                overflow: "hidden",
+              }}
+            >
+              {pieces.map((piece, index) => (
+                <div
+                  key={index}
+                  className={`text-center flex-1 bg-white rounded-lg group`}
+                  onClick={() => {
+                    if (!piece?.username) {
+                      // const current = selectedImages;
+                      // current.push(index);
+                      // setSelectedImages(current);
+                      setImagePiece(piece!);
+                      router.push("/canvas");
+                    }
+                  }}
+                >
+                  <div
+                    className={`text-white absolute flex flex-col z-10 flex-1 p-2 ${
+                      !piece?.username
+                        ? "hover:bg-[#00115A80]"
+                        : "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
+                    } hover:rounded-lg`}
+                    style={{ width: `${w}px`, height: `${h}px` }}
+                  >
+                    <div
+                      className={`m-auto justify-center items-center hidden group-hover:flex`}
+                    >
+                      <Img.default
+                        src={!piece?.username ? ICONS.ab_icon : ICONS.na1_icon}
+                        alt=""
+                        width={50}
+                        height={50}
+                        className=""
+                      />
+                    </div>
+                  </div>
+                  <Img.default
+                    onClick={() => {}}
+                    className="rounded-lg bg-black duration-300"
+                    src={piece!.dataUrl}
+                    alt={`Piece ${index + 1}`}
+                    width={w}
+                    height={h}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      display: "block",
+                      cursor: "pointer",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="w-fullflex-col justify-center hidden md:flex items-center">
             <div
               style={{
                 display: "grid",
