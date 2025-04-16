@@ -1,5 +1,5 @@
 "use server"
-import { CustomButton } from "@/app/main/components/Header";
+import { CustomButton } from "@/app/admin/components/Header";
 import { ICONS } from "@/assets";
 import React from "react";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

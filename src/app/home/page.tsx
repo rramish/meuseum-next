@@ -8,7 +8,6 @@ import Header from "./components/Header";
 import { ICONS } from "@/assets";
 import { useRouter } from "next/navigation";
 import { useImageStorage } from "@/store/imageStore";
-// import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 interface ImagePiece {
   name: string;
@@ -19,16 +18,13 @@ interface ImagePiece {
 }
 
 const Home = () => {
-
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
   const [loading, setLoading] = useState(false);
-  // const { selectedImages, setSelectedImages } = useSelectedImagesStore();
   const [w, setW] = useState(100);
   const [h, setH] = useState(100);
-  const { image, imageBackend, setImagePiece, setfinalimage } = useImageStorage();
+  const { image, imageBackend, setImagePiece, setfinalimage } =
+    useImageStorage();
   const [fixedWidth, setFixedWidth] = useState(1200);
-  // const FIXED_WIDTH = 1200;
-  // const FIXED_WIDTH = window && window.innerWidth - 100 || 1200;
   const FIXED_HEIGHT = 800;
 
   const getImageDimensions = (dataUrl: string) => {
@@ -41,12 +37,11 @@ const Home = () => {
       width = img.naturalWidth;
       height = img.naturalHeight;
 
-      setW(img.naturalWidth-27);
-      // setW(`${img.naturalWidth-59}px`);
+      setW(img.naturalWidth - 27);
       setH(img.naturalHeight);
     };
     img.onerror = () => {
-      new Error('Failed to load image from dataUrl');
+      new Error("Failed to load image from dataUrl");
     };
     console.log(width, height);
   };
@@ -60,7 +55,11 @@ const Home = () => {
     setLoading(false);
   };
 
-  async function reconstructImage({download}:{download:boolean}): Promise<string | void> {
+  async function reconstructImage({
+    download,
+  }: {
+    download: boolean;
+  }): Promise<string | void> {
     const filename = "reconstructed_image.png";
     const imagePieces = pieces;
 
@@ -120,7 +119,7 @@ const Home = () => {
       link.click();
       document.body.removeChild(link);
     }
-    if(!download){
+    if (!download) {
       setfinalimage(dataUrl);
       router.push(`/reconstructed`);
     }
@@ -129,15 +128,13 @@ const Home = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setFixedWidth(Math.min( window.innerWidth, 1100));
+      setFixedWidth(Math.min(window.innerWidth, 1100));
     }
     const sliceImage = async () => {
       const rows = 5;
       const cols = 4;
       const pieceWidth = fixedWidth / cols;
       const pieceHeight = FIXED_HEIGHT / rows;
-      // setW(`${pieceWidth}px`);
-      // setH(`${pieceHeight}px`);
 
       if (imageBackend) {
         const img = new Image();
@@ -172,24 +169,27 @@ const Home = () => {
 
   return (
     <>
-      <div className="flex-1">
-        <Img.default
+      <div className="flex-1 max-h-full bg-white">
+        {/* <Img.default
           src={ICONS.bg_image}
           alt=""
           width={100}
           height={100}
-          className={`absolute -z-10 top-0 left-0 w-full`}
+          className={`absolute -z-10 top-0 left-0 w-full h-full `}
+        /> */}
+        <Header
+          onPreview={() => {
+            reconstructImage({ download: false });
+          }}
         />
-        <Header onPreview={() =>{reconstructImage({download: false})}} />
-        <div className="w-full mb-8 py-4 relative">
-          <div className="w-full flex flex-col justify-center items-center md:hidden">
+        <div className="w-full p-4 relative h-full max-h-full">
+          <div className="w-full flex flex-col justify-center items-center">
             <div
               style={{
                 display: "grid",
-                gridTemplateRows: `repeat(5, ${FIXED_HEIGHT / 5}px)`,
-                gridTemplateColumns: `repeat(4, ${fixedWidth / 4}px)`,
+                gridTemplateRows: `repeat(5, 1fr)`,
+                gridTemplateColumns: `repeat(4, 1fr)`,
                 gap: "1px",
-                height: `${FIXED_HEIGHT + 100}px`,
                 margin: "0 auto",
                 overflow: "hidden",
               }}
@@ -197,35 +197,35 @@ const Home = () => {
               {pieces.map((piece, index) => (
                 <div
                   key={index}
-                  className={`text-center flex-1 bg-white rounded-lg group`}
+                  className={`text-center flex-1 bg-white rounded-lg group relative`}
                   onClick={() => {
                     if (!piece?.username) {
-                      // const current = selectedImages;
-                      // current.push(index);
-                      // setSelectedImages(current);
                       setImagePiece(piece!);
                       router.push("/canvas");
                     }
                   }}
                 >
                   <div
-                    className={`text-white absolute flex flex-col z-10 flex-1 p-2 ${
+                    className={`text-white absolute flex flex-col z-10 flex-1 p-2 w-full h-full ${
                       !piece?.username
                         ? "hover:bg-[#00115A80]"
                         : "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
                     } hover:rounded-lg`}
-                    style={{ width: `${w}px`, height: `${h}px` }}
                   >
                     <div
-                      className={`m-auto justify-center items-center hidden group-hover:flex`}
+                      className={`m-auto justify-center hidden items-center w-full h-full group-hover:flex relative `}
                     >
-                      <Img.default
-                        src={!piece?.username ? ICONS.ab_icon : ICONS.na1_icon}
-                        alt=""
-                        width={50}
-                        height={50}
-                        className=""
-                      />
+                      <div className=" flex justify-center items-center relative w-1/5 h-1/5">
+                        <Img.default
+                          src={
+                            !piece?.username ? ICONS.ab_icon : ICONS.na1_icon
+                          }
+                          alt=""
+                          style={{ objectFit: "contain" }}
+                          fill
+                          className="max-w-full max-h-full"
+                        />
+                      </div>
                     </div>
                   </div>
                   <Img.default
@@ -238,71 +238,6 @@ const Home = () => {
                     style={{
                       width: "auto",
                       height: "auto",
-                      display: "block",
-                      cursor: "pointer",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="w-fullflex-col justify-center hidden md:flex items-center">
-            <div
-              style={{
-                display: "grid",
-                gridTemplateRows: `repeat(5, ${FIXED_HEIGHT / 5}px)`,
-                gridTemplateColumns: `repeat(4, ${fixedWidth / 4}px)`,
-                gap: "1px",
-                height: `${FIXED_HEIGHT + 100}px`,
-                margin: "0 auto",
-                overflow: "hidden",
-              }}
-            >
-              {pieces.map((piece, index) => (
-                <div
-                  key={index}
-                  className={`text-center flex-1 bg-white rounded-lg group`}
-                >
-                  <div
-                    className={`text-white absolute flex flex-col z-10 flex-1 p-2 ${
-                      !piece?.username
-                        ? "hover:bg-[#00115A80]"
-                        : "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
-                    } hover:rounded-lg`}
-                    style={{ width: `${w}px`, height: `${h}px` }}
-                  >
-                    <div
-                      className={`m-auto justify-center items-center hidden group-hover:flex`}
-                    >
-                      <Img.default
-                        src={!piece?.username ? ICONS.ab_icon : ICONS.na1_icon}
-                        alt=""
-                        width={50}
-                        height={50}
-                        className=""
-                        onClick={() => {
-                          if (!piece?.username) {
-                            // const current = selectedImages;
-                            // current.push(index);
-                            // setSelectedImages(current);
-                            setImagePiece(piece!);
-                            router.push("/canvas");
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <Img.default
-                    onClick={() => {}}
-                    className="rounded-lg bg-black duration-300"
-                    src={piece!.dataUrl}
-                    alt={`Piece ${index + 1}`}
-                    width={w}
-                    height={h}
-                    style={{
-                      width: "100%",
-                      height: "100%",
                       display: "block",
                       cursor: "pointer",
                       objectFit: "cover",

@@ -26,7 +26,7 @@ export const CustomButton = ({
   return (
     <div
       onClick={onClick}
-      className={`flex items-center cursor-pointer hover:scale-105 duration-300 border gap-2 border-[#DADCE0] ${textcolor} ${bg} rounded-lg px-4 py-2`}
+      className={`flex items-center cursor-pointer hover:scale-105 duration-300 border gap-2 border-[#DADCE0] ${textcolor} ${bg} rounded-lg px-2 md:px-4 py-1 md:py-2 `}
     >
       <div>
         <Image
@@ -34,19 +34,20 @@ export const CustomButton = ({
           alt="image"
           width={width}
           height={height}
+          className="h-4 w-4 md:h-6 md:w-6"
         />
       </div>
       <div className="flex items-center">
-        <p className={`${fontsize}`}>{title} </p>
+        <p className={`${fontsize} text-xs md:text-base`}>{title} </p>
       </div>
     </div>
   );
 };
 
-const Header = ({onPreview}:{onPreview: () =>void}) => {
+const Header = ({ onPreview }: { onPreview: () => void }) => {
   return (
     <div className="px-10 py-6">
-      <div className="flex">
+      <div className="flex items-center justify-center gap-2">
         <div className="flex-1 flex gap-3">
           {/* <CustomButton
             title={`Available Canvas ${20 - selectedImages.length}/${20}`}

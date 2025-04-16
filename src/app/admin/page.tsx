@@ -1,117 +1,194 @@
-// "use client";
-// import React, { useEffect, useState } from "react";
-// import Header from "./components/Header";
-// import Image from "next/image";
-// import { ICONS } from "@/assets";
-// import { CustomButton } from "@/app/main/components/Header";
-// import DropZone from "@/components/DropZone";
-// import ImageSlicerWithDrawing from "./components/ImageSlicer";
-// import { useImageStorage } from "@/store/imageStore";
+"use client";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import * as Img from "next/image";
+import Header from "./components/Header";
+import ImageSlicerWithDrawing from "./components/ImageSlicer";
 
-// const Uploadmodal = ({
-//   onclose,
-//   setSelectedImage,
-// }: {
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   onclose: any;
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   setSelectedImage: any;
-// }) => {
-//   return (
-//     <div className="flex-1 h-full flex justify-center flex-col relative items-center">
-//       <div className="p-4 gap-2 rounded-lg w-[500px] h-80 bg-white shadow">
-//         <div className="flex gap-4 flex-col justify-center items-center">
-//           <div className="text-center">
-//             <p className="text-lg font-bold py-2 text-black">Upload Image</p>
-//           </div>
-//           <div>
-//             <DropZone onclose={onclose} setSelectedImage={setSelectedImage} />
-//           </div>
-//           <div className="flex gap-10">
-//             <CustomButton
-//               onClick={onclose}
-//               title="Back to Canvas"
-//               icon={ICONS.undo_icon}
-//               bg={"bg-[#fff]"}
-//               textcolor={"text-[#1A73E8]"}
-//             />
-//             <CustomButton
-//               title="Start Drawing"
-//               icon={ICONS.check_icon}
-//               bg={"bg-[#1A73E8]"}
-//               textcolor={"text-white"}
-//             />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+import { ICONS } from "@/assets";
+import { useRouter } from "next/navigation";
+import { useImageStorage } from "@/store/imageStore";
+import { Uploadmodal } from "./components/Uploadmodal";
+import { ConfirmModal } from "./components/ConfirmModal";
+// import Loader from "@/components/Loader";
 
-// const AdminPage = () => {
-//   const { image } = useImageStorage();
-//   const [selectedImageUrl, setSelectedImageUrl] = useState<
-//     Blob | MediaSource | undefined
-//   >(image? image : undefined);
-//   const [showModal, setShowModal] = useState(image ? false : true);
-//   const defaultImageUrl =
-//     "https://images.unsplash.com/photo-1740421198589-f98aa30526ac?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-
-//   useEffect(() => {
-//     console.log("in main page", selectedImageUrl);
-//   }, [selectedImageUrl]);
-//   return (
-//     <div className="flex-1">
-//       <Image
-//         src={ICONS.bg_image}
-//         alt=""
-//         width={100}
-//         height={100}
-//         className={`absolute ${
-//           showModal && "h-full"
-//         } -z-10 top-0 left-0 w-full`}
-//       />
-//       <Header />
-//       {showModal && (
-//         <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
-//       )}
-//       {showModal && (
-//         <div className="h-[700px]">
-//           <Uploadmodal
-//             setSelectedImage={setSelectedImageUrl}
-//             onclose={() => {
-//               setShowModal(false);
-//             }}
-//           />
-//         </div>
-//       )}
-//       {!showModal && (
-//         <div className="w-full mb-8 py-4 relative">
-//           {/* <div className="absolute inset-0 flex items-center justify-center  bg-opacity-50">
-//             <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-//             </div> */}
-//           {selectedImageUrl && (
-//             <ImageSlicerWithDrawing
-//               imageUrl={
-//                 URL.createObjectURL(selectedImageUrl) || defaultImageUrl
-//               }
-//             />
-//           )}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default AdminPage;
-import React from 'react'
-
-const Admin = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+interface ImagePiece {
+  name: string;
+  _id?: string;
+  serial: number;
+  dataUrl: string;
+  username?: string;
+  updatedUrl?: string;
 }
 
-export default Admin
+const Main = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
+  const [selectedPiece, setSelectedPiece] = useState<ImagePiece>();
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { setfinalimage } = useImageStorage();
+
+  async function reconstructImage({
+    download,
+  }: {
+    download: boolean;
+  }): Promise<string | void> {
+    const filename = "reconstructed_image.png";
+    const imagePieces = pieces;
+
+    const pieceMap: { [key: string]: ImagePiece } = {};
+    let maxRow = 0;
+    let maxCol = 0;
+
+    imagePieces.forEach((piece) => {
+      const match = piece!.name.match(/piece_(\d+)_(\d+)\.png/);
+      if (match) {
+        const row = parseInt(match[1], 10);
+        const col = parseInt(match[2], 10);
+        pieceMap[`${row}_${col}`] = piece!;
+        maxRow = Math.max(maxRow, row);
+        maxCol = Math.max(maxCol, col);
+      }
+    });
+
+    const pieceWidth = 200;
+    const pieceHeight = 160;
+    const canvasWidth = (maxCol + 2) * pieceWidth;
+    const canvasHeight = (maxRow + 2) * pieceHeight;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas context not available");
+
+    await Promise.all(
+      Object.entries(pieceMap).map(async ([key, piece]) => {
+        const [row, col] = key.split("_").map(Number);
+        const url = piece.updatedUrl || piece.dataUrl;
+
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = url;
+        });
+
+        const x = col * pieceWidth;
+        const y = row * pieceHeight;
+        ctx.drawImage(img, x, y, pieceWidth, pieceHeight);
+      })
+    );
+
+    const dataUrl = canvas.toDataURL("image/png");
+
+    if (download) {
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    if (!download) {
+      setfinalimage(dataUrl);
+      router.push(`/reconstructed`);
+    }
+    return dataUrl;
+  }
+
+  const router = useRouter();
+
+  const handleResetProgress = async () => {
+    setLoading(true);
+    const item = selectedPiece!;
+    const obj = {
+      pieceId: item._id,
+    };
+    const resp = await axios.post("/api/drawing-image/reset-progress", obj);
+    console.log("response form reset is : ", resp.data);
+    // await slicerRef.current?.getDataFromBackend();
+    setSelectedPiece(undefined);
+    setShowConfirmModal(false);
+    setLoading(false);
+  };
+
+  useEffect(() =>{
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return router.push("/login");
+    }
+  }
+  }, []);
+
+  return (
+    <div className="mx-4 max-w-full">
+      <>
+        <Img.default
+          src={ICONS.bg_image}
+          alt=""
+          width={100}
+          height={100}
+          className={`absolute ${
+            showModal && "h-full"
+          } -z-10 top-0 left-0 w-full h-full`}
+        />
+        <Header
+          onPreview={() => {
+            reconstructImage({ download: false });
+          }}
+          onNewDrawing={() => {
+            setShowModal(true);
+          }}
+          onConstruct={() => reconstructImage({ download: true })}
+        />
+
+        <ImageSlicerWithDrawing
+          loading={loading}
+          setLoading={setLoading}
+          pieces={pieces}
+          setPieces={setPieces}
+          selectedPiece={selectedPiece}
+          setSelectedPiece={setSelectedPiece}
+          setShowConfirmModal={setShowConfirmModal}
+        />
+      </>
+      {showModal && (
+        <>
+          <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
+          <div className="h-[800px]">
+            <Uploadmodal
+              onclose={() => {
+                setShowModal(false);
+              }}
+            />
+          </div>
+        </>
+      )}
+
+      {showConfirmModal && (
+        <>
+          <div className="h-[1000px] bg-black/70 absolute top-0 left-0 w-full z-0" />
+          <div className="h-[750px]">
+            <ConfirmModal
+              loading={loading}
+              onclose={() => {
+                setShowConfirmModal(false);
+              }}
+              onSubmit={() => {
+                if (loading) return;
+                handleResetProgress();
+              }}
+            />
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default Main;

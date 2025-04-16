@@ -38,7 +38,7 @@ export const CustomButton = ({
         />
       </div>
       <div className="flex items-center">
-        <p className={`${fontsize}`}>{title} </p>
+        <p className={`${fontsize} text-sm md:text-base`}>{title} </p>
       </div>
     </div>
   );
@@ -56,10 +56,10 @@ const Header = ({
   const { selectedImages } = useSelectedImagesStore();
   return (
     <div className="px-10 py-6">
-      <div className="flex">
-        <div className="flex-1 flex gap-3">
+      <div className="flex flex-wrap gap-2  ">
+        <div className="flex-1 flex gap-2 md:gap-3 flex-col md:flex-row">
           <CustomButton
-            title={`Available Canvas ${20 - selectedImages.length}/${20}`}
+            title={`Canvas ${20 - selectedImages.length}/${20}`}
             icon={ICONS.image_icon}
             bg={"bg-transparent"}
             textcolor={"text-[#1A73E8]"}
@@ -72,24 +72,27 @@ const Header = ({
             textcolor={"text-[#1A73E8]"}
           />
         </div>
-        <div className="flex-1">
+        <div className="flex-1 self-center flex items-center justify-center">
           <Image src={ICONS.logo_icon} alt="" width={100} height={100} />
         </div>
-        <div className="flex gap-1">
+        <div className="flex h-10">
+
+        <div className="flex gap-2 flex-col md:flex-row">
           <CustomButton
             onClick={onPreview}
             title="Preview"
             bg={"bg-white"}
             icon={ICONS.eye_icon}
             textcolor={"text-[#1A73E8]"}
-          />
+            />
           <CustomButton
             onClick={onConstruct}
             title="Reconstruct"
             bg={"bg-[#1A73E8]"}
             icon={ICONS.check_icon}
             textcolor={"text-white"}
-          />
+            />
+            </div>
         </div>
       </div>
     </div>

@@ -25,7 +25,8 @@ export default function Login() {
           localStorage.setItem("token", resp.data.token);
         }
         setToken(resp.data.token);
-        router.push("/main");
+        setLoading(false);
+        router.replace("/admin");
       }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

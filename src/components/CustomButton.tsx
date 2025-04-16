@@ -23,7 +23,7 @@ export const CustomButton = ({
   return (
     <div
     onClick={onClick}
-      className={`flex items-center justify-center cursor-pointer hover:scale-105 duration-300 border ${icon && "gap-2"} border-[#DADCE0] ${textcolor} ${bg} rounded-lg px-4 py-2`}
+      className={`flex items-center justify-center text-sm md:text-base py-0 cursor-pointer hover:scale-105 duration-300 border ${icon && "gap-2"} border-[#DADCE0] ${textcolor} ${bg} rounded-lg px-2 md:px-4 md:py-2`}
     >
       <div>
         {icon && 
