@@ -5,7 +5,15 @@ import { useRouter } from "next/navigation";
 import { ICONS } from "@/assets";
 import { CustomButton } from "@/components/CustomButton";
 
-const Header = ({ onFinishDrawing }: { onFinishDrawing: () => void }) => {
+const Header = ({
+  onFinishDrawing,
+  onUndo,
+  onRedo,
+}: {
+  onFinishDrawing: () => void;
+  onUndo: () => void;
+  onRedo: () => void;
+}) => {
   const router = useRouter();
   return (
     <div className="flex justify-between px-10 py-6">
@@ -32,20 +40,22 @@ const Header = ({ onFinishDrawing }: { onFinishDrawing: () => void }) => {
           textcolor={"text-[#1A73E8]"}
         /> */}
       </div>
-      {/* <div className="flex gap-4">
+      <div className="flex gap-4">
         <CustomButton
+          onClick={onUndo}
           title="Undo"
           icon={ICONS.undo_icon}
           bg={"bg-[#fff]"}
           textcolor={"text-[#1A73E8]"}
         />
         <CustomButton
+          onClick={onRedo}
           title="Redo"
           icon={ICONS.redo_icon}
           bg={"bg-[#fff]"}
           textcolor={"text-[#1A73E8]"}
         />
-      </div> */}
+      </div>
       <div className="flex gap-4">
         {/* <CustomButton
           title="Preview Drawing"

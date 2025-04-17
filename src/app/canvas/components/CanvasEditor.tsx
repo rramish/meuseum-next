@@ -5,7 +5,8 @@ import { useToolsStore } from "@/store/toolsStore";
 import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
 
-const CanvasEditor = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+const CanvasEditor = ({redoStack, undoStack}: {redoStack:any , undoStack: any}) => {
   const { setCanvasRef } = useCanvasStore();
   const { eraser, setEraser } = useToolsStore();
 
@@ -41,6 +42,16 @@ const CanvasEditor = () => {
 
     instance.zoomToPoint(new fabric.Point(pointer.x, pointer.y), newZoom);
   };
+
+
+  const trackObject = (obj: fabric.Object) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!(obj as any)._isBackground) {
+      undoStack.current.push(obj);
+      redoStack.current = [];
+    }
+  };
+
 
   useEffect(() => {
     if (!canvasRef.current || !canvasWidth || !canvasHeight) return;
@@ -83,6 +94,10 @@ const CanvasEditor = () => {
     //   //   canvas.renderAll();
     //   // }
     // }
+
+    canvas.on("object:added", (e) => {
+      if (e.target) trackObject(e.target);
+    });
 
     canvasRef.current.addEventListener("contextmenu", handleRightClick);
     canvas.on("mouse:dblclick", toggleZoom);

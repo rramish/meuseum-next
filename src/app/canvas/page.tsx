@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -18,6 +18,34 @@ const Canvas = () => {
 
   const [showModal, setShowModal] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const undoStack = useRef<any>([]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const redoStack = useRef<any>([]);
+
+  const handleUndo = () => {
+    if (!canvasRef.current || undoStack.current.length === 0) return;
+    const canvas = canvasRef.current;
+    const lastObject = undoStack.current.pop();
+    if (lastObject) {
+      canvas.remove(lastObject);
+      redoStack.current.push(lastObject);
+      canvas.renderAll();
+    }
+  };
+
+  const handleRedo = () => {
+    if (!canvasRef.current || redoStack.current.length === 0) return;
+    const canvas = canvasRef.current;
+    const object = redoStack.current.pop();
+    if (object) {
+      canvas.add(object);
+      undoStack.current.push(object);
+      canvas.renderAll();
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -29,8 +57,9 @@ const Canvas = () => {
           className={`absolute -z-10 top-0 left-0 w-full min-h-screen`}
         />
         <Header
+          onRedo={handleRedo}
+          onUndo={handleUndo}
           onFinishDrawing={() => {
-            // canvasRef.current!.toDataURL()
             const finalImageDataUrl = canvasRef.current!.toDataURL();
             setSubmissionUrl(finalImageDataUrl);
             setShowConfirmModal(true);
@@ -67,7 +96,7 @@ const Canvas = () => {
                 <Sidebar />
               </div>
               <div className="flex flex-1 border-[#DADCE0] border mr-10 bg-white rounded-lg">
-                <DrawingCanvas />
+                <DrawingCanvas redoStack={redoStack} undoStack={undoStack} />
               </div>
             </div>
           </div>

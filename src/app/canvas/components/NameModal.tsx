@@ -6,8 +6,10 @@ import { useState } from "react";
 import { useUserStore } from "@/store/userStore";
 import { useImageStorage } from "@/store/imageStore";
 import { CustomButton } from "@/components/CustomButton";
+import { useRouter } from "next/navigation";
 
 export const NameModal = ({ onclose }: { onclose: () => void }) => {
+  const router = useRouter();
   const [name, setName] = useState("");
   const { setUserName } = useUserStore();
   const { imagePiece } = useImageStorage();
@@ -35,7 +37,8 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
   };
 
   return (
-    <div className="flex-1 h-full flex justify-center flex-col relative items-center">
+    <>
+    {/* <div className="flex-1 h-full flex justify-center flex-col relative items-center">
       <div className="p-4 gap-2 rounded-lg  w-4/5 md:max-w-[500px] bg-white shadow">
         <div className="flex gap-4 flex-col justify-center items-center">
           <div className="text-center">
@@ -63,6 +66,46 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
           </div>
         </div>
       </div>
-    </div>
+    </div> */}
+        <div className="flex-1 h-full flex justify-center flex-col relative items-center">
+        <div className="p-4 gap-2 rounded-lg w-4/5 md:max-w-[500px] bg-white shadow">
+          <div className="flex gap-4 flex-col justify-center items-center">
+            <div className="text-center">
+              <p className="text-lg font-bold py-2 text-black">
+              Enter your name
+              </p>
+            </div>
+            <div>
+            <input
+              type="text"
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+              placeholder="Enter your name"
+              className=" w-full md:max-w-60 border border-gray-500 rounded-lg py-2 px-2 text-black"
+            />
+            {errormsg && <p className="text-red-400 text-center">{errormsg}</p>}
+          </div>
+            <div className="flex gap-2 md:gap-10 flex-wrap items-center">
+              <CustomButton
+                bg={"bg-[#fff]"}
+                title={"Cancel"}
+                onClick={() =>{ router.back(); onclose()}}
+                textcolor={"text-[#1A73E8]"}
+              />
+              <CustomButton
+                disabled={loading}
+                bg={"bg-[#fff]"}
+                onClick={handleSubmit}
+                textcolor={"text-[#1A73E8]"}
+                title={"Yes"}
+                // title={loading ? "Processing..." : "Yes"}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+
   );
 };
