@@ -65,8 +65,8 @@ const Canvas = () => {
         />
         {showModal && (
           <>
-            <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
-            <div className="h-[700px]">
+            <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-0" />
+            <div className="h-[600px]">
               <NameModal
                 onclose={() => {
                   setShowModal(false);
@@ -77,8 +77,8 @@ const Canvas = () => {
         )}
         {showConfirmModal && (
           <>
-            <div className="h-[1000px] bg-black/70 absolute top-0 left-0 w-full z-0" />
-            <div className="h-[700px]">
+            <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-0" />
+            <div className="h-[600px]">
               <ConfirmModal
                 onclose={() => {
                   setShowConfirmModal(false);

@@ -26,7 +26,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
   };
 
   return (
-    <div className="flex-1 flex justify-center flex-col relative items-center">
+    <div className="flex-1 h-full flex justify-center flex-col relative items-center">
       <div className="p-4 gap-2 rounded-lg  w-4/5 md:max-w-[300px] bg-white shadow">
         <div className="flex gap-4 flex-col justify-center items-center">
           <div className="text-center">
