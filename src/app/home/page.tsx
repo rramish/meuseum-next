@@ -127,7 +127,7 @@ const Home = () => {
                   } hover:rounded-lg`}
                 >
                   <div
-                    className={`m-auto justify-center hidden items-center w-full h-full group-hover:flex relative`}
+                    className={`m-auto justify-center flex md:hidden items-center w-full h-full group-hover:flex relative`}
                   >
                     <div
                       className={`flex justify-center items-center relative w-1/5 h-1/5 ${

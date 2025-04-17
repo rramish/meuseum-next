@@ -48,14 +48,14 @@ const Canvas = () => {
 
   return (
     <>
-      <div className="flex flex-col min-h-screen">
-        <Image
+      <div className="flex flex-col bg-white">
+        {/* <Image
           src={ICONS.bg_image}
           alt=""
           width={100}
           height={100}
           className={`absolute -z-10 top-0 left-0 w-full min-h-screen`}
-        />
+        /> */}
         <Header
           onRedo={handleRedo}
           onUndo={handleUndo}
@@ -80,7 +80,7 @@ const Canvas = () => {
         {showConfirmModal && (
           <>
             <div className="h-[1000px] bg-black/70 absolute top-0 left-0 w-full z-0" />
-            <div className="h-[750px]">
+            <div className="">
               <ConfirmModal
                 onclose={() => {
                   setShowConfirmModal(false);
