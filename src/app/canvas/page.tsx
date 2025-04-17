@@ -17,9 +17,9 @@ const Canvas = () => {
   const [showModal, setShowModal] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const undoStack = useRef<any>([]);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const redoStack = useRef<any>([]);
 
   const handleUndo = () => {
@@ -54,19 +54,21 @@ const Canvas = () => {
           height={100}
           className={`absolute -z-10 top-0 left-0 w-full min-h-screen`}
         /> */}
-        <Header
-          onRedo={handleRedo}
-          onUndo={handleUndo}
-          onFinishDrawing={() => {
-            const finalImageDataUrl = canvasRef.current!.toDataURL();
-            setSubmissionUrl(finalImageDataUrl);
-            setShowConfirmModal(true);
-          }}
-        />
+        {/* {showModal && showConfirmModal && ( */}
+          <Header
+            onRedo={handleRedo}
+            onUndo={handleUndo}
+            onFinishDrawing={() => {
+              const finalImageDataUrl = canvasRef.current!.toDataURL();
+              setSubmissionUrl(finalImageDataUrl);
+              setShowConfirmModal(true);
+            }}
+          />
+        {/* // )} */}
         {showModal && (
           <>
-            <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-0" />
-            <div className="h-[600px]">
+            <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
+            <div className="h-full my-auto">
               <NameModal
                 onclose={() => {
                   setShowModal(false);
@@ -77,8 +79,8 @@ const Canvas = () => {
         )}
         {showConfirmModal && (
           <>
-            <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-0" />
-            <div className="h-[600px]">
+            <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
+            <div className="h-full my-auto">
               <ConfirmModal
                 onclose={() => {
                   setShowConfirmModal(false);
