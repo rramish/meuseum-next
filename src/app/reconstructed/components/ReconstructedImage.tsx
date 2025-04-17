@@ -19,7 +19,7 @@ const ReconstructedImage = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center gap-4 p-6">
-      <div className="flex gap-10 mb-6">
+      <div className="flex gap-10  md:mb-6 w-full max-w-3xl">
         <CustomButton
           onClick={handleBack}
           title="Back"
