@@ -87,8 +87,8 @@ const DropZone = ({ onclose }: { onclose: () => void }) => {
         serial++;
       }
     }
-    console.log("cleared");
-    console.log("pieces are : ", pieces);
+    // console.log("cleared");
+    // console.log("pieces are : ", pieces);
     const resp = await axios.post("/api/drawing-image", {
       pieces,
       sessionId: folderName,
@@ -102,7 +102,7 @@ const DropZone = ({ onclose }: { onclose: () => void }) => {
     if (isUploading.current) return;
     isUploading.current = true;
 
-    console.log("handleDrop called with files:", acceptedFiles);
+    // console.log("handleDrop called with files:", acceptedFiles);
     const file = acceptedFiles[0];
     setErrorMessage("");
     setIsLoading(true);
@@ -126,13 +126,13 @@ const DropZone = ({ onclose }: { onclose: () => void }) => {
     formData.append("image", file);
     formData.append("name", "original");
 
-    console.log("Making API call to /api/upload-image");
+    // console.log("Making API call to /api/upload-image");
     const resp = await axios.post("/api/upload-image", formData);
 
-    console.log("resp is : ", resp.data);
+    // console.log("resp is : ", resp.data);
 
     if (resp?.data?.imageUrl) {
-      console.log("Uploaded image URL:", resp.data.imageUrl);
+      // console.log("Uploaded image URL:", resp.data.imageUrl);
       setImageBackend(resp.data.imageUrl);
       setImageFolderName(resp.data.folderName);
       await sliceImageAndUpload(resp.data.imageUrl, resp.data.folderName);

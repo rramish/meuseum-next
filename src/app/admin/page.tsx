@@ -116,7 +116,7 @@ const Main = () => {
       pieceId: item._id,
     };
     const resp = await axios.post("/api/drawing-image/reset-progress", obj);
-    console.log("response form reset is : ", resp.data);
+    // console.log("response form reset is : ", resp.data);
     setSelectedPiece(undefined);
     setShowConfirmModal(false);
     setLoading(false);
@@ -130,7 +130,7 @@ const Main = () => {
         }}
         onNewDrawing={() => {
           setShowModal(true);
-          console.log("here")
+          // console.log("here")
         }}
         onConstruct={() => reconstructImage({ download: true })}
       />

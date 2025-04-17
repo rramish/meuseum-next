@@ -71,7 +71,7 @@ const Home = () => {
     const img = new window.Image();
     img.src = dataUrl;
     img.onload = () => {
-      console.log("image inside ", img.naturalWidth, img.naturalHeight);
+      // console.log("image inside ", img.naturalWidth, img.naturalHeight);
       width = img.naturalWidth;
       height = img.naturalHeight;
     };
@@ -84,7 +84,7 @@ const Home = () => {
   const getDataFromBackend = async () => {
     setLoading(true);
     const resp = await axios.get("/api/drawing-image");
-    console.log("resp is : ", resp.data);
+    // console.log("resp is : ", resp.data);
     setPieces(resp.data.pieces);
     getImageDimensions(resp.data.pieces[0].dataUrl);
     const current = resp.data.pieces.filter((f: ImagePiece) => f.username&& f.username);

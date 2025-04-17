@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   try {
     await connectDB();
     const { pieceId } = await req.json();
-    console.log("data is : ", pieceId);
+    // console.log("data is : ", pieceId);
 
     if (!pieceId) {
       return NextResponse.json(

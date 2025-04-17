@@ -20,7 +20,7 @@ export default function Login() {
     try {
       const resp = await axios.post("/api/auth/login", { email, password });
 
-      console.log("data is : ", resp.data);
+      // console.log("data is : ", resp.data);
 
       if (resp?.data?.token) {
         if (typeof window !== "undefined") {

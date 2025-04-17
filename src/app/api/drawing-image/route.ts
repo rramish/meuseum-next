@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     const pieceDocs = await Promise.all(
       pieces.map(async (piece: Piece) => {
         const { dataUrl, name, serial } = piece;
-        console.log("piece is : ", piece);
+        // console.log("piece is : ", piece);
         if (!dataUrl || !name) {
           throw new Error("Each piece must have a pieceUrl and name");
         }
