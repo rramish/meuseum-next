@@ -21,7 +21,7 @@ const Home = () => {
   const FIXED_HEIGHT = 800;
 
   const router = useRouter();
-    const { setfinalimage } = useImageStorage();
+  const { setfinalimage } = useImageStorage();
 
   const { image, imageBackend, setImagePiece } = useImageStorage();
 
@@ -166,7 +166,11 @@ const Home = () => {
 
   return (
     <div className="flex-1 max-h-full bg-white">
-      <Header onPreview={() =>{reconstructImage({download:false})}} />
+      <Header
+        onPreview={() => {
+          reconstructImage({ download: false });
+        }}
+      />
       <div className="w-full p-4 relative h-full max-h-full">
         <div className="w-full flex flex-col justify-center items-center">
           <div
@@ -209,7 +213,11 @@ const Home = () => {
                       } hover:scale-120`}
                     >
                       <Img.default
-                        src={!piece?.username ? ICONS.edit_img : ICONS.not_available_image}
+                        src={
+                          !piece?.username
+                            ? ICONS.edit_img
+                            : ICONS.not_available_image
+                        }
                         alt="edit_icon"
                         width={40}
                         height={40}

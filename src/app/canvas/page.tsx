@@ -54,7 +54,6 @@ const Canvas = () => {
           height={100}
           className={`absolute -z-10 top-0 left-0 w-full min-h-screen`}
         /> */}
-        {/* {showModal && showConfirmModal && ( */}
           <Header
             onRedo={handleRedo}
             onUndo={handleUndo}
@@ -64,7 +63,6 @@ const Canvas = () => {
               setShowConfirmModal(true);
             }}
           />
-        {/* // )} */}
         {showModal && (
           <>
             <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
