@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import * as Img from "next/image";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 
 import { ICONS } from "@/assets";
 import Loader from "@/components/Loader";
@@ -36,44 +36,18 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
   setSelectedPiece,
   setShowConfirmModal,
 }) => {
-  const [, setW] = useState(100);
-  const [, setH] = useState(100);
-  const [, setFixedWidth] = useState(1200);
   const { setSelectedImages } = useSelectedImagesStore();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setFixedWidth(Math.min(window.innerWidth, 1100));
-    }
-
     getDataFromBackend();
   }, [selectedPiece]);
 
-  const getImageDimensions = (dataUrl: string) => {
-    console.log(setSelectedPiece);
-    console.log(setShowConfirmModal);
-    let width = 0;
-    let height = 0;
-    const img = new window.Image();
-    img.src = dataUrl;
-    img.onload = () => {
-      width = img.naturalWidth;
-      height = img.naturalHeight;
-
-      setW(img.naturalWidth - 27);
-      setH(img.naturalHeight);
-    };
-    img.onerror = () => {
-      new Error("Failed to load image from dataUrl");
-    };
-  };
 
   const getDataFromBackend = async () => {
     setLoading(true);
     const resp = await axios.get("/api/drawing-image");
     setLoading(false);
     setPieces(resp.data.pieces);
-    getImageDimensions(resp.data.pieces[0].dataUrl);
     const current = resp.data.pieces.filter((f: ImagePiece) => f.username);
     setSelectedImages(current);
   };
