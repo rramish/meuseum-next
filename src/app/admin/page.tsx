@@ -117,7 +117,6 @@ const Main = () => {
     };
     const resp = await axios.post("/api/drawing-image/reset-progress", obj);
     console.log("response form reset is : ", resp.data);
-    // await slicerRef.current?.getDataFromBackend();
     setSelectedPiece(undefined);
     setShowConfirmModal(false);
     setLoading(false);
@@ -135,10 +134,10 @@ const Main = () => {
         onConstruct={() => reconstructImage({ download: true })}
       />
       <ImageSlicerWithDrawing
-        loading={loading}
-        setLoading={setLoading}
         pieces={pieces}
+        loading={loading}
         setPieces={setPieces}
+        setLoading={setLoading}
         selectedPiece={selectedPiece}
         setSelectedPiece={setSelectedPiece}
         setShowConfirmModal={setShowConfirmModal}
@@ -161,7 +160,7 @@ const Main = () => {
               setShowConfirmModal(false);
             }}
             onSubmit={() => {
-              if (!loading) handleResetProgress();
+              handleResetProgress();
             }}
           />
         </div>

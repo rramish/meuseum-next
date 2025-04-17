@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import * as Img from "next/image";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { ICONS } from "@/assets";
 import Loader from "@/components/Loader";
@@ -29,19 +29,17 @@ interface ImageSlicerWithDrawingProps {
 
 const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
   pieces,
-  loading,
   setPieces,
-  setLoading,
   selectedPiece,
   setSelectedPiece,
   setShowConfirmModal,
 }) => {
   const { setSelectedImages } = useSelectedImagesStore();
+  const[loading, setLoading] = useState(false);
 
   useEffect(() => {
     getDataFromBackend();
   }, [selectedPiece]);
-
 
   const getDataFromBackend = async () => {
     setLoading(true);

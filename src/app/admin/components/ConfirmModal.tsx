@@ -32,7 +32,8 @@ export const ConfirmModal = ({
               bg={"bg-[#fff]"}
               onClick={onSubmit}
               textcolor={"text-[#1A73E8]"}
-              title={loading ? "Processing..." : "Continue"}
+              title={"Yes"}
+              // title={loading ? "Processing..." : "Yes"}
             />
           </div>
         </div>
