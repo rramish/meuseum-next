@@ -81,18 +81,18 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
               {piece?.username && (
                 <div className="flex relative justify-between max-w-full">
                   <Img.default
-                    src={ICONS.dell_icon}
+                    src={ICONS.reset}
                     alt="undo icon"
                     width={25}
                     height={25}
                     style={{ objectFit: "contain" }}
-                    className="cursor-pointer"
+                    className="cursor-pointer hover:scale-105"
                     onClick={() => {
                       setSelectedPiece(piece);
                       setShowConfirmModal(true);
                     }}
                   />
-                  <p className="max-w-full truncate">{piece.username}</p>
+                  <p className="max-w-full truncate ml-2">{piece.username}</p>
                 </div>
               )}
             </div>

@@ -58,6 +58,9 @@ const Header = ({
       <div className="flex items-center justify-center gap-2 h-full flex-wrap flex-col md:flex-row md:justify-between">
         <div className="flex gap-2 flex-wrap items-center justify-center">
           <CustomButton
+            onClick={() => {
+              window.location.reload();
+            }}
             title={`Canvas ${20 - selectedImages.length}/${20}`}
             icon={ICONS.image_icon}
             bg={"bg-transparent"}
@@ -73,12 +76,7 @@ const Header = ({
         </div>
 
         <div className="self-center flex items-center justify-center">
-          <Image
-            src={ICONS.logo}
-            alt="mosida_logo"
-            width={100}
-            height={100}
-          />
+          <Image src={ICONS.logo} alt="mosida_logo" width={100} height={100} />
         </div>
         <div className="flex gap-2 flex-wrap  items-center justify-center">
           <CustomButton

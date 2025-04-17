@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 
 import { ICONS } from "@/assets";
+import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 export const CustomButton = ({
   icon,
@@ -44,10 +45,12 @@ export const CustomButton = ({
   );
 };
 
-const Header = () => {
+const Header = ({ onPreview }: { onPreview: () => void }) => {
+  const { selectedImages } = useSelectedImagesStore();
   return (
     <div className="px-10 py-6">
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex-1 justify-center flex "></div>
         <div className="flex-1 justify-center flex ">
           <Image
             src={ICONS.logo}
@@ -56,6 +59,17 @@ const Header = () => {
             height={150}
             className="max-w-full max-h-full"
           />
+        </div>
+        <div className="flex-1 justify-end flex">
+          {selectedImages.length == 20 && (
+            <CustomButton
+              onClick={onPreview}
+              title="Preview"
+              bg={"bg-white"}
+              icon={ICONS.eye_icon}
+              textcolor={"text-[#1A73E8]"}
+            />
+          )}
         </div>
       </div>
     </div>

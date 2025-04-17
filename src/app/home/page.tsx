@@ -21,6 +21,7 @@ const Home = () => {
   const FIXED_HEIGHT = 800;
 
   const router = useRouter();
+    const { setfinalimage } = useImageStorage();
 
   const { image, imageBackend, setImagePiece } = useImageStorage();
 
@@ -88,13 +89,84 @@ const Home = () => {
     setLoading(false);
   };
 
+  async function reconstructImage({
+    download,
+  }: {
+    download: boolean;
+  }): Promise<string | void> {
+    const filename = "reconstructed_image.png";
+    const imagePieces = pieces;
+
+    const pieceMap: { [key: string]: ImagePiece } = {};
+    let maxRow = 0;
+    let maxCol = 0;
+
+    imagePieces.forEach((piece) => {
+      const match = piece!.name.match(/piece_(\d+)_(\d+)\.png/);
+      if (match) {
+        const row = parseInt(match[1], 10);
+        const col = parseInt(match[2], 10);
+        pieceMap[`${row}_${col}`] = piece!;
+        maxRow = Math.max(maxRow, row);
+        maxCol = Math.max(maxCol, col);
+      }
+    });
+
+    const pieceWidth = 200;
+    const pieceHeight = 160;
+    const canvasWidth = (maxCol + 2) * pieceWidth;
+    const canvasHeight = (maxRow + 2) * pieceHeight;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas context not available");
+
+    await Promise.all(
+      Object.entries(pieceMap).map(async ([key, piece]) => {
+        const [row, col] = key.split("_").map(Number);
+        const url = piece.updatedUrl || piece.dataUrl;
+
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = url;
+        });
+
+        const x = col * pieceWidth;
+        const y = row * pieceHeight;
+        ctx.drawImage(img, x, y, pieceWidth, pieceHeight);
+      })
+    );
+
+    const dataUrl = canvas.toDataURL("image/png");
+
+    if (download) {
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    if (!download) {
+      setfinalimage(dataUrl);
+      router.push(`/reconstructed`);
+    }
+    return dataUrl;
+  }
+
   if (loading) {
     return <Loader />;
   }
 
   return (
     <div className="flex-1 max-h-full bg-white">
-      <Header />
+      <Header onPreview={() =>{reconstructImage({download:false})}} />
       <div className="w-full p-4 relative h-full max-h-full">
         <div className="w-full flex flex-col justify-center items-center">
           <div

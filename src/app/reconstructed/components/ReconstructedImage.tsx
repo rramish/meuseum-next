@@ -18,15 +18,21 @@ const ReconstructedImage = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center gap-4 p-6">
-      <div className="flex gap-10  md:mb-6 w-full max-w-3xl">
-        <CustomButton
-          onClick={handleBack}
-          title="Back"
-          icon={ICONS.undo_icon}
-          bg={"bg-[#fff]"}
-          textcolor={"text-[#1A73E8]"}
-        />
+    <div className="w-full h-full flex flex-col items-center gap-4 py-6 px-10">
+      <div className="flex gap-10 w-full max-w-3xl py-2">
+        <div className="flex-1 flex">
+          <CustomButton
+            onClick={handleBack}
+            title="Back"
+            icon={ICONS.undo_icon}
+            bg={"bg-[#fff]"}
+            textcolor={"text-[#1A73E8]"}
+          />
+        </div>
+        <div className="flex-1 flex justify-center">
+          <Image width={100} height={100} alt="" src={ICONS.logo} />
+        </div>
+        <div className="flex-1"></div>
       </div>
 
       {finalimage ? (

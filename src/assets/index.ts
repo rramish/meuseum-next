@@ -27,6 +27,7 @@ export const ICONS = {
   logo: new URL("./images/Logo.png",import.meta.url).href,
   edit_img: new URL("./images/edit-image.svg",import.meta.url).href,
   not_available_image: new URL("./images/not_available-1.png",import.meta.url).href,
+  reset: new URL("./images/reset.png",import.meta.url).href,
 
 
   redo: new URL("./icons/redo.svg", import.meta.url).href,
