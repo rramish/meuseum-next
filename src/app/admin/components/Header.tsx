@@ -55,8 +55,8 @@ const Header = ({
 }) => {
   const { selectedImages } = useSelectedImagesStore();
   return (
-    <div className="px-10 py-6">
-      <div className="flex justify-between flex-wrap gap-2  ">
+    <div className="md:px-10 py-6">
+      <div className="flex justify-between gap-2  ">
         <div className="flex gap-2 md:gap-3 flex-col md:flex-row">
           <CustomButton
             title={`Canvas ${20 - selectedImages.length}/${20}`}
