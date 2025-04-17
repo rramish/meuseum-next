@@ -139,8 +139,8 @@ const Home = () => {
                       <Img.default
                         src={!piece?.username ? ICONS.edit_img : ICONS.not_available_image}
                         alt="edit_icon"
-                        width={90}
-                        height={90}
+                        width={40}
+                        height={40}
                         className=""
                       />
                     </div>

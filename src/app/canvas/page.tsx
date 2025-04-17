@@ -46,7 +46,7 @@ const Canvas = () => {
 
   return (
     <>
-      <div className="flex flex-col bg-white">
+      <div className="flex flex-col bg-blue min-h-screen">
         {/* <Image
           src={ICONS.bg_image}
           alt=""
@@ -78,7 +78,7 @@ const Canvas = () => {
         {showConfirmModal && (
           <>
             <div className="h-[1000px] bg-black/70 absolute top-0 left-0 w-full z-0" />
-            <div className="">
+            <div className="h-[700px]">
               <ConfirmModal
                 onclose={() => {
                   setShowConfirmModal(false);
