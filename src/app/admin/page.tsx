@@ -1,13 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Header from "./components/Header";
-import ImageSlicerWithDrawing from "./components/ImageSlicer";
 
+import axios from "axios";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+
+import Header from "./components/Header";
 import { useImageStorage } from "@/store/imageStore";
 import { Uploadmodal } from "./components/Uploadmodal";
 import { ConfirmModal } from "./components/ConfirmModal";
+import ImageSlicerWithDrawing from "./components/ImageSlicer";
 
 interface ImagePiece {
   name: string;
@@ -19,12 +20,23 @@ interface ImagePiece {
 }
 
 const Main = () => {
+  const router = useRouter();
+  const { setfinalimage } = useImageStorage();
+
+  const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
-  const [selectedPiece, setSelectedPiece] = useState<ImagePiece>();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { setfinalimage } = useImageStorage();
+  const [selectedPiece, setSelectedPiece] = useState<ImagePiece>();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return router.push("/login");
+      }
+    }
+  }, []);
 
   async function reconstructImage({
     download,
@@ -97,8 +109,6 @@ const Main = () => {
     return dataUrl;
   }
 
-  const router = useRouter();
-
   const handleResetProgress = async () => {
     setLoading(true);
     const item = selectedPiece!;
@@ -107,43 +117,24 @@ const Main = () => {
     };
     const resp = await axios.post("/api/drawing-image/reset-progress", obj);
     console.log("response form reset is : ", resp.data);
+    // await slicerRef.current?.getDataFromBackend();
     setSelectedPiece(undefined);
     setShowConfirmModal(false);
-    // window.location.reload();
     setLoading(false);
   };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        return router.push("/login");
-      }
-    }
-  }, []);
-
   return (
-    <div className="mx-4 max-w-full bg-white">
-        {/* <Img.default
-          src={ICONS.bg_image}
-          alt=""
-          width={100}
-          height={100}
-          className={`absolute ${
-            showModal && "h-full"
-          } -z-10 top-0 left-0 w-full h-full`}
-        /> */}
-        <Header
-          onPreview={() => {
-            reconstructImage({ download: false });
-          }}
-          onNewDrawing={() => {
-            setShowModal(true);
-          }}
-          onConstruct={() => reconstructImage({ download: true })}
-        />
-        {!showConfirmModal && !showModal && 
-        <ImageSlicerWithDrawing
+    <div className="mx-4 max-w-full bg-white pb-2">
+      <Header
+        onPreview={() => {
+          reconstructImage({ download: false });
+        }}
+        onNewDrawing={() => {
+          setShowModal(true);
+        }}
+        onConstruct={() => reconstructImage({ download: true })}
+      />
+      <ImageSlicerWithDrawing
         loading={loading}
         setLoading={setLoading}
         pieces={pieces}
@@ -151,37 +142,29 @@ const Main = () => {
         selectedPiece={selectedPiece}
         setSelectedPiece={setSelectedPiece}
         setShowConfirmModal={setShowConfirmModal}
-        />
-      }
+      />
       {showModal && (
-        <>
-          <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
-          <div className="h-[800px]">
-            <Uploadmodal
-              onclose={() => {
-                setShowModal(false);
-              }}
-            />
-          </div>
-        </>
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+          <Uploadmodal
+            onclose={() => {
+              setShowModal(false);
+            }}
+          />
+        </div>
       )}
 
       {showConfirmModal && (
-        <>
-          <div className="h-[1000px] bg-black/70 absolute top-0 left-0 w-full z-0" />
-          <div className="h-[750px]">
-            <ConfirmModal
-              loading={loading}
-              onclose={() => {
-                setShowConfirmModal(false);
-              }}
-              onSubmit={() => {
-                if (loading) return;
-                handleResetProgress();
-              }}
-            />
-          </div>
-        </>
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+          <ConfirmModal
+            loading={loading}
+            onclose={() => {
+              setShowConfirmModal(false);
+            }}
+            onSubmit={() => {
+              if (!loading) handleResetProgress();
+            }}
+          />
+        </div>
       )}
     </div>
   );

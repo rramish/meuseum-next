@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import DrawingCanvas from "../canvas/DrawingCanvas";
 
 interface ImagePiece {
   dataUrl: string;
@@ -11,13 +10,15 @@ interface ImageSlicerProps {
 }
 
 const ImageSlicer: React.FC<ImageSlicerProps> = ({ imageUrl }) => {
+
+  const FIXED_WIDTH = 800;
+  const FIXED_HEIGHT = 800;
+
   const [imagePieces, setImagePieces] = useState<ImagePiece[]>([]);
   const [, setSelectedPieceUrl] = useState<string | undefined>(
     undefined
   );
 
-  const FIXED_WIDTH = 800;
-  const FIXED_HEIGHT = 800;
 
   useEffect(() => {
     const sliceImage = async () => {

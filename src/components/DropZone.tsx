@@ -1,12 +1,13 @@
 "use client";
-import React, { useState, useRef } from "react";
+
 import axios from "axios";
 import * as Img from "next/image";
 import Dropzone from "react-dropzone";
+import React, { useState, useRef } from "react";
+
 import { ICONS } from "@/assets";
 import { useImageStorage } from "@/store/imageStore";
 import { useSelectedImagesStore } from "@/store/imagesSessionStore";
-
 
 interface ImagePiece {
   name: string;
@@ -18,23 +19,24 @@ interface ImagePiece {
 }
 
 const DropZone = ({ onclose }: { onclose: () => void }) => {
+  const isUploading = useRef(false);
+
+  const { clearSelectedImages } = useSelectedImagesStore();
+  const { setImageBackend, setImageFolderName } = useImageStorage();
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { setImageBackend, setImageFolderName } = useImageStorage();
-  const { clearSelectedImages } = useSelectedImagesStore();
-  const isUploading = useRef(false); // Prevent duplicate calls
 
   const ACCEPTED_TYPES = {
     "image/jpeg": [".jpg", ".jpeg"],
     "image/png": [".png"],
   };
 
-  const FIXED_WIDTH = window.innerWidth - 100;
   const FIXED_HEIGHT = 800;
+  const FIXED_WIDTH = window.innerWidth - 100;
 
-
-  const sliceImageAndUpload = async (imgUrl:string, folderName:string) => {
+  const sliceImageAndUpload = async (imgUrl: string, folderName: string) => {
     const rows = 5;
     const cols = 4;
 
@@ -150,51 +152,49 @@ const DropZone = ({ onclose }: { onclose: () => void }) => {
   const onDragLeave = () => setIsDragging(false);
 
   return (
-    <div>
-      <div className="w-full max-w-md cursor-pointer">
-        <Dropzone
-          onDrop={handleDrop}
-          onDragEnter={onDragEnter}
-          onDragLeave={onDragLeave}
-          accept={ACCEPTED_TYPES}
-          disabled={isLoading}
-        >
-          {({ getRootProps, getInputProps }) => (
-            <section>
-              <div
-                {...getRootProps()}
-                className={`border-1 border-dashed flex flex-col justify-center items-center rounded-lg p-8 text-center transition-all duration-300 ease-in-out ${
-                  isDragging
-                    ? "border-blue-500 bg-blue-200 bg-opacity-50 shadow-lg"
-                    : "border-gray-400 bg-[#0179DC20] hover:bg-gray-100"
-                } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-              >
-                <input {...getInputProps()} />
-                <Img.default
-                  src={ICONS.upload_icon}
-                  alt="Upload Icon"
-                  width={50}
-                  height={50}
-                />
-                <p className="text-lg text-gray-600">
-                  {isDragging
-                    ? "Drop your image here!"
-                    : "Drag & drop image here, or Browse"}
-                </p>
-                <span className="text-sm text-gray-400 mt-2 block">
-                  (Supported formats: JPG, JPEG, PNG)
-                </span>
-                {errorMessage && (
-                  <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-                )}
-                {isLoading && (
-                  <p className="text-blue-500 text-sm mt-2">Uploading...</p>
-                )}
-              </div>
-            </section>
-          )}
-        </Dropzone>
-      </div>
+    <div className="w-full max-w-md cursor-pointer">
+      <Dropzone
+        onDrop={handleDrop}
+        onDragEnter={onDragEnter}
+        onDragLeave={onDragLeave}
+        accept={ACCEPTED_TYPES}
+        disabled={isLoading}
+      >
+        {({ getRootProps, getInputProps }) => (
+          <section>
+            <div
+              {...getRootProps()}
+              className={`border-1 border-dashed flex flex-col justify-center items-center rounded-lg p-8 text-center transition-all duration-300 ease-in-out ${
+                isDragging
+                  ? "border-blue-500 bg-blue-200 bg-opacity-50 shadow-lg"
+                  : "border-gray-400 bg-[#0179DC20] hover:bg-gray-100"
+              } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+            >
+              <input {...getInputProps()} />
+              <Img.default
+                src={ICONS.upload_icon}
+                alt="Upload Icon"
+                width={50}
+                height={50}
+              />
+              <p className="text-lg text-gray-600">
+                {isDragging
+                  ? "Drop your image here!"
+                  : "Drag & drop image here, or Browse"}
+              </p>
+              <span className="text-sm text-gray-400 mt-2 block">
+                (Supported formats: JPG, JPEG, PNG)
+              </span>
+              {errorMessage && (
+                <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+              )}
+              {isLoading && (
+                <p className="text-blue-500 text-sm mt-2">Uploading...</p>
+              )}
+            </div>
+          </section>
+        )}
+      </Dropzone>
     </div>
   );
 };

@@ -45,37 +45,14 @@ export const CustomButton = ({
 };
 
 const Header = () => {
-// const Header = ({ onPreview }: { onPreview: () => void }) => {
 return (
     <div className="px-10 py-6">
       <div className="flex items-center justify-center gap-2">
-        <div className="flex-1 flex gap-3">
-          {/* <CustomButton
-            title={`Available Canvas ${20 - selectedImages.length}/${20}`}
-            icon={ICONS.image_icon}
-            bg={"bg-transparent"}
-            textcolor={"text-[#1A73E8]"}
-          /> */}
-          {/* <CustomButton
-            onClick={onNewDrawing}
-            title={`New Session`}
-            icon={ICONS.plus_icon}
-            bg={"bg-transparent"}
-            textcolor={"text-[#1A73E8]"}
-          /> */}
-        </div>
+      
         <div className="flex-1 justify-center flex">
           <Image src={ICONS.logo_icon} alt="" width={100} height={100} />
         </div>
-        <div className="flex-1">
-        {/* <CustomButton
-          title="Preview"
-          bg={"bg-white"}
-          icon={ICONS.eye_icon}
-          textcolor={"text-[#1A73E8]"}
-          onClick={onPreview}
-          /> */}
-          </div>
+     
       </div>
     </div>
   );

@@ -1,17 +1,19 @@
 "use client";
-import axios from "axios";
 
+import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
 import { useAuthStore } from "@/store/authStore";
 
 export default function Login() {
+  const router = useRouter();
+  const { setToken } = useAuthStore();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setToken } = useAuthStore();
-  const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleLogin = async () => {
     setLoading(true);

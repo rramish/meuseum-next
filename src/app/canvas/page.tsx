@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import DrawingCanvas from "./components/Sample";
+import DrawingCanvas from "./components/CanvasEditor";
 
 import { ICONS } from "@/assets";
 import { NameModal } from "./components/NameModal";
@@ -13,10 +13,11 @@ import { useImageStorage } from "@/store/imageStore";
 import { ConfirmModal } from "./components/ConfirmModal";
 
 const Canvas = () => {
-  const [showModal, setShowModal] = useState(true);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { canvasRef } = useCanvasStore();
   const {setSubmissionUrl} = useImageStorage();
+
+  const [showModal, setShowModal] = useState(true);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   return (
     <>
       <div className="flex flex-col min-h-screen">

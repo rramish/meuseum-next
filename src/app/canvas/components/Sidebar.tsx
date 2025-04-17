@@ -277,9 +277,11 @@
 // export default Sidebar;
 
 "use client";
+
 import Image from "next/image";
 import * as fabric from "fabric";
 import { useState } from "react";
+
 import { ICONS } from "@/assets";
 import { useToolsStore } from "@/store/toolsStore";
 import { useCanvasStore } from "@/store/canvasStore";
@@ -348,11 +350,12 @@ const FolderModal = ({
 };
 
 const Sidebar = () => {
-  const [showFolder, setShowFolder] = useState(false);
-  const [active, setActive] = useState("pencil");
-  const { canvasRef } = useCanvasStore();
   const { setEraser } = useToolsStore();
+  const { canvasRef } = useCanvasStore();
+
   const [zoomlevel, setZoomlevel] = useState(1);
+  const [active, setActive] = useState("pencil");
+  const [showFolder, setShowFolder] = useState(false);
   const [brushSize, setBrushSize] = useState<number>(10);
   const [brushOpacity, setBrushOpacity] = useState<number>(1);
   const [brushColor, setBrushColor] = useState<string>("#0052cc");

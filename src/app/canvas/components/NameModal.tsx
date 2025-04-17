@@ -1,6 +1,8 @@
 "use client";
+
 import axios from "axios";
 import { useState } from "react";
+
 import { useUserStore } from "@/store/userStore";
 import { useImageStorage } from "@/store/imageStore";
 import { CustomButton } from "@/components/CustomButton";
@@ -34,7 +36,7 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
 
   return (
     <div className="flex-1 h-full flex justify-center flex-col relative items-center">
-      <div className="p-4 gap-2 rounded-lg w-[340px] md:w-[500px] h-52 bg-white shadow">
+      <div className="p-4 gap-2 rounded-lg  w-4/5 md:max-w-[500px] bg-white shadow">
         <div className="flex gap-4 flex-col justify-center items-center">
           <div className="text-center">
             <p className="text-lg font-bold py-2 text-black">Enter your name</p>
@@ -46,17 +48,17 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
                 setName(e.target.value);
               }}
               placeholder="Enter your name"
-              className="w-60 border border-gray-500 rounded-lg py-2 px-2 text-black"
+              className=" w-full md:max-w-60 border border-gray-500 rounded-lg py-2 px-2 text-black"
             />
-          {errormsg && <p className="text-red-400 text-center">{errormsg}</p>}
+            {errormsg && <p className="text-red-400 text-center">{errormsg}</p>}
           </div>
           <div className="flex gap-10">
             <CustomButton
-              onClick={handleSubmit}
-              title={loading ? "Processing..." : "Continue"}
-              // icon={ICONS.plus_icon}
               bg={"bg-[#fff]"}
+              disabled={loading}
+              onClick={handleSubmit}
               textcolor={"text-[#1A73E8]"}
+              title={loading ? "Processing..." : "Continue"}
             />
           </div>
         </div>

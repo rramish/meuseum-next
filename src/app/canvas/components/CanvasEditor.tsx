@@ -6,7 +6,7 @@ import { useToolsStore } from "@/store/toolsStore";
 import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
 
-function App() {
+const CanvasEditor = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasInstance = useRef<fabric.Canvas | null>(null);
   const { setCanvasRef } = useCanvasStore();
@@ -64,7 +64,7 @@ function App() {
       console.log("not return");
       const canvas = canvasInstance.current;
       const activeObjects = canvas.getActiveObjects();
-      console.log("active objects ",activeObjects);
+      console.log("active objects ", activeObjects);
       if (activeObjects.length > 0) {
         activeObjects.forEach((obj) => canvas.remove(obj));
         canvas.discardActiveObject();
@@ -83,8 +83,7 @@ function App() {
     };
   }, [eraser, canvasRef, setEraser]);
 
-  useEffect(() =>{
-
+  useEffect(() => {
     if (eraser) {
       if (!canvasInstance.current) return;
       const canvas = canvasInstance.current;
@@ -95,8 +94,7 @@ function App() {
         canvas.renderAll();
       }
     }
-
-  }, [canvasInstance.current, eraser])
+  }, [canvasInstance.current, eraser]);
 
   const { imagePiece } = useImageStorage();
 
@@ -153,6 +151,6 @@ function App() {
       />
     </div>
   );
-}
+};
 
-export default App;
+export default CanvasEditor;

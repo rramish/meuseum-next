@@ -1,10 +1,11 @@
 "use client";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+
 import axios from "axios";
 import * as Img from "next/image";
-import Loader from "@/components/Loader";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { ICONS } from "@/assets";
+import Loader from "@/components/Loader";
 import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 interface ImagePiece {
@@ -40,6 +41,14 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
   const [, setFixedWidth] = useState(1200);
   const { setSelectedImages } = useSelectedImagesStore();
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setFixedWidth(Math.min(window.innerWidth, 1100));
+    }
+
+    getDataFromBackend();
+  }, [selectedPiece]);
+
   const getImageDimensions = (dataUrl: string) => {
     console.log(setSelectedPiece);
     console.log(setShowConfirmModal);
@@ -54,7 +63,6 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
       setW(img.naturalWidth - 27);
       setH(img.naturalHeight);
     };
-    console.log(width, height);
     img.onerror = () => {
       new Error("Failed to load image from dataUrl");
     };
@@ -69,14 +77,6 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
     const current = resp.data.pieces.filter((f: ImagePiece) => f.username);
     setSelectedImages(current);
   };
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setFixedWidth(Math.min(window.innerWidth, 1100));
-    }
-
-    getDataFromBackend();
-  }, [selectedPiece]);
 
   return loading ? (
     <Loader />
@@ -100,19 +100,19 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
             className={`text-center flex-1 bg-white rounded-lg group relative`}
           >
             <div
-              className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full ${
+              className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full max-w-full ${
                 !piece?.username
                   ? "hover:bg-[#00115A80]"
                   : "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
               } hover:rounded-lg`}
             >
               {piece?.username && (
-                <div className={`flex relative justify-between`}>
+                <div className="flex relative justify-between max-w-full">
                   <Img.default
                     src={ICONS.dell_icon}
                     alt="undo icon"
-                    width={30}
-                    height={30}
+                    width={25}
+                    height={25}
                     style={{ objectFit: "contain" }}
                     className="cursor-pointer"
                     onClick={() => {
@@ -120,7 +120,7 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
                       setShowConfirmModal(true);
                     }}
                   />
-                  <p>{piece.username}</p>
+                  <p className="max-w-full truncate">{piece.username}</p>
                 </div>
               )}
             </div>

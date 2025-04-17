@@ -1,4 +1,5 @@
 "use client";
+
 import { Suspense } from "react";
 
 import ReconstructedImage from "./components/ReconstructedImage";

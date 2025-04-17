@@ -1,7 +1,9 @@
 "use client";
+
+import { useRouter } from "next/navigation";
+
 import { ICONS } from "@/assets";
 import { CustomButton } from "@/components/CustomButton";
-import { useRouter } from "next/navigation";
 
 const Header = ({ onFinishDrawing }: { onFinishDrawing: () => void }) => {
   const router = useRouter();
