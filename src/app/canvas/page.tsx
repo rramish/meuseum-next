@@ -1,12 +1,10 @@
 "use client";
-import Image from "next/image";
 import React, { useRef, useState } from "react";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import DrawingCanvas from "./components/CanvasEditor";
 
-import { ICONS } from "@/assets";
 import { NameModal } from "./components/NameModal";
 import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
