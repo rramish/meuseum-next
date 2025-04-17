@@ -3,7 +3,6 @@ import React from "react";
 import Image from "next/image";
 
 import { ICONS } from "@/assets";
-import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 export const CustomButton = ({
   icon,
@@ -46,7 +45,6 @@ export const CustomButton = ({
 };
 
 const Header = ({ onPreview, length }: { onPreview: () => void, length: number }) => {
-  const { selectedImages } = useSelectedImagesStore();
   return (
     <div className="px-10 py-6">
       <div className="flex items-center justify-between gap-2">

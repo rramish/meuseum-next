@@ -8,7 +8,6 @@ import Header from "./components/Header";
 import { ICONS } from "@/assets";
 import { useRouter } from "next/navigation";
 import { useImageStorage } from "@/store/imageStore";
-import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 interface ImagePiece {
   name: string;
@@ -24,8 +23,7 @@ const Home = () => {
   const router = useRouter();
   const { setfinalimage } = useImageStorage();
 
-  const { image, imageBackend, setImagePiece } = useImageStorage();
-  const {setSelectedImages} = useSelectedImagesStore();
+  const { imageBackend, setImagePiece } = useImageStorage();
 
   const [loading, setLoading] = useState(false);
   const [fixedWidth, setFixedWidth] = useState(1200);
