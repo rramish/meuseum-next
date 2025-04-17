@@ -30,7 +30,7 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
       username: name,
       pieceId: imagePiece?._id,
     };
-    const resp = await axios.post("/api/drawing-image/update", obj);
+    await axios.post("/api/drawing-image/update", obj);
     // console.log("update image is : ", resp.data);
     setLoading(false);
     onclose();

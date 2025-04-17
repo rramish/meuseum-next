@@ -115,7 +115,7 @@ const Main = () => {
     const obj = {
       pieceId: item._id,
     };
-    const resp = await axios.post("/api/drawing-image/reset-progress", obj);
+    await axios.post("/api/drawing-image/reset-progress", obj);
     // console.log("response form reset is : ", resp.data);
     setSelectedPiece(undefined);
     setShowConfirmModal(false);
