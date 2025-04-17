@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import { ICONS } from "@/assets";
 import { useRouter } from "next/navigation";
 import { useImageStorage } from "@/store/imageStore";
+import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 interface ImagePiece {
   name: string;
@@ -24,9 +25,11 @@ const Home = () => {
   const { setfinalimage } = useImageStorage();
 
   const { image, imageBackend, setImagePiece } = useImageStorage();
+  const {setSelectedImages} = useSelectedImagesStore();
 
   const [loading, setLoading] = useState(false);
   const [fixedWidth, setFixedWidth] = useState(1200);
+  const [totalLen, setTotalLen] = useState(0);
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
 
   useEffect(() => {
@@ -62,7 +65,7 @@ const Home = () => {
 
     sliceImage();
     getDataFromBackend();
-  }, [image]);
+  }, []);
 
   const getImageDimensions = (dataUrl: string) => {
     let width = 0;
@@ -85,7 +88,10 @@ const Home = () => {
     const resp = await axios.get("/api/drawing-image");
     console.log("resp is : ", resp.data);
     setPieces(resp.data.pieces);
-    await getImageDimensions(resp.data.pieces[0].dataUrl);
+    getImageDimensions(resp.data.pieces[0].dataUrl);
+    const current = resp.data.pieces.filter((f: ImagePiece) => f.username&& f.username);
+    // setSelectedImages(current);
+    setTotalLen(current.length);
     setLoading(false);
   };
 
@@ -167,6 +173,7 @@ const Home = () => {
   return (
     <div className="flex-1 max-h-full bg-white">
       <Header
+      length={totalLen}
         onPreview={() => {
           reconstructImage({ download: false });
         }}

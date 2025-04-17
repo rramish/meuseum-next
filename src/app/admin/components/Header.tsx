@@ -61,7 +61,11 @@ const Header = ({
             onClick={() => {
               window.location.reload();
             }}
-            title={`Canvas ${20 - selectedImages.length}/${20}`}
+            title={`Canvas ${
+              selectedImages.length > 0 ? 20 - selectedImages.length : ""
+            } ${selectedImages.length > 0 ? "/" : ""} ${
+              selectedImages.length > 0 ? 20 : ""
+            }`}
             icon={ICONS.image_icon}
             bg={"bg-transparent"}
             textcolor={"text-[#1A73E8]"}

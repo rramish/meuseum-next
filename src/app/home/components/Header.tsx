@@ -45,7 +45,7 @@ export const CustomButton = ({
   );
 };
 
-const Header = ({ onPreview }: { onPreview: () => void }) => {
+const Header = ({ onPreview, length }: { onPreview: () => void, length: number }) => {
   const { selectedImages } = useSelectedImagesStore();
   return (
     <div className="px-10 py-6">
@@ -61,7 +61,7 @@ const Header = ({ onPreview }: { onPreview: () => void }) => {
           />
         </div>
         <div className="flex-1 justify-end flex">
-          {selectedImages.length == 20 && (
+          {length == 20 && (
             <CustomButton
               onClick={onPreview}
               title="Preview"
