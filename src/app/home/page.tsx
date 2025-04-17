@@ -137,10 +137,11 @@ const Home = () => {
                       } hover:scale-120`}
                     >
                       <Img.default
-                        src={!piece?.username ? ICONS.ab_icon : ICONS.na1_icon}
+                        src={!piece?.username ? ICONS.edit_img : ICONS.not_available_image}
                         alt="edit_icon"
-                        fill
-                        className="max-w-full max-h-full"
+                        width={90}
+                        height={90}
+                        className=""
                       />
                     </div>
                   </div>

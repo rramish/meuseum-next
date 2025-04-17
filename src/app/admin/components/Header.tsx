@@ -74,7 +74,7 @@ const Header = ({
 
         <div className="self-center flex items-center justify-center">
           <Image
-            src={ICONS.logo_icon}
+            src={ICONS.logo}
             alt="mosida_logo"
             width={100}
             height={100}

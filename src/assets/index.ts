@@ -24,13 +24,18 @@ export const ICONS = {
   zoom_2x_icon: new URL("./zoom-2x-icon.svg",import.meta.url).href,
 
 
-  brush: new URL("./icons/brush.svg", import.meta.url).href,
-  color_pellet: new URL("./icons/color_pellet.svg", import.meta.url).href,
-  eraser: new URL("./icons/eraser.svg", import.meta.url).href,
-  logo_brush: new URL("./icons/logo_brush.svg", import.meta.url).href,
-  pencil: new URL("./icons/pencil.svg", import.meta.url).href,
+  logo: new URL("./images/Logo.png",import.meta.url).href,
+  edit_img: new URL("./images/edit-image.svg",import.meta.url).href,
+  not_available_image: new URL("./images/not_available-1.png",import.meta.url).href,
+
+
   redo: new URL("./icons/redo.svg", import.meta.url).href,
-  shapes: new URL("./icons/shapes.svg", import.meta.url).href,
   text: new URL("./icons/text.svg", import.meta.url).href,
   undo: new URL("./icons/undo.svg", import.meta.url).href,
+  brush: new URL("./icons/brush.svg", import.meta.url).href,
+  eraser: new URL("./icons/eraser.svg", import.meta.url).href,
+  pencil: new URL("./icons/pencil.svg", import.meta.url).href,
+  shapes: new URL("./icons/shapes.svg", import.meta.url).href,
+  logo_brush: new URL("./icons/logo_brush.svg", import.meta.url).href,
+  color_pellet: new URL("./icons/color_pellet.svg", import.meta.url).href,
 };

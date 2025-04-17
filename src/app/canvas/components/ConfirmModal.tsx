@@ -4,13 +4,11 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useImageStorage } from "@/store/imageStore";
-// import { useCanvasStore } from "@/store/canvasStore";
 import { CustomButton } from "@/components/CustomButton";
 
 export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
   const { imagePiece } = useImageStorage();
   const [loading, setLoading] = useState(false);
-  // const { canvasRef } = useCanvasStore();
   const router = useRouter();
   const{submissionUrl} = useImageStorage();
 
@@ -18,7 +16,6 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
     setLoading(true);
     const obj = {
       updatedUrl: submissionUrl,
-      // updatedUrl: canvasRef.current!.toDataURL(),
       pieceId: imagePiece?._id,
     };
     const resp = await axios.post("/api/drawing-image/update", obj);
@@ -41,7 +38,6 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
             <CustomButton
               onClick={onclose}
               title={"Cancel"}
-              // icon={ICONS.undo_icon}
               bg={"bg-[#fff]"}
               textcolor={"text-[#1A73E8]"}
             />
@@ -52,8 +48,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
                 }
                 handleSubmit();
               }}
-              title={loading ? "Processing..." : "Continue"}
-              // icon={ICONS.plus_icon}
+              title={loading ? "Processing..." : "Yes"}
               bg={"bg-[#fff]"}
               textcolor={"text-[#1A73E8]"}
             />

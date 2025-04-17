@@ -45,14 +45,18 @@ export const CustomButton = ({
 };
 
 const Header = () => {
-return (
+  return (
     <div className="px-10 py-6">
       <div className="flex items-center justify-center gap-2">
-      
-        <div className="flex-1 justify-center flex">
-          <Image src={ICONS.logo_icon} alt="" width={100} height={100} />
+        <div className="flex-1 justify-center flex ">
+          <Image
+            src={ICONS.logo}
+            alt="logo image"
+            width={150}
+            height={150}
+            className="max-w-full max-h-full"
+          />
         </div>
-     
       </div>
     </div>
   );

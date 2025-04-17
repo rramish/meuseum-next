@@ -10,11 +10,11 @@ const geistSans = Geist({
 const marcellus_sc = Marcellus_SC({
   variable: "--font-marcellus_sc",
   subsets: ["latin"],
-  weight:['400']
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
-  title: "Mosida",
+  title: "MOSIDA - First Social Interactive Digital Art Museum in the World",
   description: "Mosida drawing app",
 };
 

@@ -14,7 +14,7 @@ import { ConfirmModal } from "./components/ConfirmModal";
 
 const Canvas = () => {
   const { canvasRef } = useCanvasStore();
-  const {setSubmissionUrl} = useImageStorage();
+  const { setSubmissionUrl } = useImageStorage();
 
   const [showModal, setShowModal] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
