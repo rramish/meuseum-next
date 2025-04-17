@@ -94,6 +94,7 @@ const DropZone = ({ onclose }: { onclose: () => void }) => {
       sessionId: folderName,
     });
     console.log("resp is : ", resp.data);
+    window.location.reload();
     // setPieces(resp.data.pieceDocs);
   };
 

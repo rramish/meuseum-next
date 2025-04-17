@@ -130,6 +130,7 @@ const Main = () => {
         }}
         onNewDrawing={() => {
           setShowModal(true);
+          console.log("here")
         }}
         onConstruct={() => reconstructImage({ download: true })}
       />

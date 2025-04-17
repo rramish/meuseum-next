@@ -35,7 +35,7 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
   setShowConfirmModal,
 }) => {
   const { setSelectedImages } = useSelectedImagesStore();
-  const[loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getDataFromBackend();
