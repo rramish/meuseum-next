@@ -64,16 +64,18 @@ return (
             textcolor={"text-[#1A73E8]"}
           /> */}
         </div>
-        <div className="flex-1">
+        <div className="flex-1 justify-center flex">
           <Image src={ICONS.logo_icon} alt="" width={100} height={100} />
         </div>
+        <div className="flex-1">
         {/* <CustomButton
           title="Preview"
           bg={"bg-white"}
           icon={ICONS.eye_icon}
           textcolor={"text-[#1A73E8]"}
           onClick={onPreview}
-        /> */}
+          /> */}
+          </div>
       </div>
     </div>
   );
