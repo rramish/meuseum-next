@@ -25,7 +25,7 @@ const Canvas = () => {
   const redoStack = useRef<any>([]);
 
   const handleUndo = () => {
-    if (!canvasRef.current || undoStack.current.length === 0) return;
+    if (!canvasRef.current || undoStack.current.length === 1) return;
     const canvas = canvasRef.current;
     const lastObject = undoStack.current.pop();
     if (lastObject) {

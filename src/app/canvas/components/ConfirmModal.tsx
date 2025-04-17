@@ -27,14 +27,14 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
 
   return (
     <div className="flex-1 h-full flex justify-center flex-col relative items-center">
-      <div className="p-4 gap-2 rounded-lg  w-4/5 md:max-w-[500px] bg-white shadow">
+      <div className="p-4 gap-2 rounded-lg  w-4/5 md:max-w-[300px] bg-white shadow">
         <div className="flex gap-4 flex-col justify-center items-center">
           <div className="text-center">
             <p className="text-lg font-bold py-2 text-black">
               Do you really want to submit?
             </p>
           </div>
-          <div className="flex gap-2 justify-between flex-wrap">
+          <div className="flex gap-2 justify-between flex-wrap py-2">
             <CustomButton
               onClick={onclose}
               title={"Cancel"}

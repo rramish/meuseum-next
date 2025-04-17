@@ -13,14 +13,14 @@ export const ConfirmModal = ({
 }) => {
   return (
     <div className="flex-1 h-full flex justify-center flex-col relative items-center">
-      <div className="p-4 gap-2 rounded-lg w-4/5 md:max-w-[500px] bg-white shadow">
+      <div className="p-4 gap-2 rounded-lg w-4/5 md:max-w-[300px] bg-white shadow">
         <div className="flex gap-4 flex-col justify-center items-center">
           <div className="text-center">
             <p className="text-lg font-bold py-2 text-black">
               Do you really want to reset?
             </p>
           </div>
-          <div className="flex gap-2 md:gap-10 flex-wrap items-center">
+          <div className="flex gap-2 md:gap-10 flex-wrap items-center py-2">
             <CustomButton
               bg={"bg-[#fff]"}
               title={"Cancel"}
@@ -33,7 +33,6 @@ export const ConfirmModal = ({
               onClick={onSubmit}
               textcolor={"text-[#1A73E8]"}
               title={"Yes"}
-              // title={loading ? "Processing..." : "Yes"}
             />
           </div>
         </div>

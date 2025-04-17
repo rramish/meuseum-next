@@ -48,7 +48,7 @@ const CanvasEditor = ({redoStack, undoStack}: {redoStack:any , undoStack: any}) 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(obj as any)._isBackground) {
       undoStack.current.push(obj);
-      redoStack.current = [];
+      redoStack.current.push(obj);
     }
   };
 

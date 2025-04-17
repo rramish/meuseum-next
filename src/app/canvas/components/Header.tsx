@@ -16,7 +16,7 @@ const Header = ({
 }) => {
   const router = useRouter();
   return (
-    <div className="flex justify-between px-10 py-6">
+    <div className="flex justify-between px-10 py-6 gap-2">
       <div className="flex gap-4">
         <CustomButton
           title="Back"
@@ -40,7 +40,7 @@ const Header = ({
           textcolor={"text-[#1A73E8]"}
         /> */}
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-1 md:gap-4">
         <CustomButton
           onClick={onUndo}
           title="Undo"
