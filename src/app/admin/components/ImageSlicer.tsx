@@ -36,6 +36,8 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
 }) => {
   const { setSelectedImages } = useSelectedImagesStore();
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [previewPiece, setPreviewPiece] = useState<ImagePiece | null>(null);
 
   useEffect(() => {
     getDataFromBackend();
@@ -48,6 +50,16 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
     setPieces(resp.data.pieces);
     const current = resp.data.pieces.filter((f: ImagePiece) => f.username);
     setSelectedImages(current);
+  };
+
+  const handlePieceClick = (piece: ImagePiece) => {
+    setPreviewPiece(piece);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setPreviewPiece(null);
   };
 
   return loading ? (
@@ -70,6 +82,11 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
           <div
             key={index}
             className={`text-center flex-1 bg-white rounded-lg group relative`}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handlePieceClick(piece!);
+            }}
           >
             <div
               className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full max-w-full ${
@@ -87,7 +104,9 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
                     height={25}
                     style={{ objectFit: "contain" }}
                     className="cursor-pointer hover:scale-105"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
                       setSelectedPiece(piece);
                       setShowConfirmModal(true);
                     }}
@@ -112,6 +131,33 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
           </div>
         ))}
       </div>
+
+      {showModal && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-100 p-3"
+          onClick={handleCloseModal}
+        >
+          <div
+            className="bg-white p-2 rounded-lg relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Img.default
+              src={previewPiece?.updatedUrl || previewPiece?.dataUrl || ""}
+              alt="Preview"
+              width={500}
+              height={500}
+              style={{ objectFit: "contain" }}
+              className="rounded-lg"
+            />
+            <button
+              className="absolute cursor-pointer top-2 right-2 text-black bg-gray-200 rounded-full p-2 hover:bg-gray-300"
+              onClick={handleCloseModal}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
