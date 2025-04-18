@@ -48,6 +48,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
                 }
                 handleSubmit();
               }}
+              disabled={loading}
               title={loading ? "Processing..." : "Yes"}
               bg={"bg-[#fff]"}
               textcolor={"text-[#1A73E8]"}

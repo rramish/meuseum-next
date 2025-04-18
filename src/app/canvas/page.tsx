@@ -68,25 +68,21 @@ const Canvas = () => {
         {showModal && (
           <>
             <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
-            <div className="h-full my-auto">
-              <NameModal
-                onclose={() => {
-                  setShowModal(false);
-                }}
-              />
-            </div>
+            <NameModal
+              onclose={() => {
+                setShowModal(false);
+              }}
+            />
           </>
         )}
         {showConfirmModal && (
           <>
             <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
-            <div className="h-full my-auto">
-              <ConfirmModal
-                onclose={() => {
-                  setShowConfirmModal(false);
-                }}
-              />
-            </div>
+            <ConfirmModal
+              onclose={() => {
+                setShowConfirmModal(false);
+              }}
+            />
           </>
         )}
         {!showModal && !showConfirmModal && (

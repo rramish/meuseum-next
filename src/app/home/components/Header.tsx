@@ -26,7 +26,7 @@ export const CustomButton = ({
   return (
     <div
       onClick={onClick}
-      className={`flex items-center cursor-pointer hover:scale-105 duration-300 border gap-2 border-[#DADCE0] ${textcolor} ${bg} rounded-lg px-2 md:px-4 py-1 md:py-2 `}
+      className={`flex items-center cursor-pointer hover:scale-105 duration-300 border gap-2 border-[#DADCE0] px-2 py-1 md:px-4  md:py-2  ${textcolor} ${bg} rounded-lg`}
     >
       <div>
         <Image
@@ -38,13 +38,19 @@ export const CustomButton = ({
         />
       </div>
       <div className="flex items-center">
-        <p className={`${fontsize} text-xs md:text-base`}>{title} </p>
+        <p className={`${fontsize} text-sm md:text-base`}>{title} </p>
       </div>
     </div>
   );
 };
 
-const Header = ({ onPreview, length }: { onPreview: () => void, length: number }) => {
+const Header = ({
+  onPreview,
+  length,
+}: {
+  onPreview: () => void;
+  length: number;
+}) => {
   return (
     <div className="px-10 py-6">
       <div className="flex items-center justify-between gap-2">
@@ -59,7 +65,7 @@ const Header = ({ onPreview, length }: { onPreview: () => void, length: number }
           />
         </div>
         <div className="flex-1 justify-end flex">
-          {length == 20 && (
+          {/* {length == 20 && ( */}
             <CustomButton
               onClick={onPreview}
               title="Preview"
@@ -67,7 +73,7 @@ const Header = ({ onPreview, length }: { onPreview: () => void, length: number }
               icon={ICONS.eye_icon}
               textcolor={"text-[#1A73E8]"}
             />
-          )}
+          {/* )} */}
         </div>
       </div>
     </div>

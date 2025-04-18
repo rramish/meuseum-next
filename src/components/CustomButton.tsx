@@ -25,9 +25,9 @@ export const CustomButton = ({
   return (
     <div
       onClick={!disabled ? onClick : undefined}
-      className={`flex items-center justify-center text-sm md:text-base py-0 cursor-pointer hover:scale-105 duration-300 border ${
+      className={`flex items-center justify-center text-sm md:text-base cursor-pointer hover:scale-105 duration-300 border ${
         icon && "gap-2"
-      } border-[#DADCE0] ${textcolor} ${bg} rounded-lg px-2 md:px-4 md:py-2 ${
+      } border-[#DADCE0] ${textcolor} ${bg} rounded-lg px-2 py-1 md:px-4 md:py-2 ${
         disabled ? "opacity-50 cursor-not-allowed hover:scale-100" : ""
       }`}
     >

@@ -19,7 +19,7 @@ const ReconstructedImage = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center gap-4 py-6 px-10">
-      <div className="flex gap-10 w-full max-w-3xl py-2">
+      <div className="flex gap-10 w-full max-w-3xl py-2 z-10">
         <div className="flex-1 flex">
           <CustomButton
             onClick={handleBack}
@@ -36,14 +36,15 @@ const ReconstructedImage = () => {
       </div>
 
       {finalimage ? (
-        <div className="relative w-full h-[600px] max-w-6xl mx-auto">
+        // <div className="relative w-full h-[75vh] max-w-6xl mx-auto overflow-hidden z-0 p-2
+        // ">
           <Image
             src={finalimage}
             alt="Reconstructed Image"
-            fill
-            className="object-cover"
+            layout="fill"
+            className="max-w-full max-h-full object-fill rounded-lg shadow-lg"
           />
-        </div>
+        // </div>
       ) : (
         <p className="text-center text-gray-500">No image available</p>
       )}
