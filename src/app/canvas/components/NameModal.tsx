@@ -2,11 +2,11 @@
 
 import axios from "axios";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { useUserStore } from "@/store/userStore";
 import { useImageStorage } from "@/store/imageStore";
 import { CustomButton } from "@/components/CustomButton";
-import { useRouter } from "next/navigation";
 
 export const NameModal = ({ onclose }: { onclose: () => void }) => {
   const router = useRouter();
@@ -37,16 +37,13 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
   };
 
   return (
-    <>
-        <div className="flex-1 h-full flex justify-center flex-col relative items-center">
-        <div className="p-4 gap-2 rounded-lg w-4/5 md:max-w-[300px] bg-white shadow">
-          <div className="flex gap-4 flex-col justify-center items-center">
-            <div className="text-center">
-              <p className="text-lg font-bold py-2 text-black">
-              Enter your name
-              </p>
-            </div>
-            <div>
+    <div className="flex-1 h-full flex justify-center flex-col relative items-center">
+      <div className="p-4 gap-2 rounded-lg w-4/5 md:max-w-[300px] bg-white shadow">
+        <div className="flex gap-4 flex-col justify-center items-center">
+          <div className="text-center">
+            <p className="text-lg font-bold py-2 text-black">Enter your name.</p>
+          </div>
+          <div>
             <input
               type="text"
               onChange={(e) => {
@@ -57,26 +54,26 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
             />
             {errormsg && <p className="text-red-400 text-center">{errormsg}</p>}
           </div>
-            <div className="flex gap-2 md:gap-4 flex-wrap items-center py-2">
-              <CustomButton
-                bg={"bg-[#fff]"}
-                title={"Cancel"}
-                onClick={() =>{ router.back(); onclose()}}
-                textcolor={"text-[#1A73E8]"}
-              />
-              <CustomButton
-                disabled={loading}
-                bg={"bg-[#fff]"}
-                onClick={handleSubmit}
-                textcolor={"text-[#1A73E8]"}
-                title={"Continue"}
-                // title={loading ? "Processing..." : "Yes"}
-              />
-            </div>
+          <div className="flex gap-2 md:gap-4 flex-wrap items-center py-2">
+            <CustomButton
+              bg={"bg-[#fff]"}
+              title={"Cancel"}
+              onClick={() => {
+                router.back();
+                onclose();
+              }}
+              textcolor={"text-[#1A73E8]"}
+            />
+            <CustomButton
+              disabled={loading}
+              bg={"bg-[#fff]"}
+              onClick={handleSubmit}
+              textcolor={"text-[#1A73E8]"}
+              title={"Continue"}
+            />
           </div>
         </div>
       </div>
-    </>
-
+    </div>
   );
 };
