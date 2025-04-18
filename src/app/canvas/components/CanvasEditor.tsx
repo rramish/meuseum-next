@@ -17,9 +17,24 @@ const CanvasEditor = ({redoStack, undoStack}: {redoStack:any , undoStack: any}) 
   const [canvasHeight, setCanvasHeight] = useState(0);
 
   const updateCanvasDimensions = useCallback(() => {
-    if (canvasContainerRef.current) {
+    if (canvasContainerRef.current && canvasInstance.current) {
+      const canvas = canvasInstance.current;
+
+      // Serialize the current canvas state
+      const canvasState = canvas.toJSON();
+
+      // Update canvas dimensions
       setCanvasWidth(canvasContainerRef.current.offsetWidth);
       setCanvasHeight(canvasContainerRef.current.offsetHeight);
+
+      // Restore the canvas state after resizing
+      setTimeout(() => {
+        canvas.setWidth(canvasContainerRef.current!.offsetWidth);
+        canvas.setHeight(canvasContainerRef.current!.offsetHeight);
+        canvas.loadFromJSON(canvasState, () => {
+          canvas.renderAll();
+        });
+      }, 0);
     }
   }, []);
 

@@ -38,7 +38,7 @@ export const CustomButton = ({
         />
       </div>
       <div className="flex items-center">
-        <p className={`${fontsize} text-sm md:text-base`}>{title} </p>
+        <p className={`${fontsize} text-base`}>{title} </p>
       </div>
     </div>
   );
