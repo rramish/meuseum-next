@@ -27,6 +27,7 @@ async function connectDB(): Promise<Mongoose> {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      dbName: "mosida"
     };
     cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
       console.log("db connected");
