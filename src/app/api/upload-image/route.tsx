@@ -1,10 +1,11 @@
 import path from "path";
-import connectDB from "@/lib/mongodb";
-import DrawingSession from "@/models/DrawingSession";
+import { put } from "@vercel/blob";
 import { promises as fs } from "fs";
 import { v4 as uuidv4 } from "uuid";
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
+
+import connectDB from "@/lib/mongodb";
+import DrawingSession from "@/models/DrawingSession";
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,7 +17,6 @@ export async function POST(req: NextRequest) {
     if (!file) {
       return NextResponse.json({ error: "No image provided" }, { status: 400 });
     }
-
     const folderName = uuidv4();
     const tempUploadDir = path.join("/tmp", "uploads", folderName);
     await fs.mkdir(tempUploadDir, { recursive: true });
@@ -36,12 +36,15 @@ export async function POST(req: NextRequest) {
 
     const currentSession = await DrawingSession.findOne({ status: "active" });
     if (currentSession) {
-      await DrawingSession.findByIdAndUpdate(currentSession._id, { status: "inactive" });
+      await DrawingSession.findByIdAndUpdate(currentSession._id, {
+        status: "inactive",
+      });
     }
 
     const session = new DrawingSession({
       imageFolderUuid: folderName,
       imageUrl,
+      imageName: fileName,
       status: "active",
     });
     await session.save();

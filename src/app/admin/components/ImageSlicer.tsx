@@ -34,23 +34,10 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
   setSelectedPiece,
   setShowConfirmModal,
 }) => {
-  const { setSelectedImages } = useSelectedImagesStore();
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [previewPiece, setPreviewPiece] = useState<ImagePiece | null>(null);
 
-  useEffect(() => {
-    getDataFromBackend();
-  }, [selectedPiece]);
-
-  const getDataFromBackend = async () => {
-    setLoading(true);
-    const resp = await axios.get("/api/drawing-image");
-    setLoading(false);
-    setPieces(resp.data.pieces);
-    const current = resp.data.pieces.filter((f: ImagePiece) => f.username);
-    setSelectedImages(current);
-  };
 
   const handlePieceClick = (piece: ImagePiece) => {
     setPreviewPiece(piece);

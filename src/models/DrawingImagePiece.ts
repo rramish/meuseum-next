@@ -7,20 +7,25 @@ interface IDrawingImagePiece extends Document {
   username: string | null;
   updatedUrl: string | null;
   serial: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const drawingImagePieceSchema = new Schema<IDrawingImagePiece>({
-  sessionId: {
-    type: Schema.Types.ObjectId,
-    ref: "DrawingSession",
-    required: true,
+const drawingImagePieceSchema = new Schema<IDrawingImagePiece>(
+  {
+    sessionId: {
+      type: Schema.Types.ObjectId,
+      ref: "DrawingSession",
+      required: true,
+    },
+    dataUrl: { type: String, required: true },
+    name: { type: String },
+    username: { type: String, default: null },
+    updatedUrl: { type: String, default: null },
+    serial: { type: Number },
   },
-  dataUrl: { type: String, required: true },
-  name: { type: String },
-  username: { type: String, default: null },
-  updatedUrl: { type: String, default: null },
-  serial: { type: Number },
-});
+  { timestamps: true }
+);
 
 const DrawingImagePiece =
   mongoose.models.DrawingImagePiece ||

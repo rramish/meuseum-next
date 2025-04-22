@@ -1,5 +1,5 @@
-import mongoose, { Schema, model, Document } from 'mongoose';
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
+import mongoose, { Schema, model, Document } from "mongoose";
 
 interface IUser extends Document {
   email: string;
@@ -8,17 +8,17 @@ interface IUser extends Document {
 }
 
 const userSchema = new Schema<IUser>({
-  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  isAdmin: {type:Boolean, default: false}
+  isAdmin: { type: Boolean, default: false },
+  email: { type: String, required: true, unique: true },
 });
 
-userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10);
   }
   next();
 });
 
-const User = mongoose.models.User || model<IUser>('User', userSchema);
+const User = mongoose.models.User || model<IUser>("User", userSchema);
 export default User;

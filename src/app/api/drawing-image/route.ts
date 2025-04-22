@@ -13,7 +13,6 @@ interface Piece {
 }
 
 export async function POST(req: NextRequest) {
-
   await connectDB();
 
   try {
@@ -74,26 +73,41 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   await connectDB();
 
   try {
-    const session = await DrawingSession.findOne({ status: "active" });
-    if (!session) {
-      return NextResponse.json(
-        { error: "Active session not found" },
-        { status: 404 }
-      );
+    const { searchParams } = new URL(req.url);
+    const sessionId = searchParams.get("sessionId");
+    let session;
+
+    if (sessionId) {
+      session = await DrawingSession.findById({ _id: sessionId });
+      if (!session) {
+        return NextResponse.json(
+          { error: "Session not found" },
+          { status: 404 }
+        );
+      }
+    } else {
+      session = await DrawingSession.findOne({ status: "active" });
+      if (!session) {
+        return NextResponse.json(
+          { error: "Active session not found" },
+          { status: 404 }
+        );
+      }
     }
 
-    const pieces = await DrawingImagePiece.find({ sessionId: session._id }).sort("serial");
+    const pieces = await DrawingImagePiece.find({
+      sessionId: session._id,
+    }).sort("serial");
 
     return NextResponse.json(
       { message: "Pieces fetched successfully", pieces },
       { status: 200 }
     );
   } catch (error) {
-    console.error("get pieces error:", error);
     return NextResponse.json(
       { error: (error as Error).message || "Failed to get pieces" },
       { status: 500 }

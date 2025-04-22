@@ -208,7 +208,8 @@ const Sidebar = () => {
       <div className="justify-center flex">
         <label
           htmlFor="color"
-          className="h-8 w-8 rounded-full bg-[#2622A5] hover:scale-110 duration-300 cursor-pointer"
+          className="h-8 w-8 rounded-full hover:scale-110 duration-300 cursor-pointer"
+          style={{ backgroundColor: brushColor ? brushColor : "#0052cc" }}
         />
         <div className="absolute">
           <input

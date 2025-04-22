@@ -1,22 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
+import { NextRequest, NextResponse } from "next/server";
 
 export function authMiddleware(req: NextRequest) {
-  const token = req.headers.get('authorization')?.replace('Bearer ', '');
+  const token = req.headers.get("authorization")?.replace("Bearer ", "");
 
   if (!token) {
-    return NextResponse.redirect(new URL('/login', req.url));
+    return NextResponse.json(
+      { error: "Unauthorized: No token provided" },
+      { status: 401 }
+    );
   }
 
   try {
     jwt.verify(token, process.env.JWT_SECRET as string);
-    return NextResponse.next();
+    return null; // Indicate that the request is valid
   } catch (error) {
-    console.log(error);
-    return NextResponse.redirect(new URL('/login', req.url));
+    console.error("Token verification error:", error);
+    return NextResponse.json(
+      { error: "Unauthorized: Invalid token" },
+      { status: 401 }
+    );
   }
 }
 
 export const config = {
-  matcher: ['/protected/:path*'],
+  matcher: ["/protected/:path*"],
 };
