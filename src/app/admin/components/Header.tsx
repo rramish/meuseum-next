@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
 
 import { ICONS } from "@/assets";
-import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 export const CustomButton = ({
   icon,
@@ -60,7 +59,6 @@ const Header = ({
   onConstruct?: () => void;
   onReset?: () => void;
 }) => {
-  const { selectedImages } = useSelectedImagesStore();
 
   return (
     <div className="px-10 py-6">

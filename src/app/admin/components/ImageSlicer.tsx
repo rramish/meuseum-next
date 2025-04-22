@@ -1,12 +1,10 @@
 "use client";
 
-import axios from "axios";
 import * as Img from "next/image";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import Loader from "@/components/Loader";
+import React, { Dispatch, SetStateAction, useState } from "react";
 
 import { ICONS } from "@/assets";
-import Loader from "@/components/Loader";
-import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 interface ImagePiece {
   name: string;
@@ -29,12 +27,10 @@ interface ImageSlicerWithDrawingProps {
 
 const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
   pieces,
-  setPieces,
-  selectedPiece,
   setSelectedPiece,
   setShowConfirmModal,
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, ] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [previewPiece, setPreviewPiece] = useState<ImagePiece | null>(null);
 

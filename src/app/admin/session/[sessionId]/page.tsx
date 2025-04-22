@@ -67,6 +67,7 @@ const Session = () => {
       setPieces(resp.data.pieces);
       const current = resp.data.pieces.filter((f: ImagePiece) => f.username);
       setSelectedImages(current);
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setError(
         error.response?.data?.error ||
@@ -161,6 +162,7 @@ const Session = () => {
       setSelectedPiece(undefined);
       await getDataFromBackend();
       setShowConfirmationModal(false);
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error resetting progress:", error);
       setError(
@@ -182,6 +184,7 @@ const Session = () => {
       // await getDataFromBackend();
       router.replace("/admin");
       setShowResetConfirmationModal(false);
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error resetting progress:", error);
       setError(
@@ -243,6 +246,7 @@ const Session = () => {
               </tr>
             </thead>
             <tbody className="text-gray-500">
+            {/* eslint-disable-next-line  @typescript-eslint/no-explicit-any  */}
               {pieces.map((piece: any, index) => (
                 <tr
                   key={piece._id || index}

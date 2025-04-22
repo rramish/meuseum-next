@@ -60,7 +60,9 @@ const Home = () => {
           canvas.width = pieceWidth;
           canvas.height = pieceHeight;
         }
-      } catch (error) {
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      } catch (error:any) {
+        console.log("error is : ", error);
         setError("Failed to slice the image. Please try again.");
       }
     };
@@ -79,10 +81,13 @@ const Home = () => {
         width = img.naturalWidth;
         height = img.naturalHeight;
       };
+      console.log("images dimesion is : ", width, height);
       img.onerror = () => {
         throw new Error("Failed to load image from dataUrl");
       };
-    } catch (error) {
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    } catch (error:any) {
+      console.log("error is : ", error);
       setError("Failed to get image dimensions. Please check the image URL.");
     }
   };
@@ -97,6 +102,7 @@ const Home = () => {
         (f: ImagePiece) => f.username && f.username
       );
       setTotalLen(current.length);
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setError(
         error?.response?.data?.error ||
@@ -177,7 +183,9 @@ const Home = () => {
         router.push(`/reconstructed`);
       }
       return dataUrl;
-    } catch (error) {
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    } catch (error:any) {
+      console.log("error is : ", error);
       setError("Failed to reconstruct the image. Please try again.");
     }
   }
