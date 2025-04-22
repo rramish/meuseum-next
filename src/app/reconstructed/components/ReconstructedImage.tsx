@@ -23,6 +23,7 @@ const ReconstructedImage = () => {
   };
 
   const onPublish = () =>{
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     window.location = "https://www.mosida.com/" as any;
   }
 

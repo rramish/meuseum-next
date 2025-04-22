@@ -10,7 +10,7 @@ import Header from "../../components/Header";
 import { useImageStorage } from "@/store/imageStore";
 import { Uploadmodal } from "../../components/Uploadmodal";
 import { ConfirmModal } from "../../components/ConfirmModal";
-import { useSelectedImagesStore } from "@/store/imagesSessionStore";
+// import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 interface ImagePiece {
   name: string;
@@ -26,7 +26,7 @@ const Session = () => {
   const params = useParams();
   const { sessionId } = params;
   const { setfinalimage } = useImageStorage();
-  const { setSelectedImages } = useSelectedImagesStore();
+  // const { setSelectedImages } = useSelectedImagesStore();
 
   const [loading, setLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -65,7 +65,7 @@ const Session = () => {
       );
       console.log("API response:", resp.data);
       setPieces(resp.data.pieces);
-      const current = resp.data.pieces.filter((f: ImagePiece) => f.username);
+      // const current = resp.data.pieces.filter((f: ImagePiece) => f.username);
       // setSelectedImages(current);
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
