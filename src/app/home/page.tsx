@@ -1,12 +1,13 @@
 "use client";
-import axios from "axios";
-import * as Img from "next/image";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import { ICONS } from "@/assets";
+import axios from "axios";
+import * as Img from "next/image";
 import Loader from "@/components/Loader";
 import Header from "./components/Header";
+
+import { ICONS } from "@/assets";
+import { useRouter } from "next/navigation";
 import { useImageStorage } from "@/store/imageStore";
 
 interface ImagePiece {
@@ -104,6 +105,7 @@ const Home = () => {
       setTotalLen(current.length);
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
+      console.log("error is ; ", error);
       setError(
         error?.response?.data?.error ||
           "Failed to fetch data from the backend. Please try again later."

@@ -66,9 +66,10 @@ const Session = () => {
       console.log("API response:", resp.data);
       setPieces(resp.data.pieces);
       const current = resp.data.pieces.filter((f: ImagePiece) => f.username);
-      setSelectedImages(current);
+      // setSelectedImages(current);
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
+      console.log("error is : ", error)
       setError(
         error.response?.data?.error ||
           "Failed to fetch data from the server. Please try again."
