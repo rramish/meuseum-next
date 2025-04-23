@@ -67,7 +67,7 @@ const ReconstructedImage = () => {
           />
         </div>
         <div className="flex-1 flex justify-center">
-          <Image width={100} height={100} alt="Logo" src={ICONS.logo} />
+          <Image width={150} height={150} alt="Logo" src={ICONS.logo} />
         </div>
         <div className="flex-1 flex justify-end gap-2">
           <CustomButton
