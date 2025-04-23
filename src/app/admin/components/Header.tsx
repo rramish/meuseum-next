@@ -63,7 +63,7 @@ const Header = ({
   return (
     <div className="px-10 py-6">
       <div className="flex items-center justify-center gap-2 h-full flex-wrap flex-col md:flex-row md:justify-between">
-        <div className="flex gap-2 flex-wrap items-center justify-center">
+        <div className="flex gap-2 flex-wrap items-center justify-center flex-1">
           {/* <CustomButton
             id="step1"
             onClick={() => {
@@ -88,10 +88,10 @@ const Header = ({
           /> */}
         </div>
 
-        <div className="self-center flex items-center justify-center">
+        <div className="self-center flex items-center justify-center flex-1">
           <Image src={ICONS.logo} alt="mosida_logo" width={150} height={150} />
         </div>
-        <div className="flex gap-2 flex-wrap  items-center justify-center">
+        <div className="flex gap-2 flex-wrap  items-center justify-end flex-1">
           {onNewDrawing && (
             <CustomButton
               id="step2"

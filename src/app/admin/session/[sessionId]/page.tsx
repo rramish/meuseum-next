@@ -286,14 +286,15 @@ const Session = () => {
                   </td>
                   <td className="px-4 py-2">
                     {piece.updatedAt
-                      ? new Intl.DateTimeFormat("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "2-digit",
+                      ? new Intl.DateTimeFormat("en-US", {
                         hour: "2-digit",
                         minute: "2-digit",
                         hour12: true,
-                        }).format(new Date(piece.updatedAt)) || "N/A"
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        timeZone: "America/New_York",
+                      }).format(new Date(piece.updatedAt)) || "N/A"
                       : "N/A"}
                   </td>
                   <td className="px-4 py-2">{piece.username || "N/A"}</td>
