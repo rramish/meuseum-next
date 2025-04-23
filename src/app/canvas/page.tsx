@@ -9,12 +9,14 @@ import { NameModal } from "./components/NameModal";
 import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
 import { ConfirmModal } from "./components/ConfirmModal";
+import { BackModal } from "./components/BackModal";
 
 const Canvas = () => {
   const { canvasRef } = useCanvasStore();
   const { setSubmissionUrl } = useImageStorage();
-
+  
   const [showModal, setShowModal] = useState(true);
+  const [showBackModal, setShowBackModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,7 +56,6 @@ const Canvas = () => {
           height={100}
           className={`absolute -z-10 top-0 left-0 w-full min-h-screen`}
         /> */}
-        {/* {!showModal && !showConfirmModal && ( */}
         <Header
           onRedo={handleRedo}
           onUndo={handleUndo}
@@ -63,8 +64,12 @@ const Canvas = () => {
             setSubmissionUrl(finalImageDataUrl);
             setShowConfirmModal(true);
           }}
+          onGoBack={() => {
+            const finalImageDataUrl = canvasRef.current!.toDataURL();
+            setSubmissionUrl(finalImageDataUrl);
+            setShowBackModal(true);
+          }}
         />
-        {/* )} */}
         {showModal && (
           <>
             <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
@@ -84,6 +89,18 @@ const Canvas = () => {
               <ConfirmModal
                 onclose={() => {
                   setShowConfirmModal(false);
+                }}
+              />
+            </div>
+          </>
+        )}
+        {showBackModal && (
+          <>
+            <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
+            <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
+              <BackModal
+                onclose={() => {
+                  setShowBackModal(false);
                 }}
               />
             </div>

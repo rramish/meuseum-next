@@ -1,7 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { ICONS } from "@/assets";
 import { CustomButton } from "@/components/CustomButton";
 
@@ -9,21 +7,20 @@ const Header = ({
   onFinishDrawing,
   onUndo,
   onRedo,
+  onGoBack
 }: {
   onFinishDrawing: () => void;
   onUndo: () => void;
   onRedo: () => void;
+  onGoBack: () => void;
 }) => {
-  const router = useRouter();
   return (
     <div className="flex justify-between px-10 py-6 gap-2">
       <div className="flex gap-4">
         <CustomButton
           title="Back"
           icon={ICONS.back_icon}
-          onClick={() => {
-            router.push("/home");
-          }}
+          onClick={onGoBack}
           bg={"bg-[#fff]"}
           textcolor={"text-[#1A73E8]"}
         />
