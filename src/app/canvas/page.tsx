@@ -5,11 +5,11 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import DrawingCanvas from "./components/CanvasEditor";
 
+import { BackModal } from "./components/BackModal";
 import { NameModal } from "./components/NameModal";
 import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
 import { ConfirmModal } from "./components/ConfirmModal";
-import { BackModal } from "./components/BackModal";
 
 const Canvas = () => {
   const { canvasRef } = useCanvasStore();
@@ -74,8 +74,8 @@ const Canvas = () => {
         />
         {showModal && (
           <>
-            <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
-            <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
+            <div className="h-[1000px] bg-black/70 absolute top-0 left-0 w-full z-20" />
+            <div className="absolute z-30 top-0 h-[1000px] w-full justify-center flex items-center">
               <NameModal
                 onclose={() => {
                   setShowModal(false);
