@@ -67,9 +67,9 @@ const Session = () => {
       setPieces(resp.data.pieces);
       // const current = resp.data.pieces.filter((f: ImagePiece) => f.username);
       // setSelectedImages(current);
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log("error is : ", error)
+      console.log("error is : ", error);
       setError(
         error.response?.data?.error ||
           "Failed to fetch data from the server. Please try again."
@@ -185,7 +185,7 @@ const Session = () => {
       // await getDataFromBackend();
       router.push("/admin");
       setShowResetConfirmationModal(false);
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error resetting progress:", error);
       setError(
@@ -247,7 +247,7 @@ const Session = () => {
               </tr>
             </thead>
             <tbody className="text-gray-500">
-            {/* eslint-disable-next-line  @typescript-eslint/no-explicit-any  */}
+              {/* eslint-disable-next-line  @typescript-eslint/no-explicit-any  */}
               {pieces.map((piece: any, index) => (
                 <tr
                   key={piece._id || index}
@@ -294,7 +294,7 @@ const Session = () => {
                       : "N/A"}
                   </td>
                   <td className="px-4 py-2">{piece.username || "N/A"}</td>
-                  <td className="px-4 py-2">
+                  <td className="px-4 py-2 gap-2 flex">
                     <button
                       disabled={
                         (!piece.updatedUrl && !piece.username) || loading
@@ -310,6 +310,22 @@ const Session = () => {
                       }`}
                     >
                       Reset
+                    </button>
+                    <button
+                      disabled={
+                        (!piece.updatedUrl && !piece.username) || loading
+                      }
+                      onClick={() => {
+                        setSelectedPiece(piece);
+                        setShowConfirmationModal(true);
+                      }}
+                      className={`px-4 py-2 rounded-xl hover:scale-105 ${
+                        !piece.updatedUrl && !piece.username
+                          ? "bg-gray-300 text-gray-500 cursor-not-allowed opacity-50"
+                          : "bg-green-500 text-white hover:bg-green-600 cursor-pointer"
+                      }`}
+                    >
+                      Activate
                     </button>
                   </td>
                 </tr>
@@ -354,7 +370,7 @@ const Session = () => {
               src={previewUrl || ""}
               alt="Preview"
               fill
-              style={{ objectFit: "contain" }}
+              style={{ objectFit: "cover" }}
               className="rounded-lg"
             />
             <button

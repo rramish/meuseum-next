@@ -34,7 +34,7 @@ const FolderModal = ({
   updateBrushOpacity,
 }: FolderModalProps) => {
   return (
-    <div className="absolute w-60 left-16 p-4 rounded-lg text-black border border-[#E6E7EA] bg-white z-50">
+    <div className="absolute w-60 left-16 p-4 rounded-lg text-black border border-[#E6E7EA] bg-white z-10">
       <div className="flex gap-2 mb-3">
         <p className="w-14">Size</p>
         <input

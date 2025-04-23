@@ -104,17 +104,6 @@ const CanvasEditor = ({
     };
   }, [eraser, canvasRef, setCanvasRef, setEraser, canvasWidth, canvasHeight]);
 
-  useEffect(() => {
-    if (eraser && canvasInstance.current) {
-      const canvas = canvasInstance.current;
-      const activeObjects = canvas.getActiveObjects();
-      if (activeObjects.length > 0) {
-        activeObjects.forEach((obj) => canvas.remove(obj));
-        canvas.discardActiveObject();
-        canvas.renderAll();
-      }
-    }
-  }, [canvasInstance.current, eraser]);
 
   const { imagePiece } = useImageStorage();
 
