@@ -310,7 +310,7 @@ const Session = () => {
                       className={`px-4 py-2 rounded-xl hover:scale-105 ${
                         !piece.updatedUrl && !piece.username
                           ? "bg-gray-300 text-gray-500 cursor-not-allowed opacity-50"
-                          : "bg-green-500 text-white hover:bg-green-600 cursor-pointer"
+                          : "bg-[#f287b7] text-white hover:bg-[#f287b780] cursor-pointer"
                       }`}
                     >
                       Reset

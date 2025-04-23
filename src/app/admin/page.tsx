@@ -162,14 +162,14 @@ const Main = () => {
                         <td className="px-4 py-2 flex gap-2">
                           <button
                             onClick={() => handlePreview(session._id)}
-                            className="bg-green-500 text-white font-bold px-4 py-2 rounded-xl hover:bg-green-600 cursor-pointer"
+                            className="bg-[#f287b7] text-white font-bold px-4 py-2 rounded-xl hover:bg-[#f287b780] cursor-pointer"
                           >
                             View
                           </button>
                           {session?.status == "inactive" && (
                             <button
                               onClick={() => handleActivateSession(session._id)}
-                              className="bg-green-500 text-white font-bold px-4 py-2 rounded-xl hover:bg-green-600 cursor-pointer"
+                              className="bg-[#f287b7] text-white font-bold px-4 py-2 rounded-xl hover:bg-[#f287b780] cursor-pointer"
                             >
                               Activate
                             </button>
