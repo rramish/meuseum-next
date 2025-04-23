@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   await connectDB();
 
   try {
-    const sessions = await DrawingSession.find({});
+    const sessions = await DrawingSession.find({}).sort("-updatedAt");
     return NextResponse.json({ sessions }, { status: 200 });
   } catch (error) {
     console.error("Error fetching sessions:", error);

@@ -87,9 +87,9 @@ const ReconstructedImage = () => {
         </div>
       </div>
 
-      <div className="w-full max-w-4xl flex justify-center items-center">
+      <div className="w-full flex justify-center items-center">
         {finalimage ? (
-          <div className="relative w-full h-[60vh]">
+          <div className=" w-[95%] relative h-[80vh]">
             <Image
               src={finalimage}
               alt="Reconstructed Image"

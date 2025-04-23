@@ -79,25 +79,15 @@ const Canvas = () => {
         )}
         {showConfirmModal && (
           <>
-            <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-0" />
-            <ConfirmModal
-              onclose={() => {
-                setShowConfirmModal(false);
-              }}
-            />
-          </>
-        )}
-        {!showModal && !showConfirmModal && (
-          <div className="flex flex-1 w-full h-full">
-            <div className="flex flex-1 pb-10">
-              <div className="flex justify-center items-center">
-                <Sidebar />
-              </div>
-              <div className="flex flex-1 border-[#DADCE0] border mr-10 bg-white">
-                <DrawingCanvas redoStack={redoStack} undoStack={undoStack} />
-              </div>
+            <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
+            <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
+              <ConfirmModal
+                onclose={() => {
+                  setShowConfirmModal(false);
+                }}
+              />
             </div>
-          </div>
+          </>
         )}
         {/* {!showModal && !showConfirmModal && ( */}
         <div className="flex flex-1 w-full h-full">

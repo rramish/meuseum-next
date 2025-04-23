@@ -89,7 +89,7 @@ const Header = ({
         </div>
 
         <div className="self-center flex items-center justify-center">
-          <Image src={ICONS.logo} alt="mosida_logo" width={100} height={100} />
+          <Image src={ICONS.logo} alt="mosida_logo" width={150} height={150} />
         </div>
         <div className="flex gap-2 flex-wrap  items-center justify-center">
           {onNewDrawing && (

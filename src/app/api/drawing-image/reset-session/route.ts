@@ -22,6 +22,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
     }
 
+    await DrawingSession.findOneAndUpdate(
+      { status: "active" },
+      { status: "inactive" },
+      { merge: true }
+    );
+
     console.log("Session", session);
 
     const newSession = new DrawingSession({
@@ -29,7 +35,7 @@ export async function POST(req: NextRequest) {
       _id: undefined,
       createdAt: new Date(),
       updatedAt: new Date(),
-      status: "inactive",
+      status: "active",
     });
 
     await newSession.save();

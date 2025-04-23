@@ -13,6 +13,7 @@ interface Session {
   name: string;
   previewUrl: string;
   imageName: string;
+  status: string;
 }
 
 const Main = () => {
@@ -55,6 +56,38 @@ const Main = () => {
       setError(
         error?.response?.data?.error ||
           "Failed to fetch sessions. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleActivateSession = async (id: string) => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        localStorage.removeItem("token");
+        router.push("/login");
+        throw new Error("No token found. Please log in.");
+      }
+
+      const resp =  await axios.post(
+        "/api/drawing-session/update",
+        { sessionId: id, status: "active" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("resp is : ", resp);
+      await fetchSessions();
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setError(
+        error?.response?.data?.error ||
+          "Failed to update session. Please try again."
       );
     } finally {
       setLoading(false);
@@ -118,13 +151,21 @@ const Main = () => {
                         <td className="px-4 py-2 text-gray-500 truncate overflow-hidden">
                           {session._id}
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-4 py-2 flex gap-2">
                           <button
                             onClick={() => handlePreview(session._id)}
-                            className="bg-blue-500 text-white font-bold px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
+                            className="bg-green-500 text-white font-bold px-4 py-2 rounded-xl hover:bg-green-600 cursor-pointer"
                           >
                             View
                           </button>
+                          {session?.status == "inactive" && (
+                            <button
+                              onClick={() => handleActivateSession(session._id)}
+                              className="bg-green-500 text-white font-bold px-4 py-2 rounded-xl hover:bg-green-600 cursor-pointer"
+                            >
+                              Activate
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}
