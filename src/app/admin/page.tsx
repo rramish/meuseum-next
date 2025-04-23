@@ -11,7 +11,7 @@ import Loader from "@/components/Loader";
 interface Session {
   _id: string;
   name: string;
-  previewUrl: string;
+  imageUrl: string;
   imageName: string;
   status: string;
 }
@@ -72,7 +72,7 @@ const Main = () => {
         throw new Error("No token found. Please log in.");
       }
 
-      const resp =  await axios.post(
+      const resp = await axios.post(
         "/api/drawing-session/update",
         { sessionId: id, status: "active" },
         {
@@ -129,7 +129,7 @@ const Main = () => {
                   <thead>
                     <tr className="text-gray-400 max-w-full">
                       <th className="px-4 py-2 text-left border-b border-gray-100 truncate overflow-hidden">
-                        Image Name
+                        Image
                       </th>
                       <th className="px-4 py-2 text-left border-b border-gray-100 truncate overflow-hidden">
                         Session ID
@@ -146,7 +146,16 @@ const Main = () => {
                         className="hover:bg-gray-50 border-b border-gray-100"
                       >
                         <td className="px-4 py-2 text-gray-500 truncate overflow-hidden">
-                          {session.imageName || "Unnamed Session"}
+                          {/* {session.imageName || "Unnamed Session"} */}
+                          <img
+                            src={session?.imageUrl}
+                            alt="Original"
+                            className="w-16 h-16 object-cover cursor-pointer"
+                            // onClick={() => {
+                            //   setShowPiecePreviewModal(true);
+                            //   setPreviewUrl(piece.dataUrl);
+                            // }}
+                          />
                         </td>
                         <td className="px-4 py-2 text-gray-500 truncate overflow-hidden">
                           {session._id}
