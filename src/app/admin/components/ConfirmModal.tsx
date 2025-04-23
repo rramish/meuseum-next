@@ -25,13 +25,13 @@ export const ConfirmModal = ({
               bg={"bg-[#fff]"}
               title={"Cancel"}
               onClick={onclose}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
             />
             <CustomButton
               disabled={loading}
               bg={"bg-[#fff]"}
               onClick={onSubmit}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
               title={"Yes"}
             />
           </div>

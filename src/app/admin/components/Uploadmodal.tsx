@@ -19,7 +19,7 @@ export const Uploadmodal = ({ onclose }: { onclose: () => void }) => {
               bg={"bg-[#fff]"}
               title={"Cancel"}
               onClick={onclose}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
             />
           </div>
         </div>

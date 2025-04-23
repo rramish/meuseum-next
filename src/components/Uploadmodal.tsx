@@ -19,13 +19,13 @@ const Uploadmodal = ({ onclose } : { onclose: any }) => {
             <CustomButton
               title="Submit Work"
               icon={ICONS.check_icon}
-              bg={"bg-[#1A73E8]"}
+              bg={"bg-[#F287B7]"}
               textcolor={"text-white"}
             />
             <CustomButton
               title="Submit Work"
               icon={ICONS.check_icon}
-              bg={"bg-[#1A73E8]"}
+              bg={"bg-[#F287B7]"}
               textcolor={"text-white"}
             />
           </div>

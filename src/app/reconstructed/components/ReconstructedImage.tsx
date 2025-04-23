@@ -63,7 +63,7 @@ const ReconstructedImage = () => {
             title="Back"
             icon={ICONS.undo_icon}
             bg={"bg-[#fff]"}
-            textcolor={"text-[#1A73E8]"}
+            textcolor={"text-[#F287B7]"}
           />
         </div>
         <div className="flex-1 flex justify-center">
@@ -75,13 +75,13 @@ const ReconstructedImage = () => {
             title="Publish"
             icon={ICONS.eye_icon}
             bg={"bg-[#fff]"}
-            textcolor={"text-[#1A73E8]"}
+            textcolor={"text-[#F287B7]"}
           />
           <CustomButton
             onClick={onDownload}
             title="Reconstruct"
             icon={ICONS.check_icon}
-            bg={"bg-[#1A73E8]"}
+            bg={"bg-[#F287B7]"}
             textcolor={"text-[#fff]"}
           />
         </div>

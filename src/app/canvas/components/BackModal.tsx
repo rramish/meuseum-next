@@ -52,20 +52,20 @@ export const BackModal = ({ onclose }: { onclose: () => void }) => {
               disabled={loading}
               title={"Save"}
               bg={"bg-[#fff]"}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
             />
             <CustomButton
               onClick={handleDontSave}
               disabled={loadingNotSave}
               title={"Don't Save"}
               bg={"bg-[#fff]"}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
             />
             <CustomButton
               onClick={onclose}
               title={"Cancel"}
               bg={"bg-[#fff]"}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
             />
           </div>
         </div>

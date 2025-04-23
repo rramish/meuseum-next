@@ -76,7 +76,7 @@ const Header = ({
               title="Preview"
               bg={"bg-white"}
               icon={ICONS.eye_icon}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
             />
           )} */}
         </div>

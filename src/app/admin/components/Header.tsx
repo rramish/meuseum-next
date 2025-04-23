@@ -76,7 +76,7 @@ const Header = ({
             }`}
             icon={ICONS.image_icon}
             bg={"bg-transparent"}
-            textcolor={"text-[#1A73E8]"}
+            textcolor={"text-[#F287B7]"}
           /> */}
           {/* <CustomButton
             id="step2"
@@ -84,7 +84,7 @@ const Header = ({
             title="New Session"
             icon={ICONS.plus_icon}
             bg={"bg-transparent"}
-            textcolor={"text-[#1A73E8]"}
+            textcolor={"text-[#F287B7]"}
           /> */}
         </div>
 
@@ -99,7 +99,7 @@ const Header = ({
               title="New Session"
               icon={ICONS.plus_icon}
               bg={"bg-transparent"}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
             />
           )}
 
@@ -109,7 +109,7 @@ const Header = ({
               title="Preview"
               bg={"bg-white"}
               icon={ICONS.eye_icon}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
             />
           )}
 
@@ -117,7 +117,7 @@ const Header = ({
             <CustomButton
               onClick={onConstruct}
               title="Reconstruct"
-              bg={"bg-[#1A73E8]"}
+              bg={"bg-[#F287B7]"}
               icon={ICONS.check_icon}
               textcolor={"text-white"}
             />
@@ -127,7 +127,7 @@ const Header = ({
             <CustomButton
               onClick={onReset}
               title="Reset Session"
-              bg={"bg-[#1A73E8]"}
+              bg={"bg-[#F287B7]"}
               textcolor={"text-white"}
             />
           )}

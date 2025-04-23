@@ -50,7 +50,7 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
                 setName(e.target.value);
               }}
               placeholder="Enter your user ID..."
-              className=" w-full md:max-w-60 border border-gray-500 rounded-lg py-2 px-2 text-black"
+              className=" w-full md:max-w-60 border outline-[#f287b7] border-gray-500 rounded-lg py-2 px-2 text-black"
             />
             {errormsg && <p className="text-red-400 text-center">{errormsg}</p>}
           </div>
@@ -62,13 +62,13 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
                 router.back();
                 onclose();
               }}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
             />
             <CustomButton
               disabled={loading}
               bg={"bg-[#fff]"}
               onClick={handleSubmit}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
               title={"Continue"}
             />
           </div>

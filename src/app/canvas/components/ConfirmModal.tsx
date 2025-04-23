@@ -39,7 +39,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
               onClick={onclose}
               title={"Cancel"}
               bg={"bg-[#fff]"}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
             />
             <CustomButton
               onClick={() => {
@@ -51,7 +51,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
               disabled={loading}
               title={loading ? "Processing..." : "Yes"}
               bg={"bg-[#fff]"}
-              textcolor={"text-[#1A73E8]"}
+              textcolor={"text-[#F287B7]"}
             />
           </div>
         </div>
