@@ -91,7 +91,7 @@ const Canvas = () => {
               <div className="flex justify-center items-center">
                 <Sidebar />
               </div>
-              <div className="flex flex-1 border-[#DADCE0] border mr-10 bg-white rounded-lg">
+              <div className="flex flex-1 border-[#DADCE0] border mr-10 bg-white">
                 <DrawingCanvas redoStack={redoStack} undoStack={undoStack} />
               </div>
             </div>

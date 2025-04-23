@@ -14,27 +14,50 @@ const ReconstructedImage = () => {
   const { finalimage } = useImageStorage();
 
   const onDownload = () => {
-    const link = document.createElement("a");
-    link.href = finalimage!;
-    link.download = finalimage!;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      if (!finalimage) {
+        throw new Error("No image available to download.");
+      }
+
+      // Convert base64 to Blob
+      const byteString = atob(finalimage.split(",")[1]);
+      const mimeString = finalimage.split(",")[0].split(":")[1].split(";")[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([ab], { type: mimeString });
+
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "reconstructed_image.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading the image:", error);
+      alert("Failed to download the image. Please try again.");
+    }
   };
 
-  const onPublish = () =>{
+  const onPublish = () => {
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     window.location = "https://www.mosida.com/" as any;
-  }
+  };
 
   const handleBack = () => {
     navigation.back();
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center gap-4 py-6 px-10">
-      <div className="flex gap-10 w-full max-w-4xl py-2 z-10">
-        <div className="flex-1 flex">
+    <div className="w-full h-full flex flex-col items-center gap-4 py-6 px-4">
+      <div className="flex flex-col md:flex-row gap-4 w-full max-w-4xl items-center justify-between py-2 z-10">
+        <div className="flex-1 flex justify-start">
           <CustomButton
             onClick={handleBack}
             title="Back"
@@ -44,9 +67,9 @@ const ReconstructedImage = () => {
           />
         </div>
         <div className="flex-1 flex justify-center">
-          <Image width={100} height={100} alt="" src={ICONS.logo} />
+          <Image width={100} height={100} alt="Logo" src={ICONS.logo} />
         </div>
-        <div className="flex-1 flex gap-1">
+        <div className="flex-1 flex justify-end gap-2">
           <CustomButton
             onClick={onPublish}
             title="Publish"
@@ -64,19 +87,21 @@ const ReconstructedImage = () => {
         </div>
       </div>
 
-      {finalimage ? (
-        // <div className="relative w-full h-[75vh] max-w-6xl mx-auto overflow-hidden z-0 p-2
-        // ">
-        <Image
-          src={finalimage}
-          alt="Reconstructed Image"
-          layout="fill"
-          className="max-w-full max-h-full object-fill rounded-lg shadow-lg"
-        />
-      ) : (
-        // </div>
-        <p className="text-center text-gray-500">No image available</p>
-      )}
+      <div className="w-full max-w-4xl flex justify-center items-center">
+        {finalimage ? (
+          <div className="relative w-full h-[60vh]">
+            <Image
+              src={finalimage}
+              alt="Reconstructed Image"
+              fill
+              className="object-cover"
+              // style={{ objectFit: "cover" }}
+            />
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">No image available</p>
+        )}
+      </div>
     </div>
   );
 };

@@ -7,10 +7,11 @@ import { useImageStorage } from "@/store/imageStore";
 import { CustomButton } from "@/components/CustomButton";
 
 export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
-  const { imagePiece } = useImageStorage();
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const{submissionUrl} = useImageStorage();
+  const { imagePiece } = useImageStorage();
+  const { submissionUrl } = useImageStorage();
+
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -19,7 +20,6 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
       pieceId: imagePiece?._id,
     };
     await axios.post("/api/drawing-image/update", obj);
-    // console.log("update image is : ", resp.data);
     setLoading(false);
     onclose();
     router.replace("/home");

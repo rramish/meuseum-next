@@ -183,7 +183,7 @@ const Session = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       // await getDataFromBackend();
-      router.replace("/admin");
+      router.push("/admin");
       setShowResetConfirmationModal(false);
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -337,7 +337,7 @@ const Session = () => {
           <ConfirmModal
             loading={loading}
             onSubmit={handleResetSession}
-            onclose={() => setShowConfirmationModal(false)}
+            onclose={() => setShowResetConfirmationModal(false)}
           />
         </div>
       )}

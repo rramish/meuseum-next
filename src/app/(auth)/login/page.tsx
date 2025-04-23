@@ -28,7 +28,7 @@ export default function Login() {
         }
         setToken(resp.data.token);
         setLoading(false);
-        router.replace("/admin");
+        router.push("/admin");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

@@ -62,7 +62,7 @@ const Main = () => {
   };
 
   const handlePreview = (previewUrl: string) => {
-    router.replace(`admin/session/${previewUrl}`);
+    router.push(`admin/session/${previewUrl}`);
   };
 
   return (
@@ -85,7 +85,7 @@ const Main = () => {
             )}
             {sessions && sessions.length <= 0 ? (
               <div className="p-4 bg-red-100 text-red-700 rounded mb-4">
-                <p> No Session Found Please Create A Session</p>
+                <p>No Session Found Please Create A Session</p>
               </div>
             ) : (
               <div className="w-full max-w-full overflow-auto">
@@ -121,7 +121,7 @@ const Main = () => {
                         <td className="px-4 py-2">
                           <button
                             onClick={() => handlePreview(session._id)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                            className="bg-blue-500 text-white font-bold px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
                           >
                             View
                           </button>

@@ -5,8 +5,14 @@ import { useToolsStore } from "@/store/toolsStore";
 import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CanvasEditor = ({redoStack, undoStack}: {redoStack:any , undoStack: any}) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const CanvasEditor = ({
+  redoStack,
+  undoStack,
+}: {
+  redoStack: any;
+  undoStack: any;
+}) => {
   const { setCanvasRef } = useCanvasStore();
   const { eraser, setEraser } = useToolsStore();
 
@@ -18,10 +24,8 @@ const CanvasEditor = ({redoStack, undoStack}: {redoStack:any , undoStack: any}) 
 
   const updateCanvasDimensions = useCallback(() => {
     if (canvasContainerRef.current) {
-
       setCanvasWidth(canvasContainerRef.current.offsetWidth);
       setCanvasHeight(canvasContainerRef.current.offsetHeight);
-
     }
   }, []);
 
@@ -45,15 +49,13 @@ const CanvasEditor = ({redoStack, undoStack}: {redoStack:any , undoStack: any}) 
     instance.zoomToPoint(new fabric.Point(pointer.x, pointer.y), newZoom);
   };
 
-
   const trackObject = (obj: fabric.Object) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(obj as any)._isBackground) {
       undoStack.current.push(obj);
       redoStack.current.push(obj);
     }
   };
-
 
   useEffect(() => {
     if (!canvasRef.current || !canvasWidth || !canvasHeight) return;
@@ -86,16 +88,6 @@ const CanvasEditor = ({redoStack, undoStack}: {redoStack:any , undoStack: any}) 
         canvas.absolutePan(new fabric.Point(0, 0));
       }
     };
-
-    // if (eraser && canvasInstance.current) {
-    //   const canvas = canvasInstance.current;
-    //   const activeObjects = canvas.getActiveObjects();
-    //   // if (activeObjects.length > 0) {
-    //   //   activeObjects.forEach((obj) => canvas.remove(obj));
-    //   //   canvas.discardActiveObject();
-    //   //   canvas.renderAll();
-    //   // }
-    // }
 
     canvas.on("object:added", (e) => {
       if (e.target) trackObject(e.target);
@@ -134,37 +126,28 @@ const CanvasEditor = ({redoStack, undoStack}: {redoStack:any , undoStack: any}) 
     imageElement.src = imagePiece.dataUrl;
 
     imageElement.onload = () => {
-      const image = new fabric.Image(imageElement);
-      const aspectRatio = imageElement.width / imageElement.height;
-      const canvasAspectRatio = canvas.width / canvas.height;
+      const imgWidth = imageElement.naturalWidth;
+      const imgHeight = imageElement.naturalHeight;
+      const fabricImage = new fabric.Image(imageElement);
 
-      let scaleFactor;
-      if (aspectRatio > canvasAspectRatio) {
-        scaleFactor = canvas.height / imageElement.height;
-      } else {
-        scaleFactor = canvas.width / imageElement.width;
-      }
+      const canvasWidth = canvas.getWidth();
+      const canvasHeight = canvas.getHeight();
 
-      image.set({
+      fabricImage.set({
         left: 0,
         top: 0,
+        width: canvasWidth,
+        height: canvasHeight,
+        scaleX: canvasWidth / imgWidth,
+        scaleY: canvasHeight / imgHeight,
         selectable: false,
         evented: false,
-        scaleX: scaleFactor,
-        scaleY: scaleFactor,
-        originX: "center",
-        originY: "center",
       });
 
-      image.setCoords();
-      image.left = canvas.width / 2;
-      image.top = canvas.height / 2;
-
-      canvas.add(image);
+      canvas.add(fabricImage);
       canvas.renderAll();
     };
   }, [canvasWidth, canvasHeight, imagePiece]);
-
   useEffect(() => {
     handleAddImage();
   }, [handleAddImage]);
@@ -172,7 +155,7 @@ const CanvasEditor = ({redoStack, undoStack}: {redoStack:any , undoStack: any}) 
   return (
     <div className="relative w-full h-full" ref={canvasContainerRef}>
       <canvas
-        className="border border-dotted border-white absolute top-0 left-0 w-full h-full"
+        className="border border-dotted border-white rounded-0 absolute top-0 left-0 w-full"
         ref={canvasRef}
       />
     </div>

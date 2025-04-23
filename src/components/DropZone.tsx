@@ -124,7 +124,7 @@ const DropZone = ({ onclose }: { onclose: () => void }) => {
 
     const formData = new FormData();
     formData.append("image", file);
-    formData.append("name", "original");
+    formData.append("name", file.name);
 
     // console.log("Making API call to /api/upload-image");
     const resp = await axios.post("/api/upload-image", formData);
