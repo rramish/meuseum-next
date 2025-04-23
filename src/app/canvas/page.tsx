@@ -26,12 +26,14 @@ const Canvas = () => {
 
   const handleUndo = () => {
     if (!canvasRef.current || undoStack.current.length === 1) return;
-    const canvas = canvasRef.current;
-    const lastObject = undoStack.current.pop();
-    if (lastObject) {
-      canvas.remove(lastObject);
-      redoStack.current.push(lastObject);
-      canvas.renderAll();
+    if(undoStack.current.length > 1){
+      const canvas = canvasRef.current;
+      const lastObject = undoStack.current.pop();
+      if (lastObject) {
+        canvas.remove(lastObject);
+        redoStack.current.push(lastObject);
+        canvas.renderAll();
+      }
     }
   };
 
