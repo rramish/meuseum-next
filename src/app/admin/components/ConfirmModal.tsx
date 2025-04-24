@@ -23,7 +23,7 @@ export const ConfirmModal = ({
           <div className="flex gap-2 md:gap-10 flex-wrap items-center py-2">
             <CustomButton
               bg={"bg-[#fff]"}
-              title={"Cancel"}
+              title={"No"}
               onClick={onclose}
               textcolor={"text-[#F287B7]"}
             />

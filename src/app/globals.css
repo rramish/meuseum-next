@@ -47,3 +47,11 @@ shadow{
   width: 100% !important;
   height: 100% !important;
 }
+
+.canvas-zoomIn {
+  cursor: zoom-in;
+}
+
+.canvas-zoomOut {
+  cursor: zoom-in;
+}

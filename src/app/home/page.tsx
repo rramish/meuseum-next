@@ -1,13 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 import * as Img from "next/image";
-import Loader from "@/components/Loader";
-import Header from "./components/Header";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 import { ICONS } from "@/assets";
-import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
+import Header from "./components/Header";
 import { useImageStorage } from "@/store/imageStore";
 
 interface ImagePiece {
@@ -25,11 +25,13 @@ const Home = () => {
   const { setfinalimage } = useImageStorage();
   const { imageBackend, setImagePiece } = useImageStorage();
 
-  const [loading, setLoading] = useState(false);
-  const [fixedWidth, setFixedWidth] = useState(1200);
   const [totalLen, setTotalLen] = useState(0);
-  const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
+  const [loading, setLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>("");
+  const [fixedWidth, setFixedWidth] = useState(1200);
   const [error, setError] = useState<string | null>(null);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -62,7 +64,7 @@ const Home = () => {
           canvas.height = pieceHeight;
         }
         // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      } catch (error:any) {
+      } catch (error: any) {
         console.log("error is : ", error);
         setError("Failed to slice the image. Please try again.");
       }
@@ -86,8 +88,8 @@ const Home = () => {
       img.onerror = () => {
         throw new Error("Failed to load image from dataUrl");
       };
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    } catch (error:any) {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.log("error is : ", error);
       setError("Failed to get image dimensions. Please check the image URL.");
     }
@@ -103,7 +105,7 @@ const Home = () => {
         (f: ImagePiece) => f.username && f.username
       );
       setTotalLen(current.length);
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log("error is ; ", error);
       setError(
@@ -185,8 +187,8 @@ const Home = () => {
         router.push(`/reconstructed`);
       }
       return dataUrl;
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    } catch (error:any) {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.log("error is : ", error);
       setError("Failed to reconstruct the image. Please try again.");
     }
@@ -225,13 +227,7 @@ const Home = () => {
                 {pieces.map((piece, index) => (
                   <div
                     key={index}
-                    className={`text-center flex-1 bg-white rounded-lg group relative`}
-                    onClick={() => {
-                      if (!piece?.username) {
-                        setImagePiece(piece!);
-                        router.push("/canvas");
-                      }
-                    }}
+                    className="text-center flex-1 bg-white rounded-lg group relative"
                   >
                     <div
                       className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full max-w-full ${
@@ -245,16 +241,8 @@ const Home = () => {
                           {piece?.username}
                         </p>
                       )}
-                      <div
-                        className={`m-auto justify-center flex md:hidden items-center w-full h-full group-hover:flex relative`}
-                      >
-                        <div
-                          className={`flex justify-center items-center relative w-1/5 h-1/5 ${
-                            !piece?.username
-                              ? "cursor-pointer"
-                              : "cursor-not-allowed"
-                          } hover:scale-120`}
-                        >
+                      <div className="m-auto justify-center flex md:hidden items-center w-full h-full group-hover:flex relative">
+                        <div className="flex justify-center items-center relative w-1/5 h-1/5 cursor-pointer hover:scale-120">
                           <Img.default
                             src={
                               !piece?.username
@@ -264,7 +252,17 @@ const Home = () => {
                             alt="edit_icon"
                             width={40}
                             height={40}
-                            className=""
+                            onClick={() => {
+                              if (!piece?.username) {
+                                setImagePiece(piece!);
+                                router.push("/canvas");
+                              }
+                              else{
+                                console.log("clicked");
+                                setShowPreviewModal(true);
+                                setPreviewUrl(piece?.updatedUrl);
+                              }
+                            }}
                           />
                         </div>
                       </div>
@@ -289,6 +287,37 @@ const Home = () => {
               </div>
             </div>
           </div>
+          {showPreviewModal && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-100 p-3"
+              onClick={() => {
+                setPreviewUrl("");
+                setShowPreviewModal(false);
+              }}
+            >
+              <div
+                className="bg-white relative"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <img
+                  src={previewUrl || ""}
+                  alt="Preview"
+                  width={500}
+                  height={500}
+                  style={{ objectFit: "contain" }}
+                />
+                <button
+                  className="absolute cursor-pointer -top-2 -right-1 text-black bg-gray-200 rounded-full p-2 hover:bg-gray-300"
+                  onClick={() => {
+                    setPreviewUrl("");
+                    setShowPreviewModal(false);
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

@@ -63,10 +63,7 @@ const Session = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-      console.log("API response:", resp.data);
       setPieces(resp.data.pieces);
-      // const current = resp.data.pieces.filter((f: ImagePiece) => f.username);
-      // setSelectedImages(current);
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log("error is : ", error);
@@ -182,7 +179,6 @@ const Session = () => {
       await axios.post("/api/drawing-image/reset-session", obj, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      // await getDataFromBackend();
       router.push("/admin");
       setShowResetConfirmationModal(false);
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -214,10 +210,14 @@ const Session = () => {
   return (
     <div className="mx-4 max-w-full bg-white pb-2">
       <Header
+        backButton
         onReset={() => {
           setShowResetConfirmationModal(true);
         }}
         onPreview={() => reconstructImage({ download: false })}
+        onReload={() => {
+          getDataFromBackend();
+        }}
       />
       {loading ? (
         <Loader />
@@ -287,14 +287,14 @@ const Session = () => {
                   <td className="px-4 py-2">
                     {piece.updatedAt
                       ? new Intl.DateTimeFormat("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        timeZone: "America/New_York",
-                      }).format(new Date(piece.updatedAt)) || "N/A"
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          timeZone: "America/New_York",
+                        }).format(new Date(piece.updatedAt)) || "N/A"
                       : "N/A"}
                   </td>
                   <td className="px-4 py-2">{piece.username || "N/A"}</td>
@@ -355,14 +355,14 @@ const Session = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <Img.default
-              src={previewUrl || ""}
-              alt="Preview"
               fill
-              style={{ objectFit: "cover" }}
+              alt="Preview"
+              src={previewUrl || ""}
               className="rounded-lg"
+              style={{ objectFit: "cover" }}
             />
             <button
-              className="absolute cursor-pointer top-2 right-2 text-gray-500 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
+              className="absolute cursor-pointer -top-1 -right-2 text-gray-500 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
               onClick={handleClosePreview}
             >
               ✕

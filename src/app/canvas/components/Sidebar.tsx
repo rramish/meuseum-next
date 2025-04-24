@@ -23,6 +23,9 @@ type FolderModalProps = {
   updateBrushSize: (val: number) => void;
   setBrushOpacity: (val: number) => void;
   updateBrushOpacity: (val: number) => void;
+  imageOpacity: number;
+  setImageOpacity: (val: number) => void;
+  updateImageOpacity: (val: number) => void;
 };
 
 const FolderModal = ({
@@ -32,6 +35,9 @@ const FolderModal = ({
   updateBrushSize,
   setBrushOpacity,
   updateBrushOpacity,
+  imageOpacity,
+  setImageOpacity,
+  updateImageOpacity,
 }: FolderModalProps) => {
   return (
     <div className="absolute w-60 left-16 p-4 rounded-lg text-black border border-[#E6E7EA] bg-white z-10">
@@ -50,7 +56,7 @@ const FolderModal = ({
           }}
         />
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 mb-3">
         <p className="w-14">Opacity</p>
         <input
           type="range"
@@ -63,6 +69,22 @@ const FolderModal = ({
             const newOpacity = parseFloat(e.target.value);
             setBrushOpacity(newOpacity);
             updateBrushOpacity(newOpacity);
+          }}
+        />
+      </div>
+      <div className="flex gap-2">
+        <p className="w-14">Image Opacity</p>
+        <input
+          type="range"
+          className="w-44"
+          min={0}
+          max={1}
+          step={0.01}
+          value={imageOpacity}
+          onChange={(e) => {
+            const newOpacity = parseFloat(e.target.value);
+            setImageOpacity(newOpacity);
+            updateImageOpacity(newOpacity);
           }}
         />
       </div>
@@ -80,6 +102,7 @@ const Sidebar = () => {
   const [brushSize, setBrushSize] = useState<number>(10);
   const [brushOpacity, setBrushOpacity] = useState<number>(1);
   const [brushColor, setBrushColor] = useState<string>("#0052cc");
+  const [imageOpacity, setImageOpacity] = useState<number>(1);
 
   const getBrushColorWithOpacity = () => hexToRgba(brushColor, brushOpacity);
 
@@ -103,51 +126,105 @@ const Sidebar = () => {
     }
   };
 
+  const updateImageOpacity = (opacity: number) => {
+    const canvas = canvasRef?.current as unknown as fabric.Canvas;
+    if (canvas && canvas._objects.length > 0) {
+      const imageObject = canvas._objects[0];
+      if (imageObject && imageObject.type === "image") {
+        imageObject.opacity = opacity;
+        canvas.renderAll();
+      }
+    }
+  };
+
   const setPencil = () => {
-    if (canvasRef?.current) {
-      const canvas = canvasRef.current as unknown as fabric.Canvas;
+    const canvas = canvasRef?.current as unknown as fabric.Canvas;
+
+    if (canvas) {
+      canvas.off("mouse:down");
+
+      const canvasContainer = canvas.lowerCanvasEl.parentNode as HTMLElement;
+      canvasContainer.classList.remove("canvas-zoom");
+
       canvas.isDrawingMode = true;
+
       const pencilBrush = new fabric.PencilBrush(canvas);
       pencilBrush.width = brushSize;
       pencilBrush.color = getBrushColorWithOpacity();
       canvas.freeDrawingBrush = pencilBrush;
+
+      setActive("pencil");
     }
   };
 
   const setBrush = () => {
-    if (canvasRef?.current) {
-      const canvas = canvasRef.current as unknown as fabric.Canvas;
+    const canvas = canvasRef?.current as unknown as fabric.Canvas;
+
+    if (canvas) {
+      canvas.off("mouse:down");
+
+      const canvasContainer = canvas.lowerCanvasEl.parentNode as HTMLElement;
+      canvasContainer.classList.remove("canvas-zoom");
+
       canvas.isDrawingMode = true;
+
       const circleBrush = new fabric.CircleBrush(canvas);
       circleBrush.width = brushSize;
       circleBrush.color = getBrushColorWithOpacity();
       canvas.freeDrawingBrush = circleBrush;
+
+      setActive("brush");
     }
   };
 
   const setEraserTool = () => {
     const canvas = canvasRef?.current as unknown as fabric.Canvas;
+
     if (canvas) {
+      canvas.off("mouse:down");
+
+      const canvasContainer = canvas.lowerCanvasEl.parentNode as HTMLElement;
+      canvasContainer.classList.remove("canvas-zoom");
+
       canvas.isDrawingMode = true;
+
       const eraserBrush = new fabric.PencilBrush(canvas);
       eraserBrush.width = brushSize;
       eraserBrush.color = "#FFFFFF";
       canvas.freeDrawingBrush = eraserBrush;
+
       setEraser(true);
       setActive("eraser");
     }
   };
 
   const toggleZoom = () => {
-    if (canvasRef?.current) {
-      const canvas = canvasRef.current;
+    const canvas = canvasRef?.current as unknown as fabric.Canvas;
+    const canvasContainer = canvas?.lowerCanvasEl.parentNode as HTMLElement;
+
+    if (canvas) {
+      canvas.off("mouse:down");
+
       if (zoomlevel === 1) {
-        canvas.setZoom(2);
-        setZoomlevel(2);
+        canvasContainer.classList.add("canvas-zoom");
+        canvas.isDrawingMode = false;
+
+        const zoomHandler = (event: any) => {
+          const pointer = canvas.getPointer(event.e);
+          canvas.zoomToPoint(new fabric.Point(pointer.x, pointer.y), 2);
+          setZoomlevel(2);
+        };
+
+        canvas.on("mouse:down", zoomHandler);
+
+        setActive("zoom");
       } else {
-        canvas.setZoom(1);
-        setZoomlevel(1);
+        canvas.zoomToPoint(new fabric.Point(0, 0), 1);
         canvas.absolutePan(new fabric.Point(0, 0));
+        canvasContainer.classList.remove("canvas-zoom");
+        setZoomlevel(1);
+
+        canvas.off("mouse:down");
       }
     }
   };
@@ -177,6 +254,7 @@ const Sidebar = () => {
         onClick={() => {
           setActive("pencil");
           setPencil();
+          setShowFolder(false);
         }}
         className={`py-1 cursor-pointer hover:scale-150 duration-300 ${
           active === "pencil" && "scale-150 scale-x-150"
@@ -190,6 +268,7 @@ const Sidebar = () => {
         onClick={() => {
           setActive("brush");
           setBrush();
+          setShowFolder(false);
         }}
         className={`py-1 cursor-pointer hover:scale-150 duration-300 ${
           active === "brush" && "scale-150 scale-x-150"
@@ -236,17 +315,20 @@ const Sidebar = () => {
           <FolderModal
             brushSize={brushSize}
             setBrushSize={setBrushSize}
-            updateBrushSize={updateBrushSize}
             brushOpacity={brushOpacity}
             setBrushOpacity={setBrushOpacity}
+            updateBrushSize={updateBrushSize}
             updateBrushOpacity={updateBrushOpacity}
+            imageOpacity={imageOpacity}
+            setImageOpacity={setImageOpacity}
+            updateImageOpacity={updateImageOpacity}
           />
         )}
       </div>
       <div className="flex justify-center">
         <Image
-          src={ICONS.zoom_2x_icon}
-          alt="Zoom Tool"
+          src={zoomlevel === 1 ? ICONS.zoom_2x_icon : ICONS.zoom_1x_icon}
+          alt={zoomlevel === 1 ? "Zoom In Tool" : "Zoom Out Tool"}
           width={30}
           height={50}
           onClick={() => {

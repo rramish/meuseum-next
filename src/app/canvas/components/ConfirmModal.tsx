@@ -37,7 +37,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
           <div className="flex gap-2 justify-between flex-wrap py-2">
             <CustomButton
               onClick={onclose}
-              title={"Cancel"}
+              title={"No"}
               bg={"bg-[#fff]"}
               textcolor={"text-[#F287B7]"}
             />

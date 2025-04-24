@@ -59,10 +59,10 @@ const ReconstructedImage = () => {
       <div className="flex flex-col md:flex-row gap-4 w-full max-w-2xl items-center justify-between py-2 z-10">
         <div className="flex-1 flex justify-start">
           <CustomButton
-            onClick={handleBack}
             title="Back"
-            icon={ICONS.undo_icon}
             bg={"bg-[#fff]"}
+            onClick={handleBack}
+            icon={ICONS.back_icon}
             textcolor={"text-[#F287B7]"}
           />
         </div>
@@ -71,17 +71,17 @@ const ReconstructedImage = () => {
         </div>
         <div className="flex-1 flex justify-end gap-2">
           <CustomButton
-            onClick={onPublish}
             title="Publish"
-            icon={ICONS.eye_icon}
             bg={"bg-[#fff]"}
+            onClick={onPublish}
+            icon={ICONS.eye_icon}
             textcolor={"text-[#F287B7]"}
           />
           <CustomButton
-            onClick={onDownload}
             title="Reconstruct"
-            icon={ICONS.check_icon}
             bg={"bg-[#F287B7]"}
+            onClick={onDownload}
+            icon={ICONS.check_icon}
             textcolor={"text-[#fff]"}
           />
         </div>

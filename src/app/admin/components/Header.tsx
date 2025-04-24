@@ -1,20 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 import { ICONS } from "@/assets";
+import { useRouter } from "next/navigation";
 
 export const CustomButton = ({
-  icon,
-  title = "Button",
-  fontsize = "text-base",
-  bg,
   id,
+  bg,
+  icon,
   textcolor,
-  onClick = () => {},
   width = 20,
   height = 20,
+  title = "Button",
+  disabled = false,
+  onClick = () => {},
+  fontsize = "text-base",
 }: {
   id?: string;
   bg?: string;
@@ -24,6 +26,7 @@ export const CustomButton = ({
   height?: number;
   fontsize?: string;
   textcolor?: string;
+  disabled?: boolean;
   onClick?: () => void;
 }) => {
   return (
@@ -49,49 +52,74 @@ export const CustomButton = ({
 };
 
 const Header = ({
-  onNewDrawing,
+  onReset,
+  onReload,
   onPreview,
   onConstruct,
-  onReset,
+  onNewDrawing,
+  logout = false,
+  backButton = false,
 }: {
-  onNewDrawing?: () => void;
+  reload?: boolean;
+  logout?: boolean;
+  onReset?: () => void;
+  backButton?: boolean;
+  onReload?: () => void;
   onPreview?: () => void;
   onConstruct?: () => void;
-  onReset?: () => void;
+  onNewDrawing?: () => void;
 }) => {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setLoading(true);
+    await localStorage.removeItem("token");
+    setLoading(false);
+    router.push("/login");
+  };
 
   return (
     <div className="px-10 py-6">
       <div className="flex items-center justify-center gap-2 h-full flex-wrap flex-col md:flex-row md:justify-between">
-        <div className="flex gap-2 flex-wrap items-center justify-center flex-1">
-          {/* <CustomButton
-            id="step1"
-            onClick={() => {
-              window.location.reload();
-            }}
-            title={`Canvas ${
-              selectedImages.length > 0 ? 20 - selectedImages.length : ""
-            } ${selectedImages.length > 0 ? "/" : ""} ${
-              selectedImages.length > 0 ? 20 : ""
-            }`}
-            icon={ICONS.image_icon}
-            bg={"bg-transparent"}
-            textcolor={"text-[#F287B7]"}
-          /> */}
-          {/* <CustomButton
-            id="step2"
-            onClick={onNewDrawing}
-            title="New Session"
-            icon={ICONS.plus_icon}
-            bg={"bg-transparent"}
-            textcolor={"text-[#F287B7]"}
-          /> */}
+        <div className="flex gap-2 flex-wrap items-start justify-center md:justify-start flex-1">
+          {logout && (
+            <CustomButton
+              title="Logout"
+              bg={"bg-white"}
+              disabled={loading}
+              onClick={handleLogout}
+              icon={ICONS.logout_icon}
+              textcolor={"text-[#F287B7]"}
+            />
+          )}
+          {backButton && (
+            <CustomButton
+              title="Back"
+              bg={"bg-white"}
+              onClick={() => {
+                router.back();
+              }}
+              icon={ICONS.back_icon}
+              textcolor={"text-[#F287B7]"}
+            />
+          )}
+          {onReload && (
+            <CustomButton
+              title="Reload"
+              bg={"bg-white"}
+              onClick={onReload}
+              icon={ICONS.reload_icon}
+              textcolor={"text-[#F287B7]"}
+            />
+          )}
         </div>
 
         <div className="self-center flex items-center justify-center flex-1">
           <Image src={ICONS.logo} alt="mosida_logo" width={150} height={150} />
         </div>
-        <div className="flex gap-2 flex-wrap  items-center justify-end flex-1">
+        <div className="flex gap-2 flex-wrap justify-center items-center md:justify-end flex-1">
           {onNewDrawing && (
             <CustomButton
               id="step2"

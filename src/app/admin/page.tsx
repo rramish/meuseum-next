@@ -1,12 +1,13 @@
 "use client";
 
 import axios from "axios";
+import * as Img from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import Header from "./components/Header";
-import { Uploadmodal } from "./components/Uploadmodal";
 import Loader from "@/components/Loader";
+import { Uploadmodal } from "./components/Uploadmodal";
 
 interface Session {
   _id: string;
@@ -23,6 +24,8 @@ const Main = () => {
   const [showModal, setShowModal] = useState(false);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [activePiece, setActivePiece] = useState("");
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -101,6 +104,7 @@ const Main = () => {
   return (
     <div className="mx-4 max-w-full bg-white pb-2">
       <Header
+        logout
         onNewDrawing={() => {
           setShowModal(true);
         }}
@@ -121,20 +125,20 @@ const Main = () => {
                 <p>No Session Found Please Create A Session</p>
               </div>
             ) : (
-              <div className="w-full max-w-full overflow-auto">
-                <h2 className="text-gray-500 text-lg font-bold mb-4">
+              <div className="w-full max-w-4xl mx-auto overflow-auto">
+                <h2 className="text-gray-500 text-lg font-bold mb-4 text-center">
                   All Sessions
                 </h2>
-                <table className="w-full max-w-full overflow-scroll">
+                <table className="w-full border-collapse">
                   <thead>
-                    <tr className="text-gray-400 max-w-full">
-                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate overflow-hidden">
+                    <tr className="text-gray-400">
+                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate">
                         Image
                       </th>
-                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate overflow-hidden">
+                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate">
                         Session ID
                       </th>
-                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate overflow-hidden">
+                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate">
                         Actions
                       </th>
                     </tr>
@@ -145,18 +149,18 @@ const Main = () => {
                         key={session._id}
                         className="hover:bg-gray-50 border-b border-gray-100"
                       >
-                        <td className="px-4 py-2 text-gray-500 truncate overflow-hidden">
+                        <td className="px-4 py-2 text-gray-500 truncate">
                           <img
-                            src={session?.imageUrl}
                             alt="Original"
+                            src={session?.imageUrl}
+                            onClick={() => {
+                              setActivePiece(session?.imageUrl);
+                              setShowPreviewModal(true);
+                            }}
                             className="w-16 h-16 object-cover cursor-pointer"
-                            // onClick={() => {
-                            //   setShowPiecePreviewModal(true);
-                            //   setPreviewUrl(piece.dataUrl);
-                            // }}
                           />
                         </td>
-                        <td className="px-4 py-2 text-gray-500 truncate overflow-hidden">
+                        <td className="px-4 py-2 text-gray-500 truncate">
                           {session._id}
                         </td>
                         <td className="px-4 py-2 flex gap-2">
@@ -172,6 +176,14 @@ const Main = () => {
                               className="bg-[#f287b7] text-white font-bold px-4 py-2 rounded-xl hover:bg-[#f287b780] cursor-pointer"
                             >
                               Activate
+                            </button>
+                          )}
+                          {session?.status == "active" && (
+                            <button
+                              disabled
+                              className="bg-[#f287b780] text-white font-bold px-4 py-2 rounded-xl"
+                            >
+                              Active
                             </button>
                           )}
                         </td>
@@ -191,6 +203,38 @@ const Main = () => {
                 setShowModal(false);
               }}
             />
+          </div>
+        )}
+
+        {showPreviewModal && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-100 p-3"
+            onClick={() => {
+              setActivePiece("");
+              setShowPreviewModal(false);
+            }}
+          >
+            <div
+              className="bg-white relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={activePiece || ""}
+                alt="Preview"
+                width={500}
+                height={500}
+                style={{ objectFit: "contain" }}
+              />
+              <button
+                className="absolute cursor-pointer -top-2 -right-1 text-black bg-gray-200 rounded-full p-2 hover:bg-gray-300"
+                onClick={() => {
+                  setActivePiece("");
+                  setShowPreviewModal(false);
+                }}
+              >
+                ✕
+              </button>
+            </div>
           </div>
         )}
       </div>
