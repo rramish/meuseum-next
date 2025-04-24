@@ -1,7 +1,7 @@
 "use client";
 import * as fabric from "fabric";
 import { useRef, useEffect, useState, useCallback } from "react";
-import { useToolsStore } from "@/store/toolsStore";
+// import { useToolsStore } from "@/store/toolsStore";
 import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
 
@@ -15,7 +15,7 @@ const CanvasEditor = ({
   undoStack: any;
 }) => {
   const { setCanvasRef } = useCanvasStore();
-  const { eraser, setEraser } = useToolsStore();
+  // const { eraser, setEraser } = useToolsStore();
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasInstance = useRef<fabric.Canvas | null>(null);
@@ -103,7 +103,7 @@ const CanvasEditor = ({
         canvasRef.current.removeEventListener("contextmenu", handleRightClick);
       }
     };
-  }, [eraser, canvasRef, setCanvasRef, setEraser, canvasWidth, canvasHeight]);
+  }, [canvasRef, setCanvasRef, canvasWidth, canvasHeight]);
 
   const { imagePiece } = useImageStorage();
 
@@ -136,7 +136,7 @@ const CanvasEditor = ({
       canvas.add(fabricImage);
       canvas.renderAll();
     };
-  }, [canvasWidth, canvasHeight, imagePiece, eraser, setEraser]);
+  }, [canvasWidth, canvasHeight, imagePiece]);
   useEffect(() => {
     handleAddImage();
   }, [handleAddImage]);

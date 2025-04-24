@@ -102,7 +102,7 @@ const Session = () => {
       const pieceWidth = 200;
       const pieceHeight = 160;
       const canvasWidth = (maxCol + 2) * pieceWidth;
-      const canvasHeight = (maxRow + 2) * pieceHeight;
+      const canvasHeight = (maxRow+ 2) * pieceHeight;
 
       const canvas = document.createElement("canvas");
       canvas.width = canvasWidth;
