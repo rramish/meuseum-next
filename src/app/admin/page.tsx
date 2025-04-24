@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Loader from "@/components/Loader";
 import { Uploadmodal } from "./components/Uploadmodal";
+import { useImageStorage } from "@/store/imageStore";
 
 interface Session {
   _id: string;
@@ -25,6 +26,7 @@ const Main = () => {
   const [error, setError] = useState<string | null>(null);
   const [activePiece, setActivePiece] = useState("");
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const {setOriginalSessionImageURL} = useImageStorage();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -52,6 +54,7 @@ const Main = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log("all sessions are : ", response.data.sessions);
       setSessions(response.data.sessions);
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -96,7 +99,9 @@ const Main = () => {
     }
   };
 
-  const handlePreview = (previewUrl: string) => {
+  const handlePreview = (previewUrl: string, imgLink: string) => {
+    console.log("link is : ", imgLink);
+    setOriginalSessionImageURL(imgLink);
     router.push(`admin/session/${previewUrl}`);
   };
 
@@ -164,7 +169,7 @@ const Main = () => {
                         </td>
                         <td className="px-4 py-2 flex gap-2">
                           <button
-                            onClick={() => handlePreview(session._id)}
+                            onClick={() => handlePreview(session._id, session.imageUrl)}
                             className="bg-[#f287b7] text-white font-bold px-4 py-2 rounded-xl hover:bg-[#f287b780] cursor-pointer"
                           >
                             View

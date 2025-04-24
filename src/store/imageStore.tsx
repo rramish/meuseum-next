@@ -9,6 +9,9 @@ interface ImageState {
   finalimage: string | null;
   setfinalimage: (image: string) => void;
 
+  originalSessionImageURL: string | null;
+  setOriginalSessionImageURL: (image: string) => void;
+
   submissionUrl: string | null;
   setSubmissionUrl: (submissionUrl: string) => void;
 
@@ -44,6 +47,9 @@ export const useImageStorage = create<ImageState>()(
 
       finalimage: null,
       setfinalimage: (finalimage) => set({ finalimage }),
+
+      originalSessionImageURL: null,
+      setOriginalSessionImageURL: (originalSessionImageURL) => set({ originalSessionImageURL }),
 
       submissionUrl: null,
       setSubmissionUrl: (submissionUrl) => set({ submissionUrl }),

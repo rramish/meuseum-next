@@ -1,9 +1,9 @@
 "use client";
 import * as fabric from "fabric";
-import { useRef, useEffect, useState, useCallback } from "react";
-// import { useToolsStore } from "@/store/toolsStore";
+
 import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
+import { useRef, useEffect, useState, useCallback } from "react";
 
 const CanvasEditor = ({
   redoStack,
@@ -15,7 +15,6 @@ const CanvasEditor = ({
   undoStack: any;
 }) => {
   const { setCanvasRef } = useCanvasStore();
-  // const { eraser, setEraser } = useToolsStore();
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasInstance = useRef<fabric.Canvas | null>(null);
@@ -144,7 +143,7 @@ const CanvasEditor = ({
   return (
     <div className="relative w-full h-full" ref={canvasContainerRef}>
       <canvas
-        className="border border-dotted border-white rounded-0 absolute top-0 left-0 w-full"
+        className="rounded-0 absolute top-0 left-0 w-full"
         ref={canvasRef}
       />
     </div>
