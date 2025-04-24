@@ -73,6 +73,9 @@ const Canvas = () => {
         onRedo={handleRedo}
         onUndo={handleUndo}
         onFinishDrawing={() => {
+          if(toggleImage){
+            handleToggle();
+          }
           const finalImageDataUrl = canvasRef.current!.toDataURL();
           setSubmissionUrl(finalImageDataUrl);
           setShowConfirmModal(true);

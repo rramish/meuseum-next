@@ -88,12 +88,14 @@ const ReconstructedImage = () => {
       </div>
       <div className="w-full flex justify-center items-center">
         {finalimage ? (
-          <div className="w-4/5 relative h-[80vh]">
+          <div className="w-full relative h-[80vh]">
             <Image
               src={finalimage}
               alt="Reconstructed Image"
-              fill
-              className="object-contain"
+              // fill
+              width={1000}
+              height={900}
+              className="object-cover w-full h-full"
             />
           </div>
         ) : (
