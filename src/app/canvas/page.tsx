@@ -57,6 +57,7 @@ const Canvas = () => {
     if (canvas && canvas._objects.length > 0) {
       canvas._objects.forEach((obj, index) => {
         if (index !== 0) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           toggled ? obj.set("opacity", 1) : obj.set("opacity", 0);
         }
         canvas.renderAll();

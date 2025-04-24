@@ -5,12 +5,13 @@ import { useToolsStore } from "@/store/toolsStore";
 import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CanvasEditor = ({
   redoStack,
   undoStack,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   redoStack: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   undoStack: any;
 }) => {
   const { setCanvasRef } = useCanvasStore();

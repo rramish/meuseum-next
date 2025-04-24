@@ -29,6 +29,7 @@ export default function Login() {
         setLoading(false);
         router.push("/admin");
       }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setErrorMessage(error.response.data.error);
       setTimeout(() => {
