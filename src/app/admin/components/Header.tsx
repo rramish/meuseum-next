@@ -14,7 +14,6 @@ export const CustomButton = ({
   width = 20,
   height = 20,
   title = "Button",
-  disabled = false,
   onClick = () => {},
   fontsize = "text-base",
 }: {

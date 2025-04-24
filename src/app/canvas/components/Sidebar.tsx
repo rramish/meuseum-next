@@ -208,7 +208,7 @@ const Sidebar = () => {
       if (zoomlevel === 1) {
         canvasContainer.classList.add("canvas-zoom");
         canvas.isDrawingMode = false;
-
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const zoomHandler = (event: any) => {
           const pointer = canvas.getPointer(event.e);
           canvas.zoomToPoint(new fabric.Point(pointer.x, pointer.y), 2);
