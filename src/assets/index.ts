@@ -2,7 +2,8 @@ export const ICONS = {
   brush_icon: new URL("./Brush.svg", import.meta.url).href,
   eraser_icon: new URL("./Eraser.svg", import.meta.url).href,
   marker_icon: new URL("./Marker.svg", import.meta.url).href,
-  eye_icon: new URL("./Eye.svg", import.meta.url).href,
+  eye_icon: new URL("./eye_show.svg", import.meta.url).href,
+  eye_hide_icon: new URL("./eye_hide.svg", import.meta.url).href,
   folder_icon: new URL("./Folder.svg", import.meta.url).href,
   image_icon: new URL("./image.svg", import.meta.url).href,
   check_icon: new URL("./check.svg", import.meta.url).href,
@@ -28,6 +29,7 @@ export const ICONS = {
 
   logo: new URL("./images/Logo.png", import.meta.url).href,
   edit_img: new URL("./images/edit-image.svg", import.meta.url).href,
+  preview_img: new URL("./images/preview-image.svg", import.meta.url).href,
   not_available_image: new URL("./images/not_available-1.png", import.meta.url)
     .href,
   reset: new URL("./images/reset.png", import.meta.url).href,

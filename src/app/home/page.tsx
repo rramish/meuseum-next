@@ -247,7 +247,7 @@ const Home = () => {
                             src={
                               !piece?.username
                                 ? ICONS.edit_img
-                                : ICONS.not_available_image
+                                : ICONS.preview_img
                             }
                             alt="edit_icon"
                             width={40}
@@ -256,9 +256,7 @@ const Home = () => {
                               if (!piece?.username) {
                                 setImagePiece(piece!);
                                 router.push("/canvas");
-                              }
-                              else{
-                                console.log("clicked");
+                              } else {
                                 setShowPreviewModal(true);
                                 setPreviewUrl(piece?.updatedUrl);
                               }

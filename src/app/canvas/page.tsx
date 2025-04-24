@@ -14,10 +14,11 @@ import { ConfirmModal } from "./components/ConfirmModal";
 const Canvas = () => {
   const { canvasRef } = useCanvasStore();
   const { setSubmissionUrl } = useImageStorage();
-  
+
   const [showModal, setShowModal] = useState(true);
   const [showBackModal, setShowBackModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [toggleImage, setToggleImage] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const undoStack = useRef<any>([]);
@@ -26,7 +27,7 @@ const Canvas = () => {
 
   const handleUndo = () => {
     if (!canvasRef.current || undoStack.current.length === 1) return;
-    if(undoStack.current.length > 1){
+    if (undoStack.current.length > 1) {
       const canvas = canvasRef.current;
       const lastObject = undoStack.current.pop();
       if (lastObject) {
@@ -48,80 +49,84 @@ const Canvas = () => {
     }
   };
 
+  const handleToggle = () => {
+    const toggled = toggleImage;
+    setToggleImage(!toggleImage);
+    const canvas = canvasRef?.current as unknown as fabric.Canvas;
+    if (canvas && canvas._objects.length > 0) {
+      const imageObject = canvas._objects[0];
+      if (imageObject && imageObject.type === "image") {
+        imageObject.opacity = toggled ? 1 : 0;
+        canvas.renderAll();
+      }
+    }
+  };
+
   return (
-    <>
-      <div className="flex flex-col bg-blue min-h-screen">
-        {/* <Image
-          src={ICONS.bg_image}
-          alt=""
-          width={100}
-          height={100}
-          className={`absolute -z-10 top-0 left-0 w-full min-h-screen`}
-        /> */}
-        <Header
-          onRedo={handleRedo}
-          onUndo={handleUndo}
-          onFinishDrawing={() => {
-            const finalImageDataUrl = canvasRef.current!.toDataURL();
-            setSubmissionUrl(finalImageDataUrl);
-            setShowConfirmModal(true);
-          }}
-          onGoBack={() => {
-            const finalImageDataUrl = canvasRef.current!.toDataURL();
-            setSubmissionUrl(finalImageDataUrl);
-            setShowBackModal(true);
-          }}
-        />
-        {showModal && (
-          <>
-            <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
-            <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
-              <NameModal
-                onclose={() => {
-                  setShowModal(false);
-                }}
-              />
-            </div>
-          </>
-        )}
-        {showConfirmModal && (
-          <>
-            <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
-            <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
-              <ConfirmModal
-                onclose={() => {
-                  setShowConfirmModal(false);
-                }}
-              />
-            </div>
-          </>
-        )}
-        {showBackModal && (
-          <>
-            <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
-            <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
-              <BackModal
-                onclose={() => {
-                  setShowBackModal(false);
-                }}
-              />
-            </div>
-          </>
-        )}
-        {/* {!showModal && !showConfirmModal && ( */}
-        <div className="flex flex-1 w-full h-full">
-          <div className="flex flex-1 pb-10">
-            <div className="flex justify-center items-center">
-              <Sidebar />
-            </div>
-            <div className="flex flex-1 border-[#DADCE0] border mr-10 bg-white rounded-lg">
-              <DrawingCanvas redoStack={redoStack} undoStack={undoStack} />
-            </div>
+    <div className="flex flex-col bg-blue min-h-screen">
+      <Header
+        toggleImage={toggleImage}
+        onToggle={handleToggle}
+        onRedo={handleRedo}
+        onUndo={handleUndo}
+        onFinishDrawing={() => {
+          const finalImageDataUrl = canvasRef.current!.toDataURL();
+          setSubmissionUrl(finalImageDataUrl);
+          setShowConfirmModal(true);
+        }}
+        onGoBack={() => {
+          const finalImageDataUrl = canvasRef.current!.toDataURL();
+          setSubmissionUrl(finalImageDataUrl);
+          setShowBackModal(true);
+        }}
+      />
+      {showModal && (
+        <>
+          <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
+            <NameModal
+              onclose={() => {
+                setShowModal(false);
+              }}
+            />
+          </div>
+        </>
+      )}
+      {showConfirmModal && (
+        <>
+          <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
+            <ConfirmModal
+              onclose={() => {
+                setShowConfirmModal(false);
+              }}
+            />
+          </div>
+        </>
+      )}
+      {showBackModal && (
+        <>
+          <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
+            <BackModal
+              onclose={() => {
+                setShowBackModal(false);
+              }}
+            />
+          </div>
+        </>
+      )}
+      <div className="flex flex-1 w-full h-full">
+        <div className="flex flex-1 pb-10">
+          <div className="flex justify-center items-center">
+            <Sidebar />
+          </div>
+          <div className="flex flex-1 border-[#DADCE0] border mr-10 bg-white">
+            <DrawingCanvas redoStack={redoStack} undoStack={undoStack} />
           </div>
         </div>
-        {/* )} */}
       </div>
-    </>
+    </div>
   );
 };
 

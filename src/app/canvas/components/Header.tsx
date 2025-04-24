@@ -4,31 +4,35 @@ import { ICONS } from "@/assets";
 import { CustomButton } from "@/components/CustomButton";
 
 const Header = ({
-  onFinishDrawing,
   onUndo,
   onRedo,
   onGoBack,
+  onToggle,
+  toggleImage,
+  onFinishDrawing,
 }: {
-  onFinishDrawing: () => void;
   onUndo: () => void;
   onRedo: () => void;
   onGoBack: () => void;
+  onToggle: () => void;
+  toggleImage: boolean;
+  onFinishDrawing: () => void;
 }) => {
   return (
     <div className="flex flex-wrap justify-between px-10 py-6 gap-2">
       <div className="flex gap-4">
         <CustomButton
           title="Back"
-          icon={ICONS.back_icon}
-          onClick={onGoBack}
           bg={"bg-[#fff]"}
+          onClick={onGoBack}
+          icon={ICONS.back_icon}
           textcolor={"text-[#F287B7]"}
         />
       </div>
-      <div className="flex gap-1 md:gap-4">
+      <div className="flex gap-1 flex-wrap md:gap-4">
         <CustomButton
-          onClick={onUndo}
           title="Undo"
+          onClick={onUndo}
           bg={"bg-[#fff]"}
           icon={ICONS.undo_icon}
           textcolor={"text-[#F287B7]"}
@@ -41,13 +45,20 @@ const Header = ({
           textcolor={"text-[#F287B7]"}
         />
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-4 flex-wrap">
         <CustomButton
-          onClick={onFinishDrawing}
+          bg={"bg-[#fff]"}
+          title="Toggle Image"
+          icon={toggleImage ? ICONS.eye_icon : ICONS.eye_hide_icon}
+          onClick={onToggle}
+          textcolor={"text-[#F287B7]"}
+        />
+        <CustomButton
+          bg={"bg-[#F287B7]"}
           title="Finish Drawing"
           icon={ICONS.check_icon}
-          bg={"bg-[#F287B7]"}
           textcolor={"text-white"}
+          onClick={onFinishDrawing}
         />
       </div>
     </div>
