@@ -49,7 +49,6 @@ const ImageSelection = () => {
 
     const imageUrl = URL.createObjectURL(file);
     setSelectedImageUrl(imageUrl);
-    // console.log("Selected file:", file);
     setIsDragging(false);
 
     const img = new Image();

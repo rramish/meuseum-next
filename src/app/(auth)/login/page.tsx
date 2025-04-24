@@ -15,12 +15,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
     try {
       const resp = await axios.post("/api/auth/login", { email, password });
-
-      // console.log("data is : ", resp.data);
 
       if (resp?.data?.token) {
         if (typeof window !== "undefined") {
@@ -30,7 +29,6 @@ export default function Login() {
         setLoading(false);
         router.push("/admin");
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setErrorMessage(error.response.data.error);
       setTimeout(() => {
@@ -46,36 +44,38 @@ export default function Login() {
         <h1 className="mb-6 text-center text-2xl font-semibold text-gray-800">
           Login
         </h1>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          className="mb-4 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          className="mb-6 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errorMessage && (
-          <p className="mb-4 text-center text-sm text-red-500">
-            {errorMessage}
-          </p>
-        )}
-        <button
-          onClick={handleLogin}
-          disabled={loading}
-          className={`w-full rounded-md py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            loading
-              ? "cursor-not-allowed bg-blue-400"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
+        <form onSubmit={handleLogin}>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className="mb-4 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:bg-[#f287b780]"
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            className="mb-6 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:bg-[#f287b780]"
+          />
+          {errorMessage && (
+            <p className="mb-4 text-center text-sm text-red-500">
+              {errorMessage}
+            </p>
+          )}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full rounded-md py-2 text-white focus:outline-none focus:ring-2 focus:bg-[#f287b780] cursor-pointer ${
+              loading
+                ? "cursor-not-allowed bg-[#f287b780]"
+                : "bg-[#f287b7] hover:bg-[#f287b780]"
+            }`}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
       </div>
     </div>
   );

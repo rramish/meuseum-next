@@ -305,7 +305,7 @@ const Home = () => {
                   style={{ objectFit: "contain" }}
                 />
                 <button
-                  className="absolute cursor-pointer -top-2 -right-1 text-black bg-gray-200 rounded-full p-2 hover:bg-gray-300"
+                  className="absolute cursor-pointer -top-2 -right-1 text-[#F287B7] bg-gray-200 rounded-full p-2 hover:bg-gray-300 font-extrabold"
                   onClick={() => {
                     setPreviewUrl("");
                     setShowPreviewModal(false);

@@ -222,7 +222,7 @@ const Session = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto px-10 py-4">
           <table className="w-full border-collapse">
             <thead>
               <tr className="text-gray-400 max-w-full">
@@ -362,7 +362,7 @@ const Session = () => {
               style={{ objectFit: "cover" }}
             />
             <button
-              className="absolute cursor-pointer -top-1 -right-2 text-gray-500 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
+              className="absolute cursor-pointer -top-1 -right-2 text-[#F287B7] bg-gray-200 rounded-full p-2 hover:bg-gray-300 font-extrabold"
               onClick={handleClosePreview}
             >
               ✕

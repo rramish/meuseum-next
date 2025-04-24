@@ -53,12 +53,14 @@ const Canvas = () => {
     const toggled = toggleImage;
     setToggleImage(!toggleImage);
     const canvas = canvasRef?.current as unknown as fabric.Canvas;
+
     if (canvas && canvas._objects.length > 0) {
-      const imageObject = canvas._objects[0];
-      if (imageObject && imageObject.type === "image") {
-        imageObject.opacity = toggled ? 1 : 0;
+      canvas._objects.forEach((obj, index) => {
+        if (index !== 0) {
+          toggled ? obj.set("opacity", 1) : obj.set("opacity", 0);
+        }
         canvas.renderAll();
-      }
+      });
     }
   };
 
@@ -82,7 +84,7 @@ const Canvas = () => {
       />
       {showModal && (
         <>
-          <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
           <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
             <NameModal
               onclose={() => {
@@ -94,7 +96,7 @@ const Canvas = () => {
       )}
       {showConfirmModal && (
         <>
-          <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
           <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
             <ConfirmModal
               onclose={() => {
@@ -106,7 +108,7 @@ const Canvas = () => {
       )}
       {showBackModal && (
         <>
-          <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
           <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
             <BackModal
               onclose={() => {

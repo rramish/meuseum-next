@@ -55,8 +55,8 @@ const ReconstructedImage = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center gap-4 py-6 px-4">
-      <div className="flex flex-col md:flex-row gap-4 w-full max-w-2xl items-center justify-between py-2 z-10">
+    <div className="w-full flex flex-col justify-center items-center">
+      <div className="flex flex-wrap justify-between px-10 py-6 gap-2 w-full">
         <div className="flex-1 flex justify-start">
           <CustomButton
             title="Back"
@@ -86,18 +86,14 @@ const ReconstructedImage = () => {
           />
         </div>
       </div>
-
       <div className="w-full flex justify-center items-center">
         {finalimage ? (
-          <div className="w-4/5 relative h-[80vh] -top-14">
+          <div className="w-4/5 relative h-[80vh]">
             <Image
               src={finalimage}
               alt="Reconstructed Image"
-              // fill
-              width={100}
-              height={100}
-              className="object-fill  w-full h-full"
-              // style={{ objectFit: "cover" }}
+              fill
+              className="object-contain"
             />
           </div>
         ) : (

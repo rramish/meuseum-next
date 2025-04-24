@@ -133,7 +133,7 @@ const ImageSlicerWithDrawing: React.FC<ImageSlicerWithDrawingProps> = ({
               className="rounded-lg"
             />
             <button
-              className="absolute cursor-pointer top-2 right-2 text-black bg-gray-200 rounded-full p-2 hover:bg-gray-300"
+              className="absolute cursor-pointer top-2 right-2 text-[#F287B7] bg-gray-200 rounded-full p-2 hover:bg-gray-300 font-extrabold"
               onClick={handleCloseModal}
             >
               ✕

@@ -6,7 +6,13 @@ import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CanvasEditor = ({  redoStack,   undoStack, }: {redoStack: any; undoStack: any;}) => {
+const CanvasEditor = ({
+  redoStack,
+  undoStack,
+}: {
+  redoStack: any;
+  undoStack: any;
+}) => {
   const { setCanvasRef } = useCanvasStore();
   const { eraser, setEraser } = useToolsStore();
 
@@ -97,7 +103,6 @@ const CanvasEditor = ({  redoStack,   undoStack, }: {redoStack: any; undoStack: 
       }
     };
   }, [eraser, canvasRef, setCanvasRef, setEraser, canvasWidth, canvasHeight]);
-
 
   const { imagePiece } = useImageStorage();
 

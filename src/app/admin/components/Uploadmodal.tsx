@@ -17,7 +17,7 @@ export const Uploadmodal = ({ onclose }: { onclose: () => void }) => {
           <div className="flex gap-10">
             <CustomButton
               bg={"bg-[#fff]"}
-              title={"Cancel"}
+              title={"Close"}
               onClick={onclose}
               textcolor={"text-[#F287B7]"}
             />

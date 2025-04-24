@@ -1,7 +1,10 @@
 "use server"
-import { CustomButton } from "@/app/admin/components/Header";
-import { ICONS } from "@/assets";
+
 import React from "react";
+
+import { ICONS } from "@/assets";
+import { CustomButton } from "@/app/admin/components/Header";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Uploadmodal = ({ onclose } : { onclose: any }) => {
   return (
@@ -13,7 +16,7 @@ const Uploadmodal = ({ onclose } : { onclose: any }) => {
       <div className="p-4 rounded-lg w-96 h-60 bg-white">
         <div>
           <div>
-            <p className="text-2xl">UPload Image</p>
+            <p className="text-2xl">Upload Image</p>
           </div>
           <div className="flex gap-10">
             <CustomButton

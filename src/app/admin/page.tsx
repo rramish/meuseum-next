@@ -124,7 +124,7 @@ const Main = () => {
                 <p>No Session Found Please Create A Session</p>
               </div>
             ) : (
-              <div className="w-full max-w-4xl mx-auto overflow-auto">
+              <div className="w-full mx-auto overflow-auto px-10 py-2">
                 <h2 className="text-gray-500 text-lg font-bold mb-4 text-center">
                   All Sessions
                 </h2>
@@ -225,7 +225,7 @@ const Main = () => {
                 style={{ objectFit: "contain" }}
               />
               <button
-                className="absolute cursor-pointer -top-2 -right-1 text-black bg-gray-200 rounded-full p-2 hover:bg-gray-300"
+                className="absolute cursor-pointer -top-2 -right-1 text-[#F287B7] bg-gray-200 rounded-full p-2 hover:bg-gray-300 font-extrabold"
                 onClick={() => {
                   setActivePiece("");
                   setShowPreviewModal(false);
