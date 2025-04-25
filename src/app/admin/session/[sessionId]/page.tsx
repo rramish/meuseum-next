@@ -295,7 +295,7 @@ const Session = () => {
                   </td>
                   <td className="px-4 py-2">
                     {piece.updatedUrl ? (
-                      <div className="w-20 h-20 py-2">
+                      <div className="w-16 h-16 py-2">
                         <img
                           src={piece.updatedUrl}
                           alt="Edited"
