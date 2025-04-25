@@ -181,19 +181,45 @@ const Sidebar = () => {
     const canvas = canvasRef?.current as unknown as fabric.Canvas;
 
     if (canvas) {
+      canvas.isDrawingMode = false;
       canvas.off("mouse:down");
+      canvas.off("mouse:move");
+      canvas.off("mouse:up");
 
-      const canvasContainer = canvas.lowerCanvasEl.parentNode as HTMLElement;
-      canvasContainer.classList.remove("canvas-zoom");
+      let isErasing = false;
 
-      canvas.isDrawingMode = true;
+      const handleMouseDown = (event: any) => {
+        isErasing = true;
+        eraseObject(event);
+      };
 
-      const eraserBrush = new fabric.PencilBrush(canvas);
-      eraserBrush.width = brushSize;
-      eraserBrush.color = "#FFFFFF";
-      canvas.freeDrawingBrush = eraserBrush;
+      const handleMouseMove = (event: any) => {
+        if (isErasing) {
+          eraseObject(event);
+        }
+      };
 
-      setEraser(true);
+      const handleMouseUp = () => {
+        isErasing = false;
+      };
+
+      const eraseObject = (event: any) => {
+        const pointer = canvas.getPointer(event.e);
+        const objects = canvas.getObjects();
+
+        objects.forEach((obj, index) => {
+          if (index !== 0 && obj.containsPoint(pointer)) {
+            canvas.remove(obj);
+          }
+        });
+
+        canvas.renderAll();
+      };
+
+      canvas.on("mouse:down", handleMouseDown);
+      canvas.on("mouse:move", handleMouseMove);
+      canvas.on("mouse:up", handleMouseUp);
+
       setActive("eraser");
     }
   };
