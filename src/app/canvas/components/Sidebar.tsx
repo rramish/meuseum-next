@@ -5,7 +5,6 @@ import * as fabric from "fabric";
 import { useState } from "react";
 
 import { ICONS } from "@/assets";
-import { useToolsStore } from "@/store/toolsStore";
 import { useCanvasStore } from "@/store/canvasStore";
 
 const hexToRgba = (hex: string, opacity: number) => {
@@ -93,7 +92,6 @@ const FolderModal = ({
 };
 
 const Sidebar = () => {
-  const { setEraser } = useToolsStore();
   const { canvasRef } = useCanvasStore();
 
   const [zoomlevel, setZoomlevel] = useState(1);
@@ -187,12 +185,12 @@ const Sidebar = () => {
       canvas.off("mouse:up");
 
       let isErasing = false;
-
+           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const handleMouseDown = (event: any) => {
         isErasing = true;
         eraseObject(event);
       };
-
+           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const handleMouseMove = (event: any) => {
         if (isErasing) {
           eraseObject(event);
@@ -202,7 +200,7 @@ const Sidebar = () => {
       const handleMouseUp = () => {
         isErasing = false;
       };
-
+           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const eraseObject = (event: any) => {
         const pointer = canvas.getPointer(event.e);
         const objects = canvas.getObjects();
