@@ -34,6 +34,8 @@ export const ICONS = {
     .href,
   reset: new URL("./images/reset.png", import.meta.url).href,
 
+  download: new URL("./download.svg", import.meta.url).href,
+
   redo: new URL("./icons/redo.svg", import.meta.url).href,
   text: new URL("./icons/text.svg", import.meta.url).href,
   undo: new URL("./icons/undo.svg", import.meta.url).href,

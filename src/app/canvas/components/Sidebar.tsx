@@ -22,12 +22,14 @@ type FolderModalProps = {
   updateBrushSize: (val: number) => void;
   setBrushOpacity: (val: number) => void;
   updateBrushOpacity: (val: number) => void;
+  active: string;
   imageOpacity: number;
   setImageOpacity: (val: number) => void;
   updateImageOpacity: (val: number) => void;
 };
 
 const FolderModal = ({
+  active,
   brushSize,
   setBrushSize,
   brushOpacity,
@@ -55,22 +57,24 @@ const FolderModal = ({
           }}
         />
       </div>
-      <div className="flex gap-2 mb-3">
-        <p className="w-14">Stroke Opacity</p>
-        <input
-          type="range"
-          className="w-44"
-          min={0}
-          max={1}
-          step={0.01}
-          value={brushOpacity}
-          onChange={(e) => {
-            const newOpacity = parseFloat(e.target.value);
-            setBrushOpacity(newOpacity);
-            updateBrushOpacity(newOpacity);
-          }}
-        />
-      </div>
+      {active !== "brush" && (
+        <div className="flex gap-2 mb-3">
+          <p className="w-14">Stroke Opacity</p>
+          <input
+            type="range"
+            className="w-44"
+            min={0}
+            max={1}
+            step={0.01}
+            value={brushOpacity}
+            onChange={(e) => {
+              const newOpacity = parseFloat(e.target.value);
+              setBrushOpacity(newOpacity);
+              updateBrushOpacity(newOpacity);
+            }}
+          />
+        </div>
+      )}
       <div className="flex gap-2">
         <p className="w-14">Image Opacity</p>
         <input
@@ -91,7 +95,13 @@ const FolderModal = ({
   );
 };
 
-const Sidebar = ({zoomlevel, setZoomlevel}:{zoomlevel:number, setZoomlevel: (zoomlevel:number) =>void}) => {
+const Sidebar = ({
+  zoomlevel,
+  setZoomlevel,
+}: {
+  zoomlevel: number;
+  setZoomlevel: (zoomlevel: number) => void;
+}) => {
   const { canvasRef } = useCanvasStore();
 
   const [active, setActive] = useState("pencil");
@@ -184,12 +194,12 @@ const Sidebar = ({zoomlevel, setZoomlevel}:{zoomlevel:number, setZoomlevel: (zoo
       canvas.off("mouse:up");
 
       let isErasing = false;
-           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const handleMouseDown = (event: any) => {
         isErasing = true;
         eraseObject(event);
       };
-           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const handleMouseMove = (event: any) => {
         if (isErasing) {
           eraseObject(event);
@@ -199,7 +209,7 @@ const Sidebar = ({zoomlevel, setZoomlevel}:{zoomlevel:number, setZoomlevel: (zoo
       const handleMouseUp = () => {
         isErasing = false;
       };
-           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const eraseObject = (event: any) => {
         const pointer = canvas.getPointer(event.e);
         const objects = canvas.getObjects();
@@ -339,6 +349,7 @@ const Sidebar = ({zoomlevel, setZoomlevel}:{zoomlevel:number, setZoomlevel: (zoo
         />
         {showFolder && (
           <FolderModal
+            active={active}
             brushSize={brushSize}
             setBrushSize={setBrushSize}
             brushOpacity={brushOpacity}
