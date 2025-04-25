@@ -237,7 +237,7 @@ const Home = () => {
                       } hover:rounded-lg`}
                     >
                       {piece?.username && (
-                        <p className="max-w-full truncate ml-2">
+                        <p className="max-w-full truncate ml-2 font-bold">
                           {piece?.username}
                         </p>
                       )}

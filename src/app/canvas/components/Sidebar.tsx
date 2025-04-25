@@ -317,7 +317,7 @@ const Sidebar = () => {
           className="h-8 w-8 rounded-full hover:scale-110 duration-300 cursor-pointer"
           style={{ backgroundColor: brushColor ? brushColor : "#0052cc" }}
         />
-        <div className="absolute top-50 left-10">
+        <div className="absolute top-50 left-16">
           <input
             type="color"
             id="color"

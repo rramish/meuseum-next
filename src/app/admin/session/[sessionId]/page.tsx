@@ -323,7 +323,7 @@ const Session = () => {
                       : "N/A"}
                   </td>
                   <td className="px-4 py-2">{piece.username || "N/A"}</td>
-                  <td className="px-4 py-2 gap-2 flex">
+                  <td className="px-4 py-2 gap-2 flex mt-3">
                     <button
                       disabled={
                         (!piece.updatedUrl && !piece.username) || loading

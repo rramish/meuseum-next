@@ -135,14 +135,14 @@ const Main = () => {
                 </h2>
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="text-gray-400">
-                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate">
+                    <tr className="text-gray-400 flex flex-1 w-full">
+                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate flex-[2]">
                         Image
                       </th>
-                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate">
+                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate flex-[2]">
                         Session ID
                       </th>
-                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate">
+                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate flex-1">
                         Actions
                       </th>
                     </tr>
@@ -151,9 +151,9 @@ const Main = () => {
                     {sessions.map((session) => (
                       <tr
                         key={session._id}
-                        className="hover:bg-gray-50 border-b border-gray-100 "
+                        className="hover:bg-gray-50 border-b border-gray-100 flex"
                       >
-                        <td className="px-4 py-2 gap-4 flex items-center text-gray-500 truncate">
+                        <td className="px-4 py-2 gap-4 flex items-center text-gray-500 truncate flex-[2]">
                           <img
                             alt="Original"
                             src={session?.imageUrl}
@@ -168,33 +168,38 @@ const Main = () => {
                             {session.imageName.split(".")[1]}
                           </p>
                         </td>
-                        <td className="px-4 py-2 text-gray-500 truncate">
-                          {session._id}
+                        <td className="px-4 py-2 text-gray-500 truncate flex-[2] flex items-center">
+                          <p>{session._id}</p>
                         </td>
-                        <td className="px-4 py-2 flex gap-2 items-center">
-                          <button
-                            onClick={() =>
-                              handlePreview(session._id, session.imageUrl)
-                            }
-                            className="bg-[#f287b7] text-white font-bold px-4 py-2 rounded-xl hover:bg-[#f287b780] cursor-pointer"
-                          >
-                            View
-                          </button>
-                          {session?.status == "inactive" && (
-                            <button
-                              onClick={() => handleActivateSession(session._id)}
+                        <td className="px-4 py-2 flex gap-2 flex-1 items-center">
+                          <div>
+                            <p
+                              onClick={() =>
+                                handlePreview(session._id, session.imageUrl)
+                              }
                               className="bg-[#f287b7] text-white font-bold px-4 py-2 rounded-xl hover:bg-[#f287b780] cursor-pointer"
                             >
-                              Activate
-                            </button>
+                              View
+                            </p>
+                          </div>
+                          {session?.status == "inactive" && (
+                            <div>
+                              <p
+                                onClick={() =>
+                                  handleActivateSession(session._id)
+                                }
+                                className="bg-[#f287b7] text-white font-bold px-4 py-2 rounded-xl hover:bg-[#f287b780] cursor-pointer"
+                              >
+                                Activate
+                              </p>
+                            </div>
                           )}
                           {session?.status == "active" && (
-                            <button
-                              disabled
-                              className="bg-[#f287b780] text-white font-bold px-4 py-2 rounded-xl"
-                            >
-                              Active
-                            </button>
+                            <div>
+                              <p className="bg-[#f287b780] text-white font-bold px-4 py-2 rounded-xl">
+                                Active
+                              </p>
+                            </div>
                           )}
                         </td>
                       </tr>
