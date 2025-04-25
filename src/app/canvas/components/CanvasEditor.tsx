@@ -14,7 +14,6 @@ import { useImageStorage } from "@/store/imageStore";
 const CanvasEditor = ({
   redoStack,
   undoStack,
-  zoomlevel,
   setZoomlevel,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
