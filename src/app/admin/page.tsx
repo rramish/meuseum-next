@@ -151,7 +151,7 @@ const Main = () => {
                     {sessions.map((session) => (
                       <tr
                         key={session._id}
-                        className="hover:bg-gray-50 border-b border-gray-100"
+                        className="hover:bg-gray-50 border-b border-gray-100 "
                       >
                         <td className="px-4 py-2 gap-4 flex items-center text-gray-500 truncate">
                           <img
@@ -171,7 +171,7 @@ const Main = () => {
                         <td className="px-4 py-2 text-gray-500 truncate">
                           {session._id}
                         </td>
-                        <td className="px-4 py-2 flex gap-2">
+                        <td className="px-4 py-2 flex gap-2 items-center">
                           <button
                             onClick={() =>
                               handlePreview(session._id, session.imageUrl)
