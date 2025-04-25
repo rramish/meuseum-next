@@ -66,7 +66,7 @@ const Session = () => {
       if (resp.data.originalImageUrl) {
         setOriginalSessionImageURL(resp.data.originalImageUrl);
       }
-           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log("error is : ", error);
       setError(
@@ -121,7 +121,6 @@ const Session = () => {
       canvas.height = canvasHeight;
       const ctx = canvas.getContext("2d");
       if (!ctx) throw new Error("Canvas context not available");
-
 
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
@@ -183,7 +182,7 @@ const Session = () => {
       setSelectedPiece(undefined);
       await getDataFromBackend();
       setShowConfirmationModal(false);
-           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error resetting progress:", error);
       setError(
@@ -205,7 +204,7 @@ const Session = () => {
       });
       router.push("/admin");
       setShowResetConfirmationModal(false);
-           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error resetting progress:", error);
       setError(
@@ -272,7 +271,7 @@ const Session = () => {
               </tr>
             </thead>
             <tbody className="text-gray-500">
-            {/* eslint-disable-next-line  @typescript-eslint/no-explicit-any */}
+              {/* eslint-disable-next-line  @typescript-eslint/no-explicit-any */}
               {pieces.map((piece: any, index) => (
                 <tr
                   key={piece._id || index}
@@ -296,15 +295,17 @@ const Session = () => {
                   </td>
                   <td className="px-4 py-2">
                     {piece.updatedUrl ? (
-                      <img
-                        src={piece.updatedUrl}
-                        alt="Edited"
-                        className="w-16 h-16 object-cover cursor-pointer rounded-md"
-                        onClick={() => {
-                          setShowPiecePreviewModal(true);
-                          setPreviewUrl(piece.updatedUrl);
-                        }}
-                      />
+                      <div className="w-20 h-20 py-2">
+                        <img
+                          src={piece.updatedUrl}
+                          alt="Edited"
+                          className="w-16 h-16 object-cover cursor-pointer rounded-md"
+                          onClick={() => {
+                            setShowPiecePreviewModal(true);
+                            setPreviewUrl(piece.updatedUrl);
+                          }}
+                        />
+                      </div>
                     ) : (
                       "N/A"
                     )}
@@ -387,7 +388,7 @@ const Session = () => {
               style={{ objectFit: "cover" }}
             />
             <button
-                className="absolute cursor-pointer top-0 right-0 text-[#F287B7] bg-gray-200/90 rounded-full h-8 w-8 hover:bg-gray-300/50 font-extrabold"
+              className="absolute cursor-pointer top-0 right-0 text-[#F287B7] bg-gray-200/90 rounded-full flex items-center justify-center h-8 w-8 hover:bg-gray-300/50 font-extrabold"
               onClick={handleClosePreview}
             >
               ✕
