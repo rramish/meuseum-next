@@ -302,9 +302,6 @@ const Sidebar = () => {
         className={`py-1 cursor-pointer hover:scale-150 duration-300 ${
           active === "brush" && "scale-150 scale-x-150"
         }`}
-        style={{
-          opacity: active === "brush" && brushOpacity > 0 ? brushOpacity : 1,
-        }}
       />
       <Image
         src={ICONS.eraser_icon}
@@ -316,19 +313,19 @@ const Sidebar = () => {
           active === "eraser" && "scale-150 scale-x-200"
         }`}
       />
-      <div className="justify-center flex">
+      <div className="justify-center flex relatvie">
         <label
           htmlFor="color"
           className="h-8 w-8 rounded-full hover:scale-110 duration-300 cursor-pointer"
           style={{ backgroundColor: brushColor ? brushColor : "#0052cc" }}
         />
-        <div className="absolute">
+        <div className="absolute top-50 left-10">
           <input
             type="color"
             id="color"
             defaultValue="#0052cc"
             onChange={handleColorChange}
-            className="w-4 h-4 hidden"
+            className="w-4 h-4 opacity-0 cursor-pointer"
           />
         </div>
       </div>
