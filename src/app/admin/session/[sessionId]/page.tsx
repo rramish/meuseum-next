@@ -10,7 +10,6 @@ import Header from "../../components/Header";
 import { useImageStorage } from "@/store/imageStore";
 import { Uploadmodal } from "../../components/Uploadmodal";
 import { ConfirmModal } from "../../components/ConfirmModal";
-// import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
 interface ImagePiece {
   name: string;
@@ -19,14 +18,14 @@ interface ImagePiece {
   dataUrl: string;
   username?: string;
   updatedUrl?: string;
+  updatedAt?: string;
 }
 
 const Session = () => {
   const router = useRouter();
   const params = useParams();
   const { sessionId } = params;
-  const { setfinalimage } = useImageStorage();
-  // const { setSelectedImages } = useSelectedImagesStore();
+  const { setfinalimage, setOriginalSessionImageURL } = useImageStorage();
 
   const [loading, setLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -64,13 +63,17 @@ const Session = () => {
         }
       );
       setPieces(resp.data.pieces);
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      if (resp.data.originalImageUrl) {
+        setOriginalSessionImageURL(resp.data.originalImageUrl);
+      }
+           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log("error is : ", error);
       setError(
         error.response?.data?.error ||
           "Failed to fetch data from the server. Please try again."
       );
+      setTimeout(() => setError(null), 3000);
     } finally {
       setLoading(false);
     }
@@ -85,8 +88,10 @@ const Session = () => {
       const filename = "reconstructed_image.png";
       const imagePieces = pieces;
       const pieceMap: { [key: string]: ImagePiece } = {};
-      let maxRow = 0;
-      let maxCol = 0;
+      let minRow = Infinity;
+      let minCol = Infinity;
+      let maxRow = -Infinity;
+      let maxCol = -Infinity;
 
       imagePieces.forEach((piece) => {
         const match = piece!.name.match(/piece_(\d+)_(\d+)\.png/);
@@ -94,21 +99,36 @@ const Session = () => {
           const row = parseInt(match[1], 10);
           const col = parseInt(match[2], 10);
           pieceMap[`${row}_${col}`] = piece!;
+          minRow = Math.min(minRow, row);
+          minCol = Math.min(minCol, col);
           maxRow = Math.max(maxRow, row);
           maxCol = Math.max(maxCol, col);
         }
       });
 
+      if (Object.keys(pieceMap).length === 0) {
+        throw new Error("No valid pieces found for reconstruction.");
+      }
+
       const pieceWidth = 200;
       const pieceHeight = 160;
-      const canvasWidth = (maxCol + 2) * pieceWidth;
-      const canvasHeight = (maxRow+ 2) * pieceHeight;
+
+      const canvasWidth = (maxCol - minCol + 1) * pieceWidth;
+      const canvasHeight = (maxRow - minRow + 1) * pieceHeight;
 
       const canvas = document.createElement("canvas");
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
       const ctx = canvas.getContext("2d");
       if (!ctx) throw new Error("Canvas context not available");
+
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+
+      console.log(
+        `Reconstructing image: minRow=${minRow}, minCol=${minCol}, maxRow=${maxRow}, maxCol=${maxCol}, canvas=${canvasWidth}x${canvasHeight}`
+      );
 
       await Promise.all(
         Object.entries(pieceMap).map(async ([key, piece]) => {
@@ -121,13 +141,15 @@ const Session = () => {
             img.onerror = reject;
             img.src = url;
           });
-          const x = col * pieceWidth;
-          const y = row * pieceHeight;
+
+          const x = (col - minCol) * pieceWidth;
+          const y = (row - minRow) * pieceHeight;
+          console.log(`Drawing piece ${piece.name} at x=${x}, y=${y}`);
           ctx.drawImage(img, x, y, pieceWidth, pieceHeight);
         })
       );
 
-      const dataUrl = canvas.toDataURL("image/png");
+      const dataUrl = canvas.toDataURL("image/png", 1.0);
       if (download) {
         const link = document.createElement("a");
         link.href = dataUrl;
@@ -144,6 +166,7 @@ const Session = () => {
     } catch (error) {
       console.error("Error reconstructing image:", error);
       setError("Failed to reconstruct the image. Please try again.");
+      setTimeout(() => setError(null), 3000);
     }
   }
 
@@ -160,13 +183,14 @@ const Session = () => {
       setSelectedPiece(undefined);
       await getDataFromBackend();
       setShowConfirmationModal(false);
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error resetting progress:", error);
       setError(
         error.response?.data?.error ||
           "Failed to reset progress. Please try again."
       );
+      setTimeout(() => setError(null), 3000);
     } finally {
       setLoading(false);
     }
@@ -181,13 +205,14 @@ const Session = () => {
       });
       router.push("/admin");
       setShowResetConfirmationModal(false);
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+           // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error resetting progress:", error);
       setError(
         error.response?.data?.error ||
           "Failed to reset progress. Please try again."
       );
+      setTimeout(() => setError(null), 3000);
     } finally {
       setLoading(false);
     }
@@ -247,7 +272,7 @@ const Session = () => {
               </tr>
             </thead>
             <tbody className="text-gray-500">
-              {/* eslint-disable-next-line  @typescript-eslint/no-explicit-any  */}
+            {/* eslint-disable-next-line  @typescript-eslint/no-explicit-any */}
               {pieces.map((piece: any, index) => (
                 <tr
                   key={piece._id || index}
@@ -351,7 +376,7 @@ const Session = () => {
           onClick={handleClosePreview}
         >
           <div
-            className="bg-white p-2 rounded-lg relative min-w-[80%] md:min-w-[50%] max-w-[500px] max-h-[500px]  min-h-[50%]"
+            className="bg-white p-2 rounded-lg relative min-w-[80%] md:min-w-[50%] max-w-[500px] max-h-[500px] min-h-[50%]"
             onClick={(e) => e.stopPropagation()}
           >
             <Img.default
