@@ -1,9 +1,15 @@
 "use client";
+import {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  useLayoutEffect,
+} from "react";
 import * as fabric from "fabric";
 
 import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
-import { useRef, useEffect, useState, useCallback } from "react";
 
 const CanvasEditor = ({
   redoStack,
@@ -15,24 +21,31 @@ const CanvasEditor = ({
   undoStack: any;
 }) => {
   const { setCanvasRef } = useCanvasStore();
-
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasInstance = useRef<fabric.Canvas | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
-  const [canvasWidth, setCanvasWidth] = useState(0);
-  const [canvasHeight, setCanvasHeight] = useState(0);
+  const [canvasWidth, setCanvasWidth] = useState<number>(0);
+  const [canvasHeight, setCanvasHeight] = useState<number>(0);
 
   const updateCanvasDimensions = useCallback(() => {
     if (canvasContainerRef.current) {
-      setCanvasWidth(canvasContainerRef.current.offsetWidth);
-      setCanvasHeight(canvasContainerRef.current.offsetHeight);
+      const { offsetWidth, offsetHeight } = canvasContainerRef.current;
+      setCanvasWidth(offsetWidth);
+      setCanvasHeight(offsetHeight);
     }
   }, []);
 
-  useEffect(() => {
-    window.addEventListener("resize", updateCanvasDimensions);
+  useLayoutEffect(() => {
     updateCanvasDimensions();
+    window.addEventListener("resize", updateCanvasDimensions);
+    return () => {
+      window.removeEventListener("resize", updateCanvasDimensions);
+    };
+  }, [updateCanvasDimensions]);
 
+  useEffect(() => {
+    updateCanvasDimensions();
+    window.addEventListener("resize", updateCanvasDimensions);
     return () => {
       window.removeEventListener("resize", updateCanvasDimensions);
     };
@@ -102,7 +115,7 @@ const CanvasEditor = ({
         canvasRef.current.removeEventListener("contextmenu", handleRightClick);
       }
     };
-  }, [canvasRef, setCanvasRef, canvasWidth, canvasHeight]);
+  }, [canvasWidth, canvasHeight, canvasRef, setCanvasRef]);
 
   const { imagePiece } = useImageStorage();
 
@@ -124,8 +137,6 @@ const CanvasEditor = ({
       fabricImage.set({
         left: 0,
         top: 0,
-        width: canvasWidth,
-        height: canvasHeight,
         scaleX: canvasWidth / imgWidth,
         scaleY: canvasHeight / imgHeight,
         selectable: false,
@@ -135,7 +146,8 @@ const CanvasEditor = ({
       canvas.add(fabricImage);
       canvas.renderAll();
     };
-  }, [canvasWidth, canvasHeight, imagePiece]);
+  }, [imagePiece, canvasWidth, canvasHeight]);
+
   useEffect(() => {
     handleAddImage();
   }, [handleAddImage]);
@@ -143,7 +155,7 @@ const CanvasEditor = ({
   return (
     <div className="relative w-full h-full" ref={canvasContainerRef}>
       <canvas
-        className="rounded-0 absolute top-0 left-0 w-full"
+        className="absolute top-0 left-0 w-full rounded-none"
         ref={canvasRef}
       />
     </div>

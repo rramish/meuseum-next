@@ -259,6 +259,9 @@ const Sidebar = () => {
         className={`py-1 cursor-pointer hover:scale-150 duration-300 ${
           active === "pencil" && "scale-150 scale-x-150"
         }`}
+        style={{
+          opacity: active === "pencil" && brushOpacity > 0 ? brushOpacity : 1,
+        }}
       />
       <Image
         src={ICONS.brush_icon}
@@ -273,6 +276,9 @@ const Sidebar = () => {
         className={`py-1 cursor-pointer hover:scale-150 duration-300 ${
           active === "brush" && "scale-150 scale-x-150"
         }`}
+        style={{
+          opacity: active === "brush" && brushOpacity > 0 ? brushOpacity : 1,
+        }}
       />
       <Image
         src={ICONS.eraser_icon}

@@ -177,13 +177,12 @@ const ReconstructedImage: React.FC = () => {
       {/* Image display */}
       <div className="w-full flex justify-center items-center">
         {finalimage ? (
-          <div className="w-full relative h-[80vh]">
-            <Img.default
+          <div className="w-full h-[80vh] relative flex items-center justify-center">
+            <img
               src={finalimage}
               alt="Reconstructed Image"
-              fill
-              className="object-contain w-full h-full"
               onClick={toggleFullScreen}
+              className="object-fill w-[90%] h-full"
             />
           </div>
         ) : (

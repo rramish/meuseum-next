@@ -258,7 +258,9 @@ const Home = () => {
                                 router.push("/canvas");
                               } else {
                                 setShowPreviewModal(true);
-                                setPreviewUrl(piece?.updatedUrl);
+                                setPreviewUrl(
+                                  piece?.updatedUrl || piece?.dataUrl
+                                );
                               }
                             }}
                           />
