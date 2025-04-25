@@ -284,7 +284,7 @@ const Session = () => {
                       <img
                         src={piece.dataUrl}
                         alt="Original"
-                        className="w-16 h-16 object-cover cursor-pointer"
+                        className="w-16 h-16 object-cover cursor-pointer rounded-md"
                         onClick={() => {
                           setShowPiecePreviewModal(true);
                           setPreviewUrl(piece.dataUrl);
@@ -299,7 +299,7 @@ const Session = () => {
                       <img
                         src={piece.updatedUrl}
                         alt="Edited"
-                        className="w-16 h-16 object-cover cursor-pointer"
+                        className="w-16 h-16 object-cover cursor-pointer rounded-md"
                         onClick={() => {
                           setShowPiecePreviewModal(true);
                           setPreviewUrl(piece.updatedUrl);

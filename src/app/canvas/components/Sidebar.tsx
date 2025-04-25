@@ -56,7 +56,7 @@ const FolderModal = ({
         />
       </div>
       <div className="flex gap-2 mb-3">
-        <p className="w-14">Opacity</p>
+        <p className="w-14">Stroke Opacity</p>
         <input
           type="range"
           className="w-44"

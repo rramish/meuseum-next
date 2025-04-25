@@ -26,7 +26,7 @@ const Main = () => {
   const [error, setError] = useState<string | null>(null);
   const [activePiece, setActivePiece] = useState("");
   const [showPreviewModal, setShowPreviewModal] = useState(false);
-  const {setOriginalSessionImageURL} = useImageStorage();
+  const { setOriginalSessionImageURL } = useImageStorage();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -153,7 +153,7 @@ const Main = () => {
                         key={session._id}
                         className="hover:bg-gray-50 border-b border-gray-100"
                       >
-                        <td className="px-4 py-2 text-gray-500 truncate">
+                        <td className="px-4 py-2 gap-4 flex items-center text-gray-500 truncate">
                           <img
                             alt="Original"
                             src={session?.imageUrl}
@@ -161,15 +161,21 @@ const Main = () => {
                               setActivePiece(session?.imageUrl);
                               setShowPreviewModal(true);
                             }}
-                            className="w-16 h-16 object-cover cursor-pointer"
+                            className="w-16 h-16 object-cover cursor-pointer rounded-md"
                           />
+                          <p>
+                            {session.imageName.split(".")[0]}.
+                            {session.imageName.split(".")[1]}
+                          </p>
                         </td>
                         <td className="px-4 py-2 text-gray-500 truncate">
                           {session._id}
                         </td>
                         <td className="px-4 py-2 flex gap-2">
                           <button
-                            onClick={() => handlePreview(session._id, session.imageUrl)}
+                            onClick={() =>
+                              handlePreview(session._id, session.imageUrl)
+                            }
                             className="bg-[#f287b7] text-white font-bold px-4 py-2 rounded-xl hover:bg-[#f287b780] cursor-pointer"
                           >
                             View
