@@ -236,7 +236,7 @@ const Main = () => {
                 style={{ objectFit: "contain" }}
               />
               <button
-                className="absolute cursor-pointer -top-2 -right-1 text-[#F287B7] bg-gray-200 rounded-full p-2 hover:bg-gray-300 font-extrabold"
+                className="absolute cursor-pointer top-0 right-0 text-[#F287B7] bg-gray-200/90 rounded-full h-8 w-8 hover:bg-gray-300/50 font-extrabold"
                 onClick={() => {
                   setActivePiece("");
                   setShowPreviewModal(false);
