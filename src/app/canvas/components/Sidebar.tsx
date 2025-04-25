@@ -91,10 +91,9 @@ const FolderModal = ({
   );
 };
 
-const Sidebar = () => {
+const Sidebar = ({zoomlevel, setZoomlevel}:{zoomlevel:number, setZoomlevel: (zoomlevel:number) =>void}) => {
   const { canvasRef } = useCanvasStore();
 
-  const [zoomlevel, setZoomlevel] = useState(1);
   const [active, setActive] = useState("pencil");
   const [showFolder, setShowFolder] = useState(false);
   const [brushSize, setBrushSize] = useState<number>(10);
@@ -354,7 +353,7 @@ const Sidebar = () => {
       </div>
       <div className="flex justify-center">
         <Image
-          src={zoomlevel === 1 ? ICONS.zoom_2x_icon : ICONS.zoom_1x_icon}
+          src={zoomlevel === 1 ? ICONS.zoom_1x_icon : ICONS.zoom_2x_icon}
           alt={zoomlevel === 1 ? "Zoom In Tool" : "Zoom Out Tool"}
           width={30}
           height={50}

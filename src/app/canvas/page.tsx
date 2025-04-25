@@ -15,6 +15,7 @@ const Canvas = () => {
   const { canvasRef } = useCanvasStore();
   const { setSubmissionUrl } = useImageStorage();
 
+  const [zoomlevel, setZoomlevel] = useState(1);
   const [showModal, setShowModal] = useState(true);
   const [showBackModal, setShowBackModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -125,10 +126,10 @@ const Canvas = () => {
       <div className="flex flex-1 w-full h-full">
         <div className="flex flex-1 pb-10">
           <div className="flex justify-center items-center">
-            <Sidebar />
+            <Sidebar zoomlevel={zoomlevel} setZoomlevel={setZoomlevel} />
           </div>
           <div className="flex flex-1 mr-10 bg-white">
-            <DrawingCanvas redoStack={redoStack} undoStack={undoStack} />
+            <DrawingCanvas zoomlevel={zoomlevel} setZoomlevel={setZoomlevel} redoStack={redoStack} undoStack={undoStack} />
           </div>
         </div>
       </div>

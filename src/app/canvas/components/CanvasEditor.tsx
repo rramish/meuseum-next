@@ -14,11 +14,15 @@ import { useImageStorage } from "@/store/imageStore";
 const CanvasEditor = ({
   redoStack,
   undoStack,
+  zoomlevel,
+  setZoomlevel,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   redoStack: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   undoStack: any;
+  zoomlevel: number;
+  setZoomlevel: (zoomlevel: number) => void;
 }) => {
   const { setCanvasRef } = useCanvasStore();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -58,6 +62,7 @@ const CanvasEditor = ({
     const instance = canvasInstance.current;
     const pointer = instance.getPointer(event.e);
     const newZoom = instance.getZoom() === 1 ? 2 : 1;
+    setZoomlevel(newZoom);
 
     instance.zoomToPoint(new fabric.Point(pointer.x, pointer.y), newZoom);
   };
