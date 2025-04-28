@@ -89,7 +89,7 @@ const Canvas = () => {
       />
       {showModal && (
         <>
-          <div className="h-[calc(100%+6rem)] lg:h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className="h-[calc(100%+8rem)] lg:h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
           <div className="absolute z-30 top-0 h-[calc(100%+6rem)] md:h-full w-full justify-center flex items-center">
             <NameModal
               onclose={() => {
@@ -101,7 +101,7 @@ const Canvas = () => {
       )}
       {showConfirmModal && (
         <>
-          <div className=" h-[calc(100%+6rem)] lg:h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className=" h-[calc(100%+8rem)] lg:h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
           <div className="absolute z-30 top-0 h-[calc(100%+6rem)] md:h-full w-full justify-center flex items-center">
             <ConfirmModal
               onclose={() => {
@@ -113,7 +113,7 @@ const Canvas = () => {
       )}
       {showBackModal && (
         <>
-          <div className=" h-[calc(100%+6rem)] lg:h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className=" h-[calc(100%+8rem)] lg:h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
           <div className="absolute z-30 top-0 h-[calc(100%+6rem)] md:h-full w-full justify-center flex items-center">
             <BackModal
               onclose={() => {
