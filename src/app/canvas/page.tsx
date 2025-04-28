@@ -89,8 +89,8 @@ const Canvas = () => {
       />
       {showModal && (
         <>
-          <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
-          <div className="absolute z-30 top-0 h-[900px] w-full justify-center flex items-center">
+          <div className="h-[900px] md:h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className="absolute z-30 top-0 h-[900px] md:h-full w-full justify-center flex items-center">
             <NameModal
               onclose={() => {
                 setShowModal(false);
@@ -101,8 +101,8 @@ const Canvas = () => {
       )}
       {showConfirmModal && (
         <>
-          <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
-          <div className="absolute z-30 top-0 h-[900px] w-full justify-center flex items-center">
+          <div className="h-[900px] md:h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className="absolute z-30 top-0 h-[900px] md:h-full w-full justify-center flex items-center">
             <ConfirmModal
               onclose={() => {
                 setShowConfirmModal(false);
@@ -113,8 +113,8 @@ const Canvas = () => {
       )}
       {showBackModal && (
         <>
-          <div className="h-[900px] bg-black/70 absolute top-0 left-0 w-full z-20" />
-          <div className="absolute z-30 top-0 h-[900px] w-full justify-center flex items-center">
+          <div className="h-[900px] md:h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
+          <div className="absolute z-30 top-0 h-[900px] md:h-full w-full justify-center flex items-center">
             <BackModal
               onclose={() => {
                 setShowBackModal(false);
