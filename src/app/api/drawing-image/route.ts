@@ -4,6 +4,13 @@ import DrawingImagePiece from "@/models/DrawingImagePiece";
 
 import { NextRequest, NextResponse } from "next/server";
 
+export const config = {
+  runtime:"edge",
+  api: {
+    responseLimit: '10mb',
+  },
+};
+
 interface Piece {
   name: string;
   serial: number;
