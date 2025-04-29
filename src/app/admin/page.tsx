@@ -26,7 +26,7 @@ const Main = () => {
   const [error, setError] = useState<string | null>(null);
   const [activePiece, setActivePiece] = useState("");
   const [showPreviewModal, setShowPreviewModal] = useState(false);
-  const {setOriginalSessionImageURL} = useImageStorage();
+  const { setOriginalSessionImageURL } = useImageStorage();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -135,14 +135,14 @@ const Main = () => {
                 </h2>
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="text-gray-400">
-                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate">
+                    <tr className="text-gray-400 flex flex-1 w-full">
+                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate flex-[2]">
                         Image
                       </th>
-                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate">
+                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate flex-[2]">
                         Session ID
                       </th>
-                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate">
+                      <th className="px-4 py-2 text-left border-b border-gray-100 truncate flex-1">
                         Actions
                       </th>
                     </tr>
@@ -151,9 +151,9 @@ const Main = () => {
                     {sessions.map((session) => (
                       <tr
                         key={session._id}
-                        className="hover:bg-gray-50 border-b border-gray-100"
+                        className="hover:bg-gray-50 border-b border-gray-100 flex"
                       >
-                        <td className="px-4 py-2 text-gray-500 truncate">
+                        <td className="px-4 py-2 gap-4 flex items-center text-gray-500 truncate flex-[2]">
                           <img
                             alt="Original"
                             src={session?.imageUrl}
@@ -161,34 +161,45 @@ const Main = () => {
                               setActivePiece(session?.imageUrl);
                               setShowPreviewModal(true);
                             }}
-                            className="w-16 h-16 object-cover cursor-pointer"
+                            className="w-16 h-16 object-cover cursor-pointer rounded-md"
                           />
+                          <p>
+                            {session.imageName.split(".")[0]}.
+                            {session.imageName.split(".")[1]}
+                          </p>
                         </td>
-                        <td className="px-4 py-2 text-gray-500 truncate">
-                          {session._id}
+                        <td className="px-4 py-2 text-gray-500 truncate flex-[2] flex items-center">
+                          <p>{session._id}</p>
                         </td>
-                        <td className="px-4 py-2 flex gap-2">
-                          <button
-                            onClick={() => handlePreview(session._id, session.imageUrl)}
-                            className="bg-[#f287b7] text-white font-bold px-4 py-2 rounded-xl hover:bg-[#f287b780] cursor-pointer"
-                          >
-                            View
-                          </button>
-                          {session?.status == "inactive" && (
-                            <button
-                              onClick={() => handleActivateSession(session._id)}
+                        <td className="px-4 py-2 flex gap-2 flex-1 items-center">
+                          <div>
+                            <p
+                              onClick={() =>
+                                handlePreview(session._id, session.imageUrl)
+                              }
                               className="bg-[#f287b7] text-white font-bold px-4 py-2 rounded-xl hover:bg-[#f287b780] cursor-pointer"
                             >
-                              Activate
-                            </button>
+                              View
+                            </p>
+                          </div>
+                          {session?.status == "inactive" && (
+                            <div>
+                              <p
+                                onClick={() =>
+                                  handleActivateSession(session._id)
+                                }
+                                className="bg-[#f287b7] text-white font-bold px-4 py-2 rounded-xl hover:bg-[#f287b780] cursor-pointer"
+                              >
+                                Activate
+                              </p>
+                            </div>
                           )}
                           {session?.status == "active" && (
-                            <button
-                              disabled
-                              className="bg-[#f287b780] text-white font-bold px-4 py-2 rounded-xl"
-                            >
-                              Active
-                            </button>
+                            <div>
+                              <p className="bg-[#f287b780] text-white font-bold px-4 py-2 rounded-xl">
+                                Active
+                              </p>
+                            </div>
                           )}
                         </td>
                       </tr>
@@ -230,7 +241,7 @@ const Main = () => {
                 style={{ objectFit: "contain" }}
               />
               <button
-                className="absolute cursor-pointer -top-2 -right-1 text-[#F287B7] bg-gray-200 rounded-full p-2 hover:bg-gray-300 font-extrabold"
+                className="absolute cursor-pointer top-0 right-0 text-[#F287B7] flex items-center justify-center bg-gray-200/90 rounded-full h-8 w-8 hover:bg-gray-300/50 font-extrabold"
                 onClick={() => {
                   setActivePiece("");
                   setShowPreviewModal(false);

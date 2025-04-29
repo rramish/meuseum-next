@@ -167,7 +167,7 @@ const ReconstructedImage: React.FC = () => {
               title="Download"
               bg="bg-[#F287B7]"
               onClick={onDownload}
-              icon={ICONS.check_icon}
+              icon={ICONS.download}
               textcolor="text-[#fff]"
             />
           </div>

@@ -5,7 +5,6 @@ import * as fabric from "fabric";
 import { useState } from "react";
 
 import { ICONS } from "@/assets";
-import { useToolsStore } from "@/store/toolsStore";
 import { useCanvasStore } from "@/store/canvasStore";
 
 const hexToRgba = (hex: string, opacity: number) => {
@@ -23,12 +22,14 @@ type FolderModalProps = {
   updateBrushSize: (val: number) => void;
   setBrushOpacity: (val: number) => void;
   updateBrushOpacity: (val: number) => void;
+  active: string;
   imageOpacity: number;
   setImageOpacity: (val: number) => void;
   updateImageOpacity: (val: number) => void;
 };
 
 const FolderModal = ({
+  active,
   brushSize,
   setBrushSize,
   brushOpacity,
@@ -56,22 +57,24 @@ const FolderModal = ({
           }}
         />
       </div>
-      <div className="flex gap-2 mb-3">
-        <p className="w-14">Opacity</p>
-        <input
-          type="range"
-          className="w-44"
-          min={0}
-          max={1}
-          step={0.01}
-          value={brushOpacity}
-          onChange={(e) => {
-            const newOpacity = parseFloat(e.target.value);
-            setBrushOpacity(newOpacity);
-            updateBrushOpacity(newOpacity);
-          }}
-        />
-      </div>
+      {active !== "brush" && (
+        <div className="flex gap-2 mb-3">
+          <p className="w-14">Stroke Opacity</p>
+          <input
+            type="range"
+            className="w-44"
+            min={0}
+            max={1}
+            step={0.01}
+            value={brushOpacity}
+            onChange={(e) => {
+              const newOpacity = parseFloat(e.target.value);
+              setBrushOpacity(newOpacity);
+              updateBrushOpacity(newOpacity);
+            }}
+          />
+        </div>
+      )}
       <div className="flex gap-2">
         <p className="w-14">Image Opacity</p>
         <input
@@ -92,11 +95,15 @@ const FolderModal = ({
   );
 };
 
-const Sidebar = () => {
-  const { setEraser } = useToolsStore();
+const Sidebar = ({
+  zoomlevel,
+  setZoomlevel,
+}: {
+  zoomlevel: number;
+  setZoomlevel: (zoomlevel: number) => void;
+}) => {
   const { canvasRef } = useCanvasStore();
 
-  const [zoomlevel, setZoomlevel] = useState(1);
   const [active, setActive] = useState("pencil");
   const [showFolder, setShowFolder] = useState(false);
   const [brushSize, setBrushSize] = useState<number>(10);
@@ -181,19 +188,45 @@ const Sidebar = () => {
     const canvas = canvasRef?.current as unknown as fabric.Canvas;
 
     if (canvas) {
+      canvas.isDrawingMode = false;
       canvas.off("mouse:down");
+      canvas.off("mouse:move");
+      canvas.off("mouse:up");
 
-      const canvasContainer = canvas.lowerCanvasEl.parentNode as HTMLElement;
-      canvasContainer.classList.remove("canvas-zoom");
+      let isErasing = false;
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const handleMouseDown = (event: any) => {
+        isErasing = true;
+        eraseObject(event);
+      };
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const handleMouseMove = (event: any) => {
+        if (isErasing) {
+          eraseObject(event);
+        }
+      };
 
-      canvas.isDrawingMode = true;
+      const handleMouseUp = () => {
+        isErasing = false;
+      };
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const eraseObject = (event: any) => {
+        const pointer = canvas.getPointer(event.e);
+        const objects = canvas.getObjects();
 
-      const eraserBrush = new fabric.PencilBrush(canvas);
-      eraserBrush.width = brushSize;
-      eraserBrush.color = "#FFFFFF";
-      canvas.freeDrawingBrush = eraserBrush;
+        objects.forEach((obj, index) => {
+          if (index !== 0 && obj.containsPoint(pointer)) {
+            canvas.remove(obj);
+          }
+        });
 
-      setEraser(true);
+        canvas.renderAll();
+      };
+
+      canvas.on("mouse:down", handleMouseDown);
+      canvas.on("mouse:move", handleMouseMove);
+      canvas.on("mouse:up", handleMouseUp);
+
       setActive("eraser");
     }
   };
@@ -276,9 +309,6 @@ const Sidebar = () => {
         className={`py-1 cursor-pointer hover:scale-150 duration-300 ${
           active === "brush" && "scale-150 scale-x-150"
         }`}
-        style={{
-          opacity: active === "brush" && brushOpacity > 0 ? brushOpacity : 1,
-        }}
       />
       <Image
         src={ICONS.eraser_icon}
@@ -290,19 +320,19 @@ const Sidebar = () => {
           active === "eraser" && "scale-150 scale-x-200"
         }`}
       />
-      <div className="justify-center flex">
+      <div className="justify-center flex relatvie">
         <label
           htmlFor="color"
           className="h-8 w-8 rounded-full hover:scale-110 duration-300 cursor-pointer"
           style={{ backgroundColor: brushColor ? brushColor : "#0052cc" }}
         />
-        <div className="absolute">
+        <div className="absolute top-50 left-16">
           <input
             type="color"
             id="color"
             defaultValue="#0052cc"
             onChange={handleColorChange}
-            className="w-4 h-4 hidden"
+            className="w-4 h-4 opacity-0 cursor-pointer"
           />
         </div>
       </div>
@@ -319,6 +349,7 @@ const Sidebar = () => {
         />
         {showFolder && (
           <FolderModal
+            active={active}
             brushSize={brushSize}
             setBrushSize={setBrushSize}
             brushOpacity={brushOpacity}
@@ -333,7 +364,7 @@ const Sidebar = () => {
       </div>
       <div className="flex justify-center">
         <Image
-          src={zoomlevel === 1 ? ICONS.zoom_2x_icon : ICONS.zoom_1x_icon}
+          src={zoomlevel === 1 ? ICONS.zoom_1x_icon : ICONS.zoom_2x_icon}
           alt={zoomlevel === 1 ? "Zoom In Tool" : "Zoom Out Tool"}
           width={30}
           height={50}
