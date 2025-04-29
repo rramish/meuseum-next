@@ -51,7 +51,6 @@ export const CustomButton = ({
 };
 
 const Header = ({
-  length,
   onReset,
   onReload,
   onPreview,
@@ -132,7 +131,7 @@ const Header = ({
             />
           )}
 
-          {length === 20 && (
+          {/* {length === 20 && (
             <CustomButton
             disabled={true}
               // onClick={onPreview}
@@ -141,7 +140,7 @@ const Header = ({
               // icon={ICONS.eye_icon}
               textcolor={"text-[#F287B7]"}
             />
-          )}
+          )} */}
 
           {onPreview && (
             <CustomButton
