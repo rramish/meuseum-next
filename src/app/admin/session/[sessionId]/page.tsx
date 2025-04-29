@@ -26,6 +26,7 @@ const Session = () => {
   const params = useParams();
   const { sessionId } = params;
   const { setfinalimage, setOriginalSessionImageURL } = useImageStorage();
+  const [totalLength, setTotalLength] = useState(0);
 
   const [loading, setLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -63,6 +64,7 @@ const Session = () => {
         }
       );
       setPieces(resp.data.pieces);
+      setTotalLength(resp.data.piece.length);
       if (resp.data.originalImageUrl) {
         setOriginalSessionImageURL(resp.data.originalImageUrl);
       }
@@ -234,6 +236,7 @@ const Session = () => {
   return (
     <div className="mx-4 max-w-full bg-white pb-2">
       <Header
+        length={totalLength}
         backButton
         onReset={() => {
           setShowResetConfirmationModal(true);
@@ -293,7 +296,7 @@ const Session = () => {
                       "N/A"
                     )}
                   </td>
-                  <td className="px-4 py-2"> 
+                  <td className="px-4 py-2">
                     {piece.updatedUrl ? (
                       <div className=" w-16 h-16 px-[3px] flex justify-center items-center">
                         <img

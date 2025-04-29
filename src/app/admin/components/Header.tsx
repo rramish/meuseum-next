@@ -51,6 +51,7 @@ export const CustomButton = ({
 };
 
 const Header = ({
+  length,
   onReset,
   onReload,
   onPreview,
@@ -59,6 +60,7 @@ const Header = ({
   logout = false,
   backButton = false,
 }: {
+  length?: number;
   reload?: boolean;
   logout?: boolean;
   onReset?: () => void;
@@ -126,6 +128,16 @@ const Header = ({
               title="New Session"
               icon={ICONS.plus_icon}
               bg={"bg-transparent"}
+              textcolor={"text-[#F287B7]"}
+            />
+          )}
+
+          {length === 20 && (
+            <CustomButton
+              // onClick={onPreview}
+              title="Completed"
+              bg={"bg-white"}
+              icon={ICONS.eye_icon}
               textcolor={"text-[#F287B7]"}
             />
           )}
