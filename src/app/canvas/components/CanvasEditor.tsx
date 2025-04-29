@@ -65,8 +65,11 @@ const CanvasEditor = ({
   const trackObject = (obj: fabric.Object) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(obj as any)._isBackground) {
+
+      console.log("Onbject ", obj);
+      console.log("undoStack.current ", undoStack.current);
+      console.log("redoStack.current ", redoStack.current);
       undoStack.current.push(obj);
-      redoStack.current.push(obj);
     }
   };
 

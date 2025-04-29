@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -16,35 +16,51 @@ const Canvas = () => {
   const { setSubmissionUrl } = useImageStorage();
 
   const [showModal, setShowModal] = useState(true);
+  const [toggleImage, setToggleImage] = useState(false);
   const [showBackModal, setShowBackModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [toggleImage, setToggleImage] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const undoStack = useRef<any>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const redoStack = useRef<any>([]);
 
-  const handleUndo = () => {
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "All your changes will be removed.";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  const handleUndo = async () => {
     if (!canvasRef.current || undoStack.current.length === 1) return;
+
     if (undoStack.current.length > 1) {
       const canvas = canvasRef.current;
+
       const lastObject = undoStack.current.pop();
       if (lastObject) {
+        await redoStack.current.push(lastObject);
         canvas.remove(lastObject);
-        redoStack.current.push(lastObject);
         canvas.renderAll();
       }
     }
   };
 
-  const handleRedo = () => {
+  const handleRedo = async () => {
     if (!canvasRef.current || redoStack.current.length === 0) return;
     const canvas = canvasRef.current;
+
     const object = redoStack.current.pop();
     if (object) {
+      await undoStack.current.push(object);
       canvas.add(object);
-      undoStack.current.push(object);
       canvas.renderAll();
     }
   };
