@@ -24,6 +24,7 @@ const Canvas = () => {
   const undoStack = useRef<any>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const redoStack = useRef<any>([]);
+  const redoing = useRef<boolean>(false);
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -38,33 +39,40 @@ const Canvas = () => {
     };
   }, []);
 
-  const handleUndo = async () => {
-    if (!canvasRef.current || undoStack.current.length === 1) return;
+  const handleUndo = () => {
+    if (!canvasRef.current || undoStack.current.length <= 1) return;
 
-    if (undoStack.current.length > 1) {
-      const canvas = canvasRef.current;
-
-      const lastObject = undoStack.current.pop();
-      if (lastObject) {
-        await redoStack.current.push(lastObject);
-        canvas.remove(lastObject);
-        canvas.renderAll();
-      }
-    }
-  };
-
-  const handleRedo = async () => {
-    if (!canvasRef.current || redoStack.current.length === 0) return;
     const canvas = canvasRef.current;
 
-    const object = redoStack.current.pop();
-    if (object) {
-      await undoStack.current.push(object);
-      canvas.add(object);
+    const lastObject = undoStack.current.pop();
+    if (lastObject) {
+      redoStack.current.push(lastObject);
+
+      canvas.remove(lastObject);
       canvas.renderAll();
     }
   };
 
+  const handleRedo = () => {
+    if (!canvasRef.current || redoStack.current.length === 0) return;
+    redoing.current = true;
+    const canvas = canvasRef.current;
+
+    const objectToRestore = redoStack.current.pop();
+    if (objectToRestore) {
+      undoStack.current.push(objectToRestore);
+
+      const existingObjectIndex = canvas
+        .getObjects()
+        .findIndex((obj) => obj === objectToRestore);
+
+      if (existingObjectIndex === -1) {
+        canvas.add(objectToRestore);
+        canvas.renderAll();
+        redoing.current = false;
+      }
+    }
+  };
   const handleToggle = () => {
     const toggled = toggleImage;
     setToggleImage(!toggleImage);
@@ -135,7 +143,11 @@ const Canvas = () => {
             <Sidebar />
           </div>
           <div className="flex flex-1 border-[#DADCE0] border mr-10 bg-white">
-            <DrawingCanvas redoStack={redoStack} undoStack={undoStack} />
+            <DrawingCanvas
+              redoStack={redoStack}
+              undoStack={undoStack}
+              redo={redoing}
+            />
           </div>
         </div>
       </div>

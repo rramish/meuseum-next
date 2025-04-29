@@ -12,9 +12,12 @@ import { useCanvasStore } from "@/store/canvasStore";
 import { useImageStorage } from "@/store/imageStore";
 
 const CanvasEditor = ({
+  redo,
   redoStack,
   undoStack,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  redo: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   redoStack: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,10 +68,10 @@ const CanvasEditor = ({
   const trackObject = (obj: fabric.Object) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(obj as any)._isBackground) {
+      if (redo.current === true) return;
 
-      console.log("Onbject ", obj);
-      console.log("undoStack.current ", undoStack.current);
-      console.log("redoStack.current ", redoStack.current);
+      console.log("trackObject.undo ", undoStack.current);
+      console.log("trackObject.redo ", redoStack.current);
       undoStack.current.push(obj);
     }
   };
