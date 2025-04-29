@@ -161,7 +161,7 @@ const Canvas = () => {
           </div>
           <div className="flex flex-1 mr-10 bg-white">
             <DrawingCanvas
-              redo={redoStack}
+              redo={redoing}
               zoomlevel={zoomlevel}
               redoStack={redoStack}
               undoStack={undoStack}
