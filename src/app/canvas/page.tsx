@@ -73,7 +73,7 @@ const Canvas = () => {
         onRedo={handleRedo}
         onUndo={handleUndo}
         onFinishDrawing={() => {
-          if(toggleImage){
+          if (toggleImage) {
             handleToggle();
           }
           const finalImageDataUrl = canvasRef.current!.toDataURL();
@@ -87,40 +87,31 @@ const Canvas = () => {
         }}
       />
       {showModal && (
-        <>
-          <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
-          <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
-            <NameModal
-              onclose={() => {
-                setShowModal(false);
-              }}
-            />
-          </div>
-        </>
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+          <NameModal
+            onclose={() => {
+              setShowModal(false);
+            }}
+          />
+        </div>
       )}
       {showConfirmModal && (
-        <>
-          <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
-          <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
-            <ConfirmModal
-              onclose={() => {
-                setShowConfirmModal(false);
-              }}
-            />
-          </div>
-        </>
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+          <ConfirmModal
+            onclose={() => {
+              setShowConfirmModal(false);
+            }}
+          />
+        </div>
       )}
       {showBackModal && (
-        <>
-          <div className="h-full bg-black/70 absolute top-0 left-0 w-full z-20" />
-          <div className="absolute z-30 top-0 h-full w-full justify-center flex items-center">
-            <BackModal
-              onclose={() => {
-                setShowBackModal(false);
-              }}
-            />
-          </div>
-        </>
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+          <BackModal
+            onclose={() => {
+              setShowBackModal(false);
+            }}
+          />
+        </div>
       )}
       <div className="flex flex-1 w-full h-full">
         <div className="flex flex-1 pb-10">
