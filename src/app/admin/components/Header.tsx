@@ -134,10 +134,11 @@ const Header = ({
 
           {length === 20 && (
             <CustomButton
+            disabled={true}
               // onClick={onPreview}
               title="Completed"
               bg={"bg-white"}
-              icon={ICONS.eye_icon}
+              // icon={ICONS.eye_icon}
               textcolor={"text-[#F287B7]"}
             />
           )}
