@@ -64,7 +64,7 @@ const Session = () => {
         }
       );
       setPieces(resp.data.pieces);
-      setTotalLength(resp.data.piece.length);
+      setTotalLength(resp.data.pieces.length);
       if (resp.data.originalImageUrl) {
         setOriginalSessionImageURL(resp.data.originalImageUrl);
       }
