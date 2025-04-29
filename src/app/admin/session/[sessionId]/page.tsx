@@ -263,7 +263,7 @@ const Session = () => {
                   Timestamp
                 </th>
                 <th className="px-4 py-2 text-left border-b border-gray-100">
-                  User ID
+                  User Name
                 </th>
                 <th className="px-4 py-2 text-left border-b border-gray-100">
                   Action

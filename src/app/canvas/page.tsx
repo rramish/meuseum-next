@@ -74,6 +74,7 @@ const Canvas = () => {
       }
     }
   };
+
   const handleToggle = () => {
     const toggled = toggleImage;
     setToggleImage(!toggleImage);
@@ -90,6 +91,18 @@ const Canvas = () => {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const toggleZoom = () => {
+    if (!canvasRef.current) return;
+
+    const instance = canvasRef.current;
+
+    instance.setZoom(1);
+    instance.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+    instance.renderAll();
+  };
+
   return (
     <div className="flex flex-col bg-blue min-h-screen">
       <Header
@@ -100,6 +113,9 @@ const Canvas = () => {
         onFinishDrawing={() => {
           if (toggleImage) {
             handleToggle();
+          }
+          if (zoomlevel !== 1) {
+            toggleZoom();
           }
           const finalImageDataUrl = canvasRef.current!.toDataURL();
           setSubmissionUrl(finalImageDataUrl);
@@ -147,9 +163,9 @@ const Canvas = () => {
             <DrawingCanvas
               redo={redoStack}
               zoomlevel={zoomlevel}
-              setZoomlevel={setZoomlevel}
               redoStack={redoStack}
               undoStack={undoStack}
+              setZoomlevel={setZoomlevel}
             />
           </div>
         </div>

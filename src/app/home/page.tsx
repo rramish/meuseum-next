@@ -232,8 +232,8 @@ const Home = () => {
                     <div
                       className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full max-w-full ${
                         !piece?.username
-                          ? "hover:bg-[#00115A80]"
-                          : "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
+                          ? "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
+                          : "hover:bg-[#00115A80]"
                       } hover:rounded-lg`}
                     >
                       {piece?.username && (
@@ -307,7 +307,7 @@ const Home = () => {
                   style={{ objectFit: "contain" }}
                 />
                 <button
-                className="absolute cursor-pointer top-0 right-0 text-[#F287B7] flex items-center justify-center bg-gray-200/90 rounded-full h-8 w-8 hover:bg-gray-300/50 font-extrabold"
+                  className="absolute cursor-pointer top-0 right-0 text-[#F287B7] flex items-center justify-center bg-gray-200/90 rounded-full h-8 w-8 hover:bg-gray-300/50 font-extrabold"
                   onClick={() => {
                     setPreviewUrl("");
                     setShowPreviewModal(false);
