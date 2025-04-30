@@ -46,7 +46,7 @@ export const CustomButton = ({
 
 const Header = ({
   // onPreview,
-  length,
+  // length,
 }: {
   // onPreview: () => void;
   length: number;

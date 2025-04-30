@@ -117,9 +117,9 @@ const ReconstructedImage: React.FC = () => {
     setIsFullScreen(!isFullScreen);
   };
 
-  const onPublish = () => {
-    window.location.href = "https://www.mosida.com/";
-  };
+  // const onPublish = () => {
+  //   window.location.href = "https://www.mosida.com/";
+  // };
 
   const handleBack = () => {
     router.back();
