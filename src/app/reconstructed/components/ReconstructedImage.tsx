@@ -153,7 +153,7 @@ const ReconstructedImage: React.FC = () => {
           <Img.default width={150} height={150} alt="Logo" src={ICONS.logo} />
         </div>
         <div className="flex-1 flex justify-end gap-2">
-          <div>
+               {/* <div>
             <CustomButton
               title="Publish"
               bg="bg-[#fff]"
@@ -161,7 +161,7 @@ const ReconstructedImage: React.FC = () => {
               icon={ICONS.eye_icon}
               textcolor="text-[#F287B7]"
             />
-          </div>
+          </div> */}
           <div>
             <CustomButton
               title="Download"

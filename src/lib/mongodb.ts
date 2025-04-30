@@ -28,11 +28,11 @@ async function connectDB(): Promise<Mongoose> {
     const opts = {
       bufferCommands: false,
       dbName: "mosida_updated",
-      maxPoolSize: 10, // Maintain up to 10 socket connections
-      serverSelectionTimeoutMS: 15000, // Timeout for server selection
-      socketTimeoutMS: 45000, // How long a socket can be idle before closing
-      connectTimeoutMS: 10000, // Timeout for initial connection
-      waitQueueTimeoutMS: 10000 
+      // maxPoolSize: 10,
+      // socketTimeoutMS: 45000,
+      // connectTimeoutMS: 10000,
+      // waitQueueTimeoutMS: 10000 ,
+      // serverSelectionTimeoutMS: 15000,
     };
     cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
       console.log("db connected");

@@ -45,10 +45,10 @@ export const CustomButton = ({
 };
 
 const Header = ({
-  onPreview,
+  // onPreview,
   length,
 }: {
-  onPreview: () => void;
+  // onPreview: () => void;
   length: number;
 }) => {
 // const Header = ({
@@ -70,7 +70,7 @@ const Header = ({
           />
         </div>
         <div className="flex-1 justify-end flex">
-          {length == 20 && (
+          {/* {length == 20 && (
             <CustomButton
               onClick={onPreview}
               title="Preview"
@@ -78,7 +78,7 @@ const Header = ({
               icon={ICONS.eye_icon}
               textcolor={"text-[#F287B7]"}
             />
-          )}
+          )} */}
         </div>
       </div>
     </div>

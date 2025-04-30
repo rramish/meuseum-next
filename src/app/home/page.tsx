@@ -22,14 +22,14 @@ const Home = () => {
   const FIXED_HEIGHT = 800;
 
   const router = useRouter();
-  const { setfinalimage } = useImageStorage();
+  const { finalimage, setfinalimage } = useImageStorage();
   const { imageBackend, setImagePiece } = useImageStorage();
 
   const [totalLen, setTotalLen] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>("");
   const [fixedWidth, setFixedWidth] = useState(1200);
   const [error, setError] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>("");
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
 
@@ -74,6 +74,12 @@ const Home = () => {
     getDataFromBackend();
   }, []);
 
+  useEffect(() => {
+    if (totalLen === 20) {
+      reconstruct({ download: false });
+    }
+  }, [totalLen]);
+
   const getImageDimensions = (dataUrl: string) => {
     try {
       let width = 0;
@@ -116,84 +122,6 @@ const Home = () => {
       setLoading(false);
     }
   };
-
-  // async function reconstructImage({
-  //   download,
-  // }: {
-  //   download: boolean;
-  // }): Promise<string | void> {
-  //   try {
-  //     const filename = "reconstructed_image.png";
-  //     const imagePieces = pieces;
-
-  //     const pieceMap: { [key: string]: ImagePiece } = {};
-  //     let maxRow = 0;
-  //     let maxCol = 0;
-
-  //     imagePieces.forEach((piece) => {
-  //       const match = piece!.name.match(/piece_(\d+)_(\d+)\.png/);
-  //       if (match) {
-  //         const row = parseInt(match[1], 10);
-  //         const col = parseInt(match[2], 10);
-  //         pieceMap[`${row}_${col}`] = piece!;
-  //         maxRow = Math.max(maxRow, row);
-  //         maxCol = Math.max(maxCol, col);
-  //       }
-  //     });
-
-  //     const pieceWidth = 200;
-  //     const pieceHeight = 160;
-  //     const canvasWidth = (maxCol + 2) * pieceWidth;
-  //     const canvasHeight = (maxRow + 2) * pieceHeight;
-
-  //     const canvas = document.createElement("canvas");
-  //     canvas.width = canvasWidth;
-  //     canvas.height = canvasHeight;
-  //     const ctx = canvas.getContext("2d");
-  //     if (!ctx) throw new Error("Canvas context not available");
-
-  //     await Promise.all(
-  //       Object.entries(pieceMap).map(async ([key, piece]) => {
-  //         const [row, col] = key.split("_").map(Number);
-  //         const url = piece.updatedUrl || piece.dataUrl;
-
-  //         const img = new Image();
-  //         img.crossOrigin = "Anonymous";
-
-  //         await new Promise((resolve, reject) => {
-  //           img.onload = resolve;
-  //           img.onerror = reject;
-  //           img.src = url;
-  //         });
-
-  //         const x = col * pieceWidth;
-  //         const y = row * pieceHeight;
-  //         ctx.drawImage(img, x, y, pieceWidth, pieceHeight);
-  //       })
-  //     );
-
-  //     const dataUrl = canvas.toDataURL("image/png");
-
-  //     if (download) {
-  //       const link = document.createElement("a");
-  //       link.href = dataUrl;
-  //       link.download = filename;
-  //       document.body.appendChild(link);
-  //       link.click();
-  //       document.body.removeChild(link);
-  //     }
-  //     if (!download) {
-  //       setfinalimage(dataUrl);
-  //       router.push(`/reconstructed`);
-  //     }
-  //     return dataUrl;
-  //     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  //   } catch (error: any) {
-  //     console.log("error is : ", error);
-  //     setError("Failed to reconstruct the image. Please try again.");
-  //   }
-  // }
-
 
   async function reconstructImage({
     download,
@@ -285,14 +213,103 @@ const Home = () => {
     }
   }
 
+  async function reconstruct({
+    download,
+  }: {
+    download: boolean;
+  }): Promise<string | void> {
+    try {
+      const filename = "reconstructed_image.png";
+      const imagePieces = pieces;
+      const pieceMap: { [key: string]: ImagePiece } = {};
+      let minRow = Infinity;
+      let minCol = Infinity;
+      let maxRow = -Infinity;
+      let maxCol = -Infinity;
+
+      imagePieces.forEach((piece) => {
+        const match = piece!.name.match(/piece_(\d+)_(\d+)\.png/);
+        if (match) {
+          const row = parseInt(match[1], 10);
+          const col = parseInt(match[2], 10);
+          pieceMap[`${row}_${col}`] = piece!;
+          minRow = Math.min(minRow, row);
+          minCol = Math.min(minCol, col);
+          maxRow = Math.max(maxRow, row);
+          maxCol = Math.max(maxCol, col);
+        }
+      });
+
+      if (Object.keys(pieceMap).length === 0) {
+        throw new Error("No valid pieces found for reconstruction.");
+      }
+
+      const pieceWidth = 200;
+      const pieceHeight = 160;
+
+      const canvasWidth = (maxCol - minCol + 1) * pieceWidth;
+      const canvasHeight = (maxRow - minRow + 1) * pieceHeight;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Canvas context not available");
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+
+      console.log(
+        `Reconstructing image: minRow=${minRow}, minCol=${minCol}, maxRow=${maxRow}, maxCol=${maxCol}, canvas=${canvasWidth}x${canvasHeight}`
+      );
+
+      await Promise.all(
+        Object.entries(pieceMap).map(async ([key, piece]) => {
+          const [row, col] = key.split("_").map(Number);
+          const url = piece.updatedUrl || piece.dataUrl;
+          const img = new Image();
+          img.crossOrigin = "Anonymous";
+          await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            img.src = url;
+          });
+
+          const x = (col - minCol) * pieceWidth;
+          const y = (row - minRow) * pieceHeight;
+          console.log(`Drawing piece ${piece.name} at x=${x}, y=${y}`);
+          ctx.drawImage(img, x, y, pieceWidth, pieceHeight);
+        })
+      );
+
+      const dataUrl = canvas.toDataURL("image/png", 1.0);
+      if (download) {
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+      if (!download) {
+        setfinalimage(dataUrl);
+        //  router.push(`/reconstructed`);
+      }
+      return dataUrl;
+    } catch (error) {
+      console.error("Error reconstructing image:", error);
+      setError("Failed to reconstruct the image. Please try again.");
+      setTimeout(() => setError(null), 3000);
+    }
+  }
 
   return (
     <div className="flex-1 max-h-full bg-white">
       <Header
         length={totalLen}
-        onPreview={() => {
-          reconstructImage({ download: false });
-        }}
+        // onPreview={() => {
+        //   reconstructImage({ download: false });
+        // }}
       />
       {loading ? (
         <Loader />
@@ -305,78 +322,91 @@ const Home = () => {
           )}
           <div className="w-full p-4 relative h-full max-h-full">
             <div className="w-full flex flex-col justify-center items-center">
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateRows: `repeat(5, 1fr)`,
-                  gridTemplateColumns: `repeat(4, 1fr)`,
-                  gap: "1px",
-                  width: "100%",
-                  height: "80vh",
-                  overflow: "hidden",
-                }}
-              >
-                {pieces.map((piece, index) => (
-                  <div
-                    key={index}
-                    className="text-center flex-1 bg-white rounded-lg group relative"
-                  >
+              {totalLen === 20 ? (
+                <div className="w-full h-[80vh] relative flex items-center justify-center">
+                  <img
+                    alt="Reconstructed Image"
+                    src={(finalimage && finalimage) || ""}
+                    className="object-fill w-[90%] h-full"
+                  />
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateRows: `repeat(5, 1fr)`,
+                    gridTemplateColumns: `repeat(4, 1fr)`,
+                    gap: "1px",
+                    width: "100%",
+                    height: "80vh",
+                    overflow: "hidden",
+                  }}
+                >
+                  {pieces.map((piece, index) => (
                     <div
-                      className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full max-w-full ${
-                        !piece?.username
-                          ? "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
-                          : "hover:bg-[#00115A80]"
-                      } hover:rounded-lg`}
+                      key={index}
+                      className="text-center flex-1 bg-white rounded-lg group relative"
                     >
-                      {piece?.username && (
-                        <p className="max-w-full truncate ml-2 font-bold">
-                          {piece?.username}
-                        </p>
-                      )}
-                      <div className="m-auto justify-center flex md:hidden items-center w-full h-full group-hover:flex relative">
-                        <div className="flex justify-center items-center relative w-1/5 h-1/5 cursor-pointer hover:scale-120">
-                          <Img.default
-                            src={
-                              !piece?.username
-                                ? ICONS.edit_img
-                                : ICONS.preview_img
-                            }
-                            alt="edit_icon"
-                            width={40}
-                            height={40}
-                            onClick={() => {
-                              if (!piece?.username) {
-                                setImagePiece(piece!);
-                                router.push("/canvas");
-                              } else {
-                                setShowPreviewModal(true);
-                                setPreviewUrl(
-                                  piece?.updatedUrl || piece?.dataUrl
-                                );
+                      <div
+                        className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full max-w-full ${
+                          !piece?.username
+                            ? "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
+                            : "hover:bg-[#00115A80]"
+                        } hover:rounded-lg`}
+                      >
+                        {piece?.username &&
+                          (() => {
+                            const [firstName, secondName] =
+                              piece.username.split(" ");
+                            return secondName
+                              ? `${firstName} ${secondName[0]}.`
+                              : firstName;
+                          })()}
+                        <div className="m-auto justify-center flex md:hidden items-center w-full h-full group-hover:flex relative">
+                          <div className="flex justify-center items-center relative w-1/5 h-1/5 cursor-pointer hover:scale-120">
+                            <Img.default
+                              src={
+                                !piece?.username
+                                  ? ICONS.edit_img
+                                  : ICONS.preview_img
                               }
-                            }}
-                          />
+                              alt="edit_icon"
+                              width={40}
+                              height={40}
+                              onClick={() => {
+                                if (!piece?.username) {
+                                  setImagePiece(piece!);
+                                  router.push("/canvas");
+                                } else {
+                                  setShowPreviewModal(true);
+                                  setPreviewUrl(
+                                    piece?.updatedUrl || piece?.dataUrl
+                                  );
+                                }
+                              }}
+                            />
+                          </div>
                         </div>
                       </div>
+                      <Img.default
+                        onClick={() => {}}
+                        className="rounded-lg bg-black duration-300"
+                        src={
+                          piece && piece.updatedUrl
+                            ? piece.updatedUrl
+                            : piece!.dataUrl
+                        }
+                        alt={`Piece ${index + 1}`}
+                        fill
+                        style={{
+                          display: "block",
+                          cursor: "pointer",
+                        }}
+                      />
                     </div>
-                    <Img.default
-                      onClick={() => {}}
-                      className="rounded-lg bg-black duration-300"
-                      src={
-                        piece && piece.updatedUrl
-                          ? piece.updatedUrl
-                          : piece!.dataUrl
-                      }
-                      alt={`Piece ${index + 1}`}
-                      fill
-                      style={{
-                        display: "block",
-                        cursor: "pointer",
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           {showPreviewModal && (

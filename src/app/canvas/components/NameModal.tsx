@@ -18,7 +18,7 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
 
   const handleSubmit = async () => {
     if (!name) {
-      setErrormsg("User Name field cannot be empty!");
+      setErrormsg("Name field cannot be empty!");
       setTimeout(() => {
         setErrormsg(null);
       }, 3000);
@@ -41,7 +41,9 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
       <div className="p-4 gap-2 rounded-lg w-4/5 md:max-w-[300px] bg-white shadow">
         <div className="flex gap-4 flex-col justify-center items-center">
           <div className="text-center">
-            <p className="text-lg font-bold py-2 text-black">Enter your User Name.</p>
+            <p className="text-lg font-bold py-2 text-black">
+              Enter your Full Name.
+            </p>
           </div>
           <div>
             <input
@@ -49,7 +51,7 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
               onChange={(e) => {
                 setName(e.target.value);
               }}
-              placeholder="Enter your user name..."
+              placeholder="Enter your full name..."
               className=" w-full md:max-w-60 border outline-[#f287b7] border-gray-500 rounded-lg py-2 px-2 text-black"
             />
             {errormsg && <p className="text-red-400 text-center">{errormsg}</p>}
