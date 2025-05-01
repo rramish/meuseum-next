@@ -10,9 +10,9 @@ export async function POST(req: NextRequest) {
   try {
     const { sessionId } = await req.json();
 
-    if (!sessionId ) {
+    if (!sessionId) {
       return NextResponse.json(
-        { error: "Session ID and new username are required" },
+        { error: "Session ID is required" },
         { status: 400 }
       );
     }
@@ -24,17 +24,17 @@ export async function POST(req: NextRequest) {
 
     console.log("Ending session:", session);
 
+    // Update username only if it is null or does not exist
     const updateResult = await DrawingImagePiece.updateMany(
-      { sessionId: session._id }, 
+      { sessionId: session._id, username: { $in: [null, ""] } },
       { $set: { username: "Mosida Admin." } } 
     );
-
 
     return NextResponse.json(
       {
         sessionId,
         updatedCount: updateResult.modifiedCount,
-        message: "Session ended and username updated",
+        message: "Session ended and username updated where it was missing",
       },
       { status: 200 }
     );

@@ -275,12 +275,13 @@ const Home = () => {
                       className="text-center flex-1 bg-white rounded-lg group relative"
                     >
                       <div
-                        className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full max-w-full ${
-                          !piece?.username
-                            ? "bg-[#5F000280] rounded-lg"
-                            : "bg-[#00115A80]"
-                        } hover:rounded-lg`}
+                        className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full max-w-full`}
                       >
+                        {/* ${
+                       !piece?.username
+                         ? "bg-[#5F000280] rounded-lg"
+                         : "bg-[#00115A80]"
+                     }  hover:rounded-lg */}
                         {piece?.username &&
                           (() => {
                             const [firstName, secondName] =
