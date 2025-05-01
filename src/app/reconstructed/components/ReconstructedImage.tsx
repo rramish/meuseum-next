@@ -12,75 +12,75 @@ interface Dimensions {
   height: number;
 }
 
-const processImageForDownload = (
-  originalImageUrl: string,
-  editedDataUrl: string,
-  fileName: string
-): Promise<{ original: Dimensions; edited: Dimensions }> => {
-  return new Promise((resolve, reject) => {
-    const originalImg = new Image();
-    originalImg.crossOrigin = "Anonymous";
-    originalImg.onload = () => {
-      const originalDimensions: Dimensions = {
-        width: originalImg.width,
-        height: originalImg.height,
-      };
+// const processImageForDownload = (
+//   originalImageUrl: string,
+//   editedDataUrl: string,
+//   fileName: string
+// ): Promise<{ original: Dimensions; edited: Dimensions }> => {
+//   return new Promise((resolve, reject) => {
+//     const originalImg = new Image();
+//     originalImg.crossOrigin = "Anonymous";
+//     originalImg.onload = () => {
+//       const originalDimensions: Dimensions = {
+//         width: originalImg.width,
+//         height: originalImg.height,
+//       };
 
-      const editedImg = new Image();
-      editedImg.onload = () => {
-        const editedDimensions: Dimensions = {
-          width: editedImg.width,
-          height: editedImg.height,
-        };
+//       const editedImg = new Image();
+//       editedImg.onload = () => {
+//         const editedDimensions: Dimensions = {
+//           width: editedImg.width,
+//           height: editedImg.height,
+//         };
 
-        const canvas = document.createElement("canvas");
-        canvas.width = originalDimensions.width;
-        canvas.height = originalDimensions.height;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-          reject(new Error("Failed to get canvas context"));
-          return;
-        }
-        ctx.drawImage(
-          editedImg,
-          0,
-          0,
-          originalDimensions.width,
-          originalDimensions.height
-        );
+//         const canvas = document.createElement("canvas");
+//         canvas.width = originalDimensions.width;
+//         canvas.height = originalDimensions.height;
+//         const ctx = canvas.getContext("2d");
+//         if (!ctx) {
+//           reject(new Error("Failed to get canvas context"));
+//           return;
+//         }
+//         ctx.drawImage(
+//           editedImg,
+//           0,
+//           0,
+//           originalDimensions.width,
+//           originalDimensions.height
+//         );
 
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) {
-              reject(new Error("Failed to create Blob"));
-              return;
-            }
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+//         canvas.toBlob(
+//           (blob) => {
+//             if (!blob) {
+//               reject(new Error("Failed to create Blob"));
+//               return;
+//             }
+//             const url = URL.createObjectURL(blob);
+//             const link = document.createElement("a");
+//             link.href = url;
+//             link.download = fileName;
+//             document.body.appendChild(link);
+//             link.click();
+//             document.body.removeChild(link);
+//             URL.revokeObjectURL(url);
 
-            resolve({ original: originalDimensions, edited: editedDimensions });
-          },
-          "image/png",
-          1.0
-        );
-      };
-      editedImg.onerror = () => {
-        reject(new Error("Failed to load edited image"));
-      };
-      editedImg.src = editedDataUrl;
-    };
-    originalImg.onerror = () => {
-      reject(new Error("Failed to load original image"));
-    };
-    originalImg.src = originalImageUrl;
-  });
-};
+//             resolve({ original: originalDimensions, edited: editedDimensions });
+//           },
+//           "image/png",
+//           1.0
+//         );
+//       };
+//       editedImg.onerror = () => {
+//         reject(new Error("Failed to load edited image"));
+//       };
+//       editedImg.src = editedDataUrl;
+//     };
+//     originalImg.onerror = () => {
+//       reject(new Error("Failed to load original image"));
+//     };
+//     originalImg.src = originalImageUrl;
+//   });
+// };
 
 const downloadOriginalAsVector = async (finalimage: any) => {
   try {
