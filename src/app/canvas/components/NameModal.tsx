@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/userStore";
 import { useImageStorage } from "@/store/imageStore";
 import { CustomButton } from "@/components/CustomButton";
+import { socket } from "@/socket";
 
 export const NameModal = ({ onclose }: { onclose: () => void }) => {
   const router = useRouter();
@@ -31,7 +32,8 @@ export const NameModal = ({ onclose }: { onclose: () => void }) => {
       pieceId: imagePiece?._id,
     };
     await axios.post("/api/drawing-image/update", obj);
-    // console.log("update image is : ", resp.data);
+    socket.emit("image-updated-backend", { hello: "world" });
+
     setLoading(false);
     onclose();
   };

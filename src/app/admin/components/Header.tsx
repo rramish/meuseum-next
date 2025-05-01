@@ -56,18 +56,21 @@ const Header = ({
   onPreview,
   onConstruct,
   onNewDrawing,
+  onEndSession,
   logout = false,
+  piecesLength = 0,
   backButton = false,
 }: {
-  length?: number;
   reload?: boolean;
   logout?: boolean;
   onReset?: () => void;
   backButton?: boolean;
+  piecesLength?: number;
   onReload?: () => void;
   onPreview?: () => void;
   onConstruct?: () => void;
   onNewDrawing?: () => void;
+  onEndSession?: () => void;
 }) => {
   const router = useRouter();
 
@@ -79,6 +82,8 @@ const Header = ({
     setLoading(false);
     router.push("/login");
   };
+
+  console.log("length", piecesLength);
 
   return (
     <div className="px-10 py-6">
@@ -131,16 +136,15 @@ const Header = ({
             />
           )}
 
-          {/* {length === 20 && (
+          {piecesLength > 0 && piecesLength < 20 && (
             <CustomButton
             disabled={true}
-              // onClick={onPreview}
-              title="Completed"
-              bg={"bg-white"}
-              // icon={ICONS.eye_icon}
+            bg={"bg-white"}
+            title="Complete"
+            onClick={onEndSession}
               textcolor={"text-[#F287B7]"}
             />
-          )} */}
+          )}
 
           {onPreview && (
             <CustomButton

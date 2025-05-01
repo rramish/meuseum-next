@@ -3,13 +3,15 @@
 import { CustomButton } from "@/components/CustomButton";
 
 export const ConfirmModal = ({
+  message,
   onclose,
-  onSubmit,
   loading,
+  onSubmit,
 }: {
+  message?: string;
+  loading: boolean;
   onclose: () => void;
   onSubmit: () => void;
-  loading: boolean;
 }) => {
   return (
     <div className="flex-1 h-full flex justify-center flex-col relative items-center">
@@ -17,7 +19,7 @@ export const ConfirmModal = ({
         <div className="flex gap-4 flex-col justify-center items-center">
           <div className="text-center">
             <p className="text-lg font-bold py-2 text-black">
-              Do you really want to reset?
+              {message || "Do you really want to reset?"}
             </p>
           </div>
           <div className="flex gap-2 md:gap-10 flex-wrap items-center py-2">

@@ -139,7 +139,6 @@ const CanvasEditor = ({
     });
 
     canvasRef.current.addEventListener("contextmenu", handleRightClick);
-    canvas.on("mouse:dblclick", toggleZoom);
 
     return () => {
       canvas.dispose();

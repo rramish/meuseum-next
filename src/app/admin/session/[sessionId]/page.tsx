@@ -5,6 +5,7 @@ import * as Img from "next/image";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
+import { socket } from "@/socket";
 import Loader from "@/components/Loader";
 import Header from "../../components/Header";
 import { useImageStorage } from "@/store/imageStore";
@@ -17,27 +18,30 @@ interface ImagePiece {
   serial: number;
   dataUrl: string;
   username?: string;
-  updatedUrl?: string;
   updatedAt?: string;
+  updatedUrl?: string;
 }
 
 const Session = () => {
-  const router = useRouter();
   const params = useParams();
+  const router = useRouter();
+
   const { sessionId } = params;
+
   const { setfinalimage, setOriginalSessionImageURL } = useImageStorage();
-  const [totalLength, setTotalLength] = useState(0);
 
   const [loading, setLoading] = useState(false);
-  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [totalLength, setTotalLength] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [showUploadModal, setShowUploadModal] = useState(false);
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
+  const [showEndSessionModal, setShowEndSessionModal] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showPiecePreviewModal, setShowPiecePreviewModal] = useState(false);
   const [showResetConfirmationModal, setShowResetConfirmationModal] =
     useState(false);
   const [selectedPiece, setSelectedPiece] = useState<ImagePiece | undefined>();
-  const [showPiecePreviewModal, setShowPiecePreviewModal] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -64,7 +68,12 @@ const Session = () => {
         }
       );
       setPieces(resp.data.pieces);
-      setTotalLength(resp.data.pieces.length);
+      const filledPieces = resp.data.pieces.filter(
+        (f: ImagePiece) => f.username && f.username
+      );
+
+      setTotalLength(filledPieces.length);
+
       if (resp.data.originalImageUrl) {
         setOriginalSessionImageURL(resp.data.originalImageUrl);
       }
@@ -182,8 +191,8 @@ const Session = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setSelectedPiece(undefined);
-      await getDataFromBackend();
       setShowConfirmationModal(false);
+      await getDataFromBackend();
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error resetting progress:", error);
@@ -219,6 +228,30 @@ const Session = () => {
     }
   };
 
+  const handleCompleteSession = async () => {
+    try {
+      setLoading(true);
+      const obj = { sessionId: sessionId };
+      await axios.post("/api/drawing-session/end", obj, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      socket.emit("image-updated-backend", { hello: "world" });
+      setShowEndSessionModal(false);
+      await getDataFromBackend();
+
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Error Completing Session:", error);
+      setError(
+        error.response?.data?.error ||
+          "Failed to End Session. Please try again."
+      );
+      setTimeout(() => setError(null), 3000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleClosePreview = () => {
     setShowPiecePreviewModal(false);
   };
@@ -236,7 +269,7 @@ const Session = () => {
   return (
     <div className="mx-4 max-w-full bg-white pb-2">
       <Header
-        length={totalLength}
+        piecesLength={totalLength}
         backButton
         onReset={() => {
           setShowResetConfirmationModal(true);
@@ -244,6 +277,9 @@ const Session = () => {
         onPreview={() => reconstructImage({ download: false })}
         onReload={() => {
           getDataFromBackend();
+        }}
+        onEndSession={() => {
+          setShowEndSessionModal(true);
         }}
       />
       {loading ? (
@@ -397,6 +433,16 @@ const Session = () => {
               ✕
             </button>
           </div>
+        </div>
+      )}
+      {showEndSessionModal && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+          <ConfirmModal
+            loading={loading}
+            onSubmit={handleCompleteSession}
+            onclose={() => setShowEndSessionModal(false)}
+            message="Do you really want to end the session?"
+          />
         </div>
       )}
     </div>

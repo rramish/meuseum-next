@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import { ICONS } from "@/assets";
+import { socket } from "@/socket";
 import Loader from "@/components/Loader";
 import Header from "./components/Header";
 import { useImageStorage } from "@/store/imageStore";
@@ -32,6 +33,22 @@ const Home = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>("");
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Connected to Socket.IO server");
+    });
+
+    socket.on("image-updated", () => {
+      console.log("Received image-updated event");
+      getDataFromBackend();
+    });
+
+    return () => {
+      socket.off("image-updated");
+      socket.off("connect");
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -122,96 +139,6 @@ const Home = () => {
       setLoading(false);
     }
   };
-
-  // async function reconstructImage({
-  //   download,
-  // }: {
-  //   download: boolean;
-  // }): Promise<string | void> {
-  //   try {
-  //     const filename = "reconstructed_image.png";
-  //     const imagePieces = pieces;
-  //     const pieceMap: { [key: string]: ImagePiece } = {};
-  //     let minRow = Infinity;
-  //     let minCol = Infinity;
-  //     let maxRow = -Infinity;
-  //     let maxCol = -Infinity;
-
-  //     imagePieces.forEach((piece) => {
-  //       const match = piece!.name.match(/piece_(\d+)_(\d+)\.png/);
-  //       if (match) {
-  //         const row = parseInt(match[1], 10);
-  //         const col = parseInt(match[2], 10);
-  //         pieceMap[`${row}_${col}`] = piece!;
-  //         minRow = Math.min(minRow, row);
-  //         minCol = Math.min(minCol, col);
-  //         maxRow = Math.max(maxRow, row);
-  //         maxCol = Math.max(maxCol, col);
-  //       }
-  //     });
-
-  //     if (Object.keys(pieceMap).length === 0) {
-  //       throw new Error("No valid pieces found for reconstruction.");
-  //     }
-
-  //     const pieceWidth = 200;
-  //     const pieceHeight = 160;
-
-  //     const canvasWidth = (maxCol - minCol + 1) * pieceWidth;
-  //     const canvasHeight = (maxRow - minRow + 1) * pieceHeight;
-
-  //     const canvas = document.createElement("canvas");
-  //     canvas.width = canvasWidth;
-  //     canvas.height = canvasHeight;
-  //     const ctx = canvas.getContext("2d");
-  //     if (!ctx) throw new Error("Canvas context not available");
-
-  //     ctx.imageSmoothingEnabled = true;
-  //     ctx.imageSmoothingQuality = "high";
-
-  //     console.log(
-  //       `Reconstructing image: minRow=${minRow}, minCol=${minCol}, maxRow=${maxRow}, maxCol=${maxCol}, canvas=${canvasWidth}x${canvasHeight}`
-  //     );
-
-  //     await Promise.all(
-  //       Object.entries(pieceMap).map(async ([key, piece]) => {
-  //         const [row, col] = key.split("_").map(Number);
-  //         const url = piece.updatedUrl || piece.dataUrl;
-  //         const img = new Image();
-  //         img.crossOrigin = "Anonymous";
-  //         await new Promise((resolve, reject) => {
-  //           img.onload = resolve;
-  //           img.onerror = reject;
-  //           img.src = url;
-  //         });
-
-  //         const x = (col - minCol) * pieceWidth;
-  //         const y = (row - minRow) * pieceHeight;
-  //         console.log(`Drawing piece ${piece.name} at x=${x}, y=${y}`);
-  //         ctx.drawImage(img, x, y, pieceWidth, pieceHeight);
-  //       })
-  //     );
-
-  //     const dataUrl = canvas.toDataURL("image/png", 1.0);
-  //     if (download) {
-  //       const link = document.createElement("a");
-  //       link.href = dataUrl;
-  //       link.download = filename;
-  //       document.body.appendChild(link);
-  //       link.click();
-  //       document.body.removeChild(link);
-  //     }
-  //     if (!download) {
-  //       setfinalimage(dataUrl);
-  //       router.push(`/reconstructed`);
-  //     }
-  //     return dataUrl;
-  //   } catch (error) {
-  //     console.error("Error reconstructing image:", error);
-  //     setError("Failed to reconstruct the image. Please try again.");
-  //     setTimeout(() => setError(null), 3000);
-  //   }
-  // }
 
   async function reconstruct({
     download,
@@ -350,8 +277,8 @@ const Home = () => {
                       <div
                         className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full max-w-full ${
                           !piece?.username
-                            ? "hover:bg-[#5F000280] bg-[#00000050] rounded-lg"
-                            : "hover:bg-[#00115A80]"
+                            ? "bg-[#5F000280] rounded-lg"
+                            : "bg-[#00115A80]"
                         } hover:rounded-lg`}
                       >
                         {piece?.username &&
@@ -362,8 +289,8 @@ const Home = () => {
                               ? `${firstName} ${secondName[0]}.`
                               : firstName;
                           })()}
-                        <div className="m-auto justify-center flex md:hidden items-center w-full h-full group-hover:flex relative">
-                          <div className="flex justify-center items-center relative w-1/5 h-1/5 cursor-pointer hover:scale-120">
+                        <div className="m-auto justify-center flex items-center w-full h-full relative">
+                          <div className="flex justify-center items-center relative w-1/5 h-1/5 cursor-pointer">
                             <Img.default
                               src={
                                 !piece?.username

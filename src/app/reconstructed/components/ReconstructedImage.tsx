@@ -82,36 +82,72 @@ const processImageForDownload = (
   });
 };
 
+const downloadOriginalAsVector = async (finalimage: any) => {
+  try {
+    if (!finalimage) {
+      throw new Error("Original image URL is missing.");
+    }
+
+    // Extract the base64 data from the URL
+    const base64Data = finalimage.split(",")[1];
+    if (!base64Data) {
+      throw new Error("Invalid base64 image data.");
+    }
+
+    // Create an SVG element with the base64 image embedded
+    const svgData = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+        <image href="${finalimage}" width="800" height="600" />
+      </svg>
+    `;
+
+    // Create a Blob from the SVG data
+    const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+
+    // Create a download link
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "original_image_vector.svg";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    console.log("Original image downloaded as vector successfully.");
+  } catch (error) {
+    console.error("Error downloading original image as vector:", error);
+  }
+};
+
 const ReconstructedImage: React.FC = () => {
   const router = useRouter();
   const { finalimage, originalSessionImageURL } = useImageStorage();
   const [error, setError] = useState<string | null>(null);
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 
-  const onDownload = async () => {
-    try {
-      if (!finalimage) {
-        throw new Error("No edited image available to download.");
-      }
-      if (!originalSessionImageURL) {
-        throw new Error("Original image URL is missing.");
-      }
+  // const onDownload = async () => {
+  //   try {
+  //     if (!finalimage) {
+  //       throw new Error("No edited image available to download.");
+  //     }
+  //     if (!originalSessionImageURL) {
+  //       throw new Error("Original image URL is missing.");
+  //     }
 
-      const fileName = "reconstructed_Image.png";
-      const dimensions = await processImageForDownload(
-        originalSessionImageURL,
-        finalimage,
-        fileName
-      );
-      console.log(
-        `Downloaded - Original: ${dimensions.original.width}x${dimensions.original.height}, Edited: ${dimensions.edited.width}x${dimensions.edited.height}`
-      );
-    } catch (error) {
-      console.error("Error downloading the image:", error);
-      setError("Failed to download the image. Please try again.");
-      setTimeout(() => setError(null), 3000);
-    }
-  };
+  //     const fileName = "reconstructed_Image.png";
+  //     const dimensions = await processImageForDownload(
+  //       originalSessionImageURL,
+  //       finalimage,
+  //       fileName
+  //     );
+  //     console.log(
+  //       `Downloaded - Original: ${dimensions.original.width}x${dimensions.original.height}, Edited: ${dimensions.edited.width}x${dimensions.edited.height}`
+  //     );
+  //   } catch (error) {
+  //     console.error("Error downloading the image:", error);
+  //     setError("Failed to download the image. Please try again.");
+  //     setTimeout(() => setError(null), 3000);
+  //   }
+  // };
 
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
@@ -153,7 +189,7 @@ const ReconstructedImage: React.FC = () => {
           <Img.default width={150} height={150} alt="Logo" src={ICONS.logo} />
         </div>
         <div className="flex-1 flex justify-end gap-2">
-               {/* <div>
+          {/* <div>
             <CustomButton
               title="Publish"
               bg="bg-[#fff]"
@@ -162,11 +198,21 @@ const ReconstructedImage: React.FC = () => {
               textcolor="text-[#F287B7]"
             />
           </div> */}
-          <div>
+          {/* <div>
             <CustomButton
               title="Download"
               bg="bg-[#F287B7]"
               onClick={onDownload}
+              icon={ICONS.download}
+              textcolor="text-[#fff]"
+            />
+          </div> */}
+        
+          <div>
+            <CustomButton
+              title="Download"
+              bg="bg-[#F287B7]"
+              onClick={() => downloadOriginalAsVector(finalimage)}
               icon={ICONS.download}
               textcolor="text-[#fff]"
             />

@@ -104,7 +104,7 @@ const Sidebar = ({
 }) => {
   const { canvasRef } = useCanvasStore();
 
-  const [active, setActive] = useState("pencil");
+  const [active, setActive] = useState("");
   const [showFolder, setShowFolder] = useState(false);
   const [brushSize, setBrushSize] = useState<number>(10);
   const [brushOpacity, setBrushOpacity] = useState<number>(1);
@@ -148,6 +148,11 @@ const Sidebar = ({
     const canvas = canvasRef?.current as unknown as fabric.Canvas;
 
     if (canvas) {
+      if (active === "pencil") {
+        setActive("");
+        canvas.freeDrawingBrush = undefined;
+        return;
+      }
       canvas.off("mouse:down");
 
       const canvasContainer = canvas.lowerCanvasEl.parentNode as HTMLElement;
@@ -168,6 +173,11 @@ const Sidebar = ({
     const canvas = canvasRef?.current as unknown as fabric.Canvas;
 
     if (canvas) {
+      if (active === "brush") {
+        setActive("");
+        canvas.freeDrawingBrush = undefined;
+        return;
+      }
       canvas.off("mouse:down");
 
       const canvasContainer = canvas.lowerCanvasEl.parentNode as HTMLElement;
@@ -185,6 +195,10 @@ const Sidebar = ({
   };
 
   const setEraserTool = () => {
+    if (active === "eraser") {
+      setActive("");
+      return;
+    }
     const canvas = canvasRef?.current as unknown as fabric.Canvas;
 
     if (canvas) {
