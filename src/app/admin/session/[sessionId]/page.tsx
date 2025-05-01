@@ -5,7 +5,7 @@ import * as Img from "next/image";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-// import { socket } from "@/socket";
+import { socket } from "@/socket";
 import Loader from "@/components/Loader";
 import Header from "../../components/Header";
 import { useImageStorage } from "@/store/imageStore";
@@ -235,7 +235,7 @@ const Session = () => {
       await axios.post("/api/drawing-session/end", obj, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      // socket.emit("image-updated-backend", { hello: "world" });
+      socket.emit("image-updated-backend", { hello: "world" });
       setShowEndSessionModal(false);
       await getDataFromBackend();
 

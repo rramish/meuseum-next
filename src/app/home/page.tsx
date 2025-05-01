@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import { ICONS } from "@/assets";
-// import { socket } from "@/socket";
+import { socket } from "@/socket";
 import Loader from "@/components/Loader";
 import Header from "./components/Header";
 import { useImageStorage } from "@/store/imageStore";
@@ -34,21 +34,21 @@ const Home = () => {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [pieces, setPieces] = useState<Partial<ImagePiece[]>>([]);
 
-  // useEffect(() => {
-  //   socket.on("connect", () => {
-  //     console.log("Connected to Socket.IO server");
-  //   });
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Connected to Socket.IO server");
+    });
 
-  //   socket.on("image-updated", () => {
-  //     console.log("Received image-updated event");
-  //     getDataFromBackend();
-  //   });
+    socket.on("image-updated", () => {
+      console.log("Received image-updated event");
+      getDataFromBackend();
+    });
 
-  //   return () => {
-  //     socket.off("image-updated");
-  //     socket.off("connect");
-  //   };
-  // }, [socket]);
+    return () => {
+      socket.off("image-updated");
+      socket.off("connect");
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
