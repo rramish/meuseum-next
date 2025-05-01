@@ -26,6 +26,7 @@ const Session = () => {
   const params = useParams();
   const router = useRouter();
 
+  
   const { sessionId } = params;
 
   const { setfinalimage, setOriginalSessionImageURL } = useImageStorage();
