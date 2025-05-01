@@ -165,7 +165,7 @@ const Canvas = () => {
               zoomlevel={zoomlevel}
               redoStack={redoStack}
               undoStack={undoStack}
-              setZoomlevel={setZoomlevel}
+              // setZoomlevel={setZoomlevel}
             />
           </div>
         </div>

@@ -15,7 +15,7 @@ const CanvasEditor = ({
   redo,
   redoStack,
   undoStack,
-  setZoomlevel,
+  // setZoomlevel,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   redo: any;
@@ -24,7 +24,7 @@ const CanvasEditor = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   undoStack: any;
   zoomlevel: number;
-  setZoomlevel: (zoomlevel: number) => void;
+  // setZoomlevel: (zoomlevel: number) => void;
 }) => {
   const { setCanvasRef } = useCanvasStore();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -34,11 +34,11 @@ const CanvasEditor = ({
   const [canvasHeight, setCanvasHeight] = useState<number>(0);
 
   // Store canvas view state
-  const viewportState = useRef({
-    zoom: 1,
-    panX: 0,
-    panY: 0,
-  });
+  // const viewportState = useRef({
+  //   zoom: 1,
+  //   panX: 0,
+  //   panY: 0,
+  // });
 
   const updateCanvasDimensions = useCallback(() => {
     if (canvasContainerRef.current) {
@@ -65,31 +65,31 @@ const CanvasEditor = ({
   }, [updateCanvasDimensions]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const toggleZoom = (event: any) => {
-    if (!canvasInstance.current) return;
+  // const toggleZoom = (event: any) => {
+  //   if (!canvasInstance.current) return;
 
-    const instance = canvasInstance.current;
-    const pointer = instance.getPointer(event.e);
-    const currentZoom = instance.getZoom();
-    const newZoom = currentZoom === 1 ? 2 : 1;
+  //   const instance = canvasInstance.current;
+  //   const pointer = instance.getPointer(event.e);
+  //   const currentZoom = instance.getZoom();
+  //   const newZoom = currentZoom === 1 ? 2 : 1;
 
-    setZoomlevel(newZoom);
+  //   setZoomlevel(newZoom);
 
-    if (newZoom === 2) {
-      viewportState.current = {
-        zoom: currentZoom,
-        panX: instance.viewportTransform?.[4] || 0,
-        panY: instance.viewportTransform?.[5] || 0,
-      };
+  //   if (newZoom === 2) {
+  //     viewportState.current = {
+  //       zoom: currentZoom,
+  //       panX: instance.viewportTransform?.[4] || 0,
+  //       panY: instance.viewportTransform?.[5] || 0,
+  //     };
 
-      instance.zoomToPoint(new fabric.Point(pointer.x, pointer.y), newZoom);
-    } else {
-      instance.setZoom(1);
-      instance.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    }
+  //     instance.zoomToPoint(new fabric.Point(pointer.x, pointer.y), newZoom);
+  //   } else {
+  //     instance.setZoom(1);
+  //     instance.setViewportTransform([1, 0, 0, 1, 0, 0]);
+  //   }
 
-    instance.renderAll();
-  };
+  //   instance.renderAll();
+  // };
 
   const trackObject = (obj: fabric.Object) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

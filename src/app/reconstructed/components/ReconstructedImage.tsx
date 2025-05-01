@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { ICONS } from "@/assets";
 import { useRouter } from "next/navigation";
@@ -7,10 +6,10 @@ import { useImageStorage } from "@/store/imageStore";
 import { CustomButton } from "@/components/CustomButton";
 import * as Img from "next/image";
 
-interface Dimensions {
-  width: number;
-  height: number;
-}
+// interface Dimensions {
+//   width: number;
+//   height: number;
+// }
 
 // const processImageForDownload = (
 //   originalImageUrl: string,
@@ -82,6 +81,7 @@ interface Dimensions {
 //   });
 // };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const downloadOriginalAsVector = async (finalimage: any) => {
   try {
     if (!finalimage) {
@@ -120,8 +120,11 @@ const downloadOriginalAsVector = async (finalimage: any) => {
 
 const ReconstructedImage: React.FC = () => {
   const router = useRouter();
-  const { finalimage, originalSessionImageURL } = useImageStorage();
-  const [error, setError] = useState<string | null>(null);
+  const {
+    finalimage,
+    //  originalSessionImageURL
+  } = useImageStorage();
+  const [error] = useState<string | null>(null);
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 
   // const onDownload = async () => {
@@ -207,7 +210,7 @@ const ReconstructedImage: React.FC = () => {
               textcolor="text-[#fff]"
             />
           </div> */}
-        
+
           <div>
             <CustomButton
               title="Download"
