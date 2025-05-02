@@ -54,6 +54,22 @@ const Session = () => {
     }
   }, [sessionId, router]);
 
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Connected to Socket.IO server");
+    });
+
+    socket.on("image-updated-admin", () => {
+      console.log("Received image-updated event");
+      getDataFromBackend();
+    });
+
+    return () => {
+      socket.off("image-updated-admin");
+      socket.off("connect");
+    };
+  }, [socket]);
+
   const getDataFromBackend = async () => {
     try {
       if (!sessionId) {

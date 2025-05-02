@@ -23,6 +23,12 @@ app.prepare().then(() => {
                 data: 'some data'
             });
         });
+        socket.on('image-updated-user', (data) => {
+            console.log('Received image-updated event from:', socket.id, data);
+            io.sockets.emit('image-updated-admin', {
+                data: 'some data'
+            });
+        });
     });
 
 

@@ -22,6 +22,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
     };
     await axios.post("/api/drawing-image/update", obj);
     socket.emit("image-updated-user", { hello: "world" });
+    socket.emit("image-updated-backend", { hello: "world" });
     setLoading(false);
     onclose();
     router.replace("/home");
