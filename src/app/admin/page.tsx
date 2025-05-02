@@ -78,7 +78,7 @@ const Main = () => {
         throw new Error("No token found. Please log in.");
       }
 
-      const resp = await axios.post(
+       await axios.post(
         "/api/drawing-session/update",
         { sessionId: id, status: "active" },
         {
