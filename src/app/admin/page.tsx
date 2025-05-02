@@ -4,29 +4,30 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
+import { socket } from "@/socket";
 import Header from "./components/Header";
 import Loader from "@/components/Loader";
-import { Uploadmodal } from "./components/Uploadmodal";
 import { useImageStorage } from "@/store/imageStore";
+import { Uploadmodal } from "./components/Uploadmodal";
 
 interface Session {
   _id: string;
   name: string;
+  status: string;
   imageUrl: string;
   imageName: string;
-  status: string;
 }
 
 const Main = () => {
   const router = useRouter();
+  const { setOriginalSessionImageURL } = useImageStorage();
 
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [activePiece, setActivePiece] = useState("");
   const [sessions, setSessions] = useState<Session[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [activePiece, setActivePiece] = useState("");
   const [showPreviewModal, setShowPreviewModal] = useState(false);
-  const { setOriginalSessionImageURL } = useImageStorage();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -86,7 +87,7 @@ const Main = () => {
           },
         }
       );
-      console.log("resp is : ", resp);
+      socket.emit("image-updated-backend", { hello: "world" });
       await fetchSessions();
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {

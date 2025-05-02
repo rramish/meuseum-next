@@ -2,6 +2,7 @@
 import axios from "axios";
 
 import { useState } from "react";
+import { socket } from "@/socket";
 import { useRouter } from "next/navigation";
 import { useImageStorage } from "@/store/imageStore";
 import { CustomButton } from "@/components/CustomButton";
@@ -20,6 +21,7 @@ export const ConfirmModal = ({ onclose }: { onclose: () => void }) => {
       pieceId: imagePiece?._id,
     };
     await axios.post("/api/drawing-image/update", obj);
+    socket.emit("image-updated-user", { hello: "world" });
     setLoading(false);
     onclose();
     router.replace("/home");

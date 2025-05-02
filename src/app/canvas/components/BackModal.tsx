@@ -1,8 +1,9 @@
 "use client";
 import axios from "axios";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { socket } from "@/socket";
 import { useImageStorage } from "@/store/imageStore";
 import { CustomButton } from "@/components/CustomButton";
 
@@ -21,6 +22,7 @@ export const BackModal = ({ onclose }: { onclose: () => void }) => {
       pieceId: imagePiece?._id,
     };
     await axios.post("/api/drawing-image/update", obj);
+    socket.emit("image-updated-backend", { hello: "world" });
     setLoading(false);
     onclose();
     router.replace("/home");
@@ -32,6 +34,8 @@ export const BackModal = ({ onclose }: { onclose: () => void }) => {
       pieceId: imagePiece?._id,
     };
     await axios.post("/api/drawing-image/reset-progress", obj);
+    socket.emit("image-updated-backend", { hello: "world" });
+
     setLoadingNotSave(false);
     onclose();
     router.replace("/home");

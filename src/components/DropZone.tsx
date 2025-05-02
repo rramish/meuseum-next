@@ -6,6 +6,7 @@ import Dropzone from "react-dropzone";
 import React, { useState, useRef } from "react";
 
 import { ICONS } from "@/assets";
+import { socket } from "@/socket";
 import { useImageStorage } from "@/store/imageStore";
 import { useSelectedImagesStore } from "@/store/imagesSessionStore";
 
@@ -87,22 +88,20 @@ const DropZone = ({ onclose }: { onclose: () => void }) => {
         serial++;
       }
     }
-    // console.log("cleared");
-    // console.log("pieces are : ", pieces);
+
     const resp = await axios.post("/api/drawing-image", {
       pieces,
       sessionId: folderName,
     });
-    console.log("resp is : ", resp.data);
+    socket.emit("image-updated-backend", { hello: "world" });
+
     window.location.reload();
-    // setPieces(resp.data.pieceDocs);
   };
 
   const handleDrop = async (acceptedFiles: File[]) => {
     if (isUploading.current) return;
     isUploading.current = true;
 
-    // console.log("handleDrop called with files:", acceptedFiles);
     const file = acceptedFiles[0];
     setErrorMessage("");
     setIsLoading(true);

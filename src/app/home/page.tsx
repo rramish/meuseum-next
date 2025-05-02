@@ -275,20 +275,34 @@ const Home = () => {
                       className="text-center flex-1 bg-white rounded-lg group relative"
                     >
                       <div
-                        className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full max-w-full`}
+                        className={`text-white absolute flex flex-col z-10 flex-1 p-2 min-h-full min-w-full max-w-full
+                        ${
+                          !piece?.username ? "bg-[#5F000280] rounded-lg" : ""
+                        }  hover:rounded-lg`}
                       >
-                        {/* ${
-                       !piece?.username
-                         ? "bg-[#5F000280] rounded-lg"
-                         : "bg-[#00115A80]"
-                     }  hover:rounded-lg */}
                         {piece?.username &&
                           (() => {
                             const [firstName, secondName] =
                               piece.username.split(" ");
-                            return secondName
-                              ? `${firstName} ${secondName[0]}.`
-                              : firstName;
+                            return secondName ? (
+                              <p
+                                style={{
+                                  fontWeight: "bold",
+                                  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+                                }}
+                              >
+                                {firstName} {secondName[0]}.
+                              </p>
+                            ) : (
+                              <p
+                                style={{
+                                  fontWeight: "bold",
+                                  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+                                }}
+                              >
+                                {firstName}
+                              </p>
+                            );
                           })()}
                         <div className="m-auto justify-center flex items-center w-full h-full relative">
                           <div className="flex justify-center items-center relative w-1/5 h-1/5 cursor-pointer">

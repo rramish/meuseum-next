@@ -26,7 +26,6 @@ const Session = () => {
   const params = useParams();
   const router = useRouter();
 
-  
   const { sessionId } = params;
 
   const { setfinalimage, setOriginalSessionImageURL } = useImageStorage();
@@ -193,6 +192,7 @@ const Session = () => {
       });
       setSelectedPiece(undefined);
       setShowConfirmationModal(false);
+      socket.emit("image-updated-backend", { hello: "world" });
       await getDataFromBackend();
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -216,6 +216,7 @@ const Session = () => {
       });
       router.push("/admin");
       setShowResetConfirmationModal(false);
+      socket.emit("image-updated-backend", { hello: "world" });
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error resetting progress:", error);
