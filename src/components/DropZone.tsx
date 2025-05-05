@@ -89,7 +89,7 @@ const DropZone = ({ onclose }: { onclose: () => void }) => {
       }
     }
 
-    const resp = await axios.post("/api/drawing-image", {
+    await axios.post("/api/drawing-image", {
       pieces,
       sessionId: folderName,
     });

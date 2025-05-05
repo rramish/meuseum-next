@@ -22,6 +22,7 @@ export const BackModal = ({ onclose }: { onclose: () => void }) => {
       pieceId: imagePiece?._id,
     };
     await axios.post("/api/drawing-image/update", obj);
+    socket.emit("image-updated-user", { hello: "world" });
     socket.emit("image-updated-backend", { hello: "world" });
     setLoading(false);
     onclose();

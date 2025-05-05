@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { ICONS } from "@/assets";
 import { useRouter } from "next/navigation";
@@ -6,48 +7,84 @@ import { useImageStorage } from "@/store/imageStore";
 import { CustomButton } from "@/components/CustomButton";
 import * as Img from "next/image";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const downloadOriginalAsVector = async (finalimage: any) => {
-  try {
-    if (!finalimage) {
+interface Dimensions {
+  width: number;
+  height: number;
+}
+
+const processImageForDownload = (
+  originalImageUrl: string,
+  editedDataUrl: string
+): Promise<{ original: Dimensions; edited: Dimensions }> => {
+  return new Promise((resolve, reject) => {
+    if (!editedDataUrl) {
       throw new Error("Original image URL is missing.");
     }
+    const originalImg = new Image();
+    originalImg.crossOrigin = "Anonymous";
+    originalImg.onload = () => {
+      const originalDimensions: Dimensions = {
+        width: originalImg.width,
+        height: originalImg.height,
+      };
 
-    // Extract the base64 data from the URL
-    const base64Data = finalimage.split(",")[1];
-    if (!base64Data) {
-      throw new Error("Invalid base64 image data.");
-    }
+      const base64Data = editedDataUrl.split(",")[1];
+      if (!base64Data) {
+        throw new Error("Invalid base64 image data.");
+      }
 
-    // Create an SVG element with the base64 image embedded
-    const svgData = `
-      <svg xmlns="http://www.w3.org/2000/svg">
-        <image href="${finalimage}" />
-      </svg>
-    `;
+      const svgData = `<svg xmlns="http://www.w3.org/2000/svg" width="${
+        originalDimensions.width
+      }" height="${
+        originalDimensions.height
+      }"><image href="${editedDataUrl.replace(/"/g, "&quot;")}" width="${
+        originalDimensions.width
+      }" height="${
+        originalDimensions.height
+      }" preserveAspectRatio="none" /></svg>`;
 
-    // Create a Blob from the SVG data
-    const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+      // Create a Blob from the SVG data
+      const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
 
-    // Create a download link
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "original_image_vector.svg";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      // Create a download link
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "reconstructed_Image.svg";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-    console.log("Original image downloaded as vector successfully.");
-  } catch (error) {
-    console.error("Error downloading original image as vector:", error);
-  }
+      console.log("Original image downloaded as vector successfully.");
+    };
+    originalImg.onerror = () => {
+      reject(new Error("Failed to load original image"));
+    };
+    originalImg.src = originalImageUrl;
+  });
 };
 
 const ReconstructedImage: React.FC = () => {
   const router = useRouter();
-  const { finalimage } = useImageStorage();
-  const [error] = useState<string | null>(null);
+  const { finalimage, originalSessionImageURL } = useImageStorage();
+  const [error, setError] = useState<string | null>(null);
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
+
+  const onDownload = async () => {
+    try {
+      if (!finalimage) {
+        throw new Error("No edited image available to download.");
+      }
+      if (!originalSessionImageURL) {
+        throw new Error("Original image URL is missing.");
+      }
+
+      await processImageForDownload(originalSessionImageURL, finalimage);
+    } catch (error) {
+      console.error("Error downloading the image:", error);
+      setError("Failed to download the image. Please try again.");
+      setTimeout(() => setError(null), 3000);
+    }
+  };
 
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
@@ -93,7 +130,7 @@ const ReconstructedImage: React.FC = () => {
             <CustomButton
               title="Download"
               bg="bg-[#F287B7]"
-              onClick={() => downloadOriginalAsVector(finalimage)}
+              onClick={onDownload}
               icon={ICONS.download}
               textcolor="text-[#fff]"
             />

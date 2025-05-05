@@ -4,7 +4,7 @@ import { createServer } from "node:http";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
-const port = process.env.PORT | 3000
+const port = process.env.PORT 
 // when using middleware `hostname` and `port` must be provided below
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
@@ -20,6 +20,12 @@ app.prepare().then(() => {
         socket.on('image-updated-backend', (data) => {
             console.log('Received image-updated event from:', socket.id, data);
             io.sockets.emit('image-updated', {
+                data: 'some data'
+            });
+        });
+        socket.on('image-updated-user', (data) => {
+            console.log('Received image-updated event from:', socket.id, data);
+            io.sockets.emit('image-updated-admin', {
                 data: 'some data'
             });
         });
